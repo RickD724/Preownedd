@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Porsche Residual — Fetch JSON</title>
+<style>
+  :root{
+    --bg:#0b1020; --card:#121932; --text:#e6ebff; --muted:#a8b3d1; --border:#233057;
+    --accent:#2ea66a; --chip:#243156; --chip-text:#cfe1ff; --danger:#ff5d5d;
+    --radius:14px; --shadow:0 10px 26px rgba(0,0,0,.28);
+  }
+  [data-theme="light"]{
+    --bg:#f6f7fb; --card:#ffffff; --text:#0f172a; --muted:#64748b; --border:#e8ecf5;
+    --chip:#eef2ff; --chip-text:#2f2f91; --shadow:0 10px 26px rgba(16,24,40,.08);
+  }
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.45 -apple-system,BlinkMacSystemFont,Inter,Segoe UI,Roboto,system-ui,sans-serif}
+  .wrap{max-width:1040px;margin:20px auto;padding:0 14px}
+  .top{position:sticky;top:0;z-index:30;background:var(--bg);padding:10px 0 8px}
+  .brand{display:flex;gap:10px;align-items:center;justify-content:space-between}
+  .pill{display:inline-flex;align-items:center;gap:8px;background:var(--chip);color:var(--chip-text);padding:8px 12px;border-radius:999px;border:1px solid var(--border)}
+  .theme{border:1px solid var(--border);background:var(--chip);color:var(--chip-text);padding:8px 12px;border-radius:999px;cursor:pointer}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:14px}
+  .controls{position:sticky;top:56px;z-index:20}
+  .grid{display:grid;gap:10px}
+  .g3{grid-template-columns:repeat(3, minmax(0,1fr))}
+  .g2{grid-template-columns:repeat(2, minmax(0,1fr))}
+  @media (max-width:900px){.g3,.g2{grid-template-columns:1fr}}
+  label{font-size:.85rem;color:var(--muted);display:block;margin:0 0 6px}
+  select,input[type="number"],input[type="text"],button{width:100%;appearance:none;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:11px 12px}
+  select:focus,input:focus,button:focus{outline:2px solid var(--accent);outline-offset:0}
+  .rowline{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .switch{display:flex;align-items:center;gap:10px}
+  .muted{color:var(--muted)}
+  .hint{font-size:.8rem;color:var(--muted);margin-top:6px}
+  .warn{color:var(--danger);font-size:.86rem;margin-top:6px;display:none}
+
+  .result{display:flex;align-items:baseline;gap:12px;margin-top:6px;flex-wrap:wrap}
+  .result .big{font-size:2.0rem;font-weight:800;letter-spacing:.25px}
+  .result .small{font-size:.95rem}
+
+  .tableWrap{margin-top:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:12px}
+  table{min-width:720px;width:100%;border-collapse:separate;border-spacing:0;background:var(--card)}
+  th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
+  thead th{font-size:.82rem;color:var(--muted);font-weight:600;position:sticky;top:0;background:var(--card);z-index:1}
+  tbody tr:last-child td{border-bottom:0}
+  td.ok{color:var(--accent);font-weight:600}
+  td.err{color:var(--danger)}
+  td:first-child, th:first-child{position:sticky;left:0;background:var(--card);z-index:2}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="pill">Porsche Residual — Fetch JSON</div>
+        <button id="themeBtn" class="theme" type="button">Light</button>
+      </div>
+    </div>
+
+    <div class="card controls">
+      <!-- ORDER: Family → Year → Trim (search) → Miles@Inception → Miles/Year → PACPO → Term -->
+      <div class="grid g3">
+        <div>
+          <label>Model Family</label>
+          <select id="familySel"></select>
+        </div>
+        <div>
+          <label>Model Year</label>
+          <select id="yearSel"></select>
+        </div>
+        <div>
+          <label>Trim</label>
+          <select id="trimSel"></select>
+          <div class="hint" id="trimCount"></div>
+          <div class="warn" id="trimWarn">No trims found for this family/year. Check JSON spelling/case.</div>
+        </div>
+      </div>
+
+      <div class="grid g3" style="margin-top:10px">
+        <div>
+          <label>Search Trim</label>
+          <input id="trimSearch" type="text" placeholder="Type to filter by name or code… (e.g. 992, 95B)" />
+        </div>
+        <div>
+          <label>Term (months)</label>
+          <select id="termSel"></select>
+        </div>
+        <div class="rowline" style="margin-top:22px">
+          <label class="switch">
+            <span>+2% PACPO</span>
+            <input id="pacpoToggle" type="checkbox" />
+          </label>
+          <label class="switch">
+            <span>Hide N/A Columns</span>
+            <input id="hideNA" type="checkbox" />
+          </label>
+          <div class="pill" id="codeBadge">MY Code: —</div>
+        </div>
+      </div>
+
+      <div class="grid g2" style="margin-top:10px">
+        <div>
+          <label>Miles at Inception (odometer)</label>
+          <input id="odoInput" type="number" min="0" step="1" placeholder="e.g., 3,450" />
+          <div class="hint">Summary shows this adjustment even when it’s +0%.</div>
+        </div>
+        <div>
+          <label>Miles per Year (24–60 mo)</label>
+          <select id="annualMilesSel"></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <div class="result">
+        <div class="big" id="finalOut">—</div>
+        <div class="small muted" id="detailOut"></div>
+      </div>
+
+      <div class="tableWrap">
+        <table id="residualTable">
+          <thead><tr id="theadRow"></tr></thead>
+          <tbody><tr id="tvalRow"></tr></tbody>
+        </table>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <div class="rowline">
+          <strong>Summary</strong>
+          <button id="copyBtn" class="theme" style="margin-left:auto" type="button">Copy</button>
+        </div>
+        <div id="summaryText" class="muted" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(async function(){
+  // ========= THEME =========
+  const themeBtn = document.getElementById('themeBtn');
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  themeBtn.textContent = prefersDark ? 'Light' : 'Dark';
+  themeBtn.addEventListener('click', ()=>{
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = cur === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    themeBtn.textContent = next === 'light' ? 'Dark' : 'Light';
+  });
+
+  // ========= DOM HANDLES =========
+  const familySel = document.getElementById('familySel');
+  const yearSel = document.getElementById('yearSel');
+  const trimSel = document.getElementById('trimSel');
+  const trimSearch = document.getElementById('trimSearch');
+  const trimCount = document.getElementById('trimCount');
+  const trimWarn = document.getElementById('trimWarn');
+  const termSel = document.getElementById('termSel');
+  const pacpoToggle = document.getElementById('pacpoToggle');
+  const hideNA = document.getElementById('hideNA');
+  const codeBadge = document.getElementById('codeBadge');
+  const finalOut = document.getElementById('finalOut');
+  const detailOut = document.getElementById('detailOut');
+  const theadRow = document.getElementById('theadRow');
+  const tvalRow  = document.getElementById('tvalRow');
+  const annualMilesSel = document.getElementById('annualMilesSel');
+  const odoInput = document.getElementById('odoInput');
+  const summaryText = document.getElementById('summaryText');
+  const copyBtn = document.getElementById('copyBtn');
+
+  // ========= FETCH JSON =========
+  // Default file name (same folder). You can override via ?data=filename.json
+  const params = new URLSearchParams(location.search);
+  const jsonFile = params.get('data') || 'porsche_residuals_all.json';
+  const cacheBuster = `v=${Date.now()}`; // force refresh on GH Pages
+  let data;
+
+  try {
+    const res = await fetch(`${jsonFile}?${cacheBuster}`, {cache: 'no-store'});
+    if (!res.ok) throw new Error(`HTTP ${res.status} loading ${jsonFile}`);
+    data = await res.json();
+  } catch (err) {
+    alert(`Failed to load JSON: ${err.message}.
+- Ensure ${jsonFile} exists in the same folder as this HTML
+- If using file://, most browsers block fetch; serve via GitHub Pages or a local server`);
+    throw err;
+  }
+  window.__data = data;
+
+  const MONTHS = data.months || ["12","18","24","27","30","36","39","42","48","51","60"];
+  const PACPO = data.pacpo_bonus_percent ?? 2;
+
+  // ========= HELPERS =========
+  function normalizeYearKey(k){
+    const s = String(k).trim();
+    const mPlain = s.match(/^(20\d{2})$/);
+    if (mPlain) return { display: `MY${mPlain[1].slice(-2)}`, key: k };
+    const mMY = s.toUpperCase().replace(/\s+/g,'').match(/^MY(\d{2})$/);
+    if (mMY) return { display: `MY${mMY[1]}`, key: k };
+    return { display: s, key: k };
+  }
+  function getCaseInsensitive(obj, name){
+    if(!obj || typeof obj!=="object") return undefined;
+    const target = String(name).replace(/\s+/g,'').toLowerCase();
+    for(const k of Object.keys(obj)){
+      const norm = k.replace(/\s+/g,'').toLowerCase();
+      if(norm === target) return obj[k];
+    }
+    return undefined;
+  }
+
+  // Families with flat 718 (accept nested or top-level)
+  function getVirtualFamilies(){
+    const out = new Set();
+    const models = data.models || {};
+    Object.keys(models).forEach(f=>{
+      if(f === '718'){
+        const cay = getCaseInsensitive(models['718'],'Cayman');
+        const box = getCaseInsensitive(models['718'],'Boxster');
+        if (cay) out.add('718 Cayman');
+        if (box) out.add('718 Boxster');
+      } else {
+        out.add(f);
+      }
+    });
+    if(models['Cayman']) out.add('718 Cayman');
+    if(models['Boxster']) out.add('718 Boxster');
+    const order = ['911','718 Cayman','718 Boxster','Taycan','Macan','Cayenne','Panamera'];
+    return Array.from(out).sort((a,b)=> order.indexOf(a) - order.indexOf(b));
+  }
+  function branchForFamily(famDisp){
+    const models = data.models || {};
+    if (famDisp === '718 Cayman'){
+      return getCaseInsensitive(models['718']||{}, 'Cayman') || models['Cayman'] || {};
+    }
+    if (famDisp === '718 Boxster'){
+      return getCaseInsensitive(models['718']||{}, 'Boxster') || models['Boxster'] || {};
+    }
+    return models[famDisp] || {};
+  }
+  function yearsForFamily(famDisp){
+    const out = new Set();
+    const branch = branchForFamily(famDisp);
+    Object.keys(branch).forEach(y => out.add(normalizeYearKey(y).display));
+    return Array.from(out).sort((a,b)=>{
+      const ay = parseInt(a.replace(/\D/g,''),10);
+      const by = parseInt(b.replace(/\D/g,''),10);
+      if (Number.isNaN(ay) || Number.isNaN(by)) return b.localeCompare(a);
+      return by - ay;
+    });
+  }
+
+  // ========= UI POPULATION =========
+  function populateFamilies(){
+    familySel.innerHTML = '';
+    getVirtualFamilies().forEach(f=>{
+      const opt = document.createElement('option'); opt.value=f; opt.textContent=f; familySel.appendChild(opt);
+    });
+  }
+  function populateYears(){
+    yearSel.innerHTML = '';
+    yearsForFamily(familySel.value).forEach(d=>{
+      const opt = document.createElement('option'); opt.value=d; opt.textContent=d; yearSel.appendChild(opt);
+    });
+  }
+
+  let fullTrimList = [];
+  function collectTrimsForYear(){
+    fullTrimList = [];
+    const branch = branchForFamily(familySel.value);
+    const dispYear = yearSel.value;
+    const yearKeys = Object.keys(branch).filter(k => normalizeYearKey(k).display === dispYear);
+    const yearKey = yearKeys[0];
+    const rows = (yearKey && branch[yearKey]) || {};
+    Object.entries(rows).forEach(([code,row])=>{
+      fullTrimList.push({code, model: row.model || code});
+    });
+  }
+  function populateTrims(filterTerm=""){
+    trimSel.innerHTML = '';
+    const term = filterTerm.trim().toLowerCase();
+    const filtered = fullTrimList.filter(x=>{
+      const hay = (x.model + " " + x.code).toLowerCase();
+      return hay.includes(term);
+    });
+    filtered.forEach(({code,model})=>{
+      const opt = document.createElement('option');
+      opt.value = code; opt.textContent = model; opt.dataset.code = code;
+      trimSel.appendChild(opt);
+    });
+    trimCount.textContent = filtered.length ? `${filtered.length} trim(s)` : 'No trims match filter';
+    trimWarn.style.display = filtered.length ? 'none' : 'block';
+  }
+  function populateTerms(){
+    termSel.innerHTML = '';
+    (data.months || ["12","18","24","27","30","36","39","42","48","51","60"]).forEach(m=>{
+      const opt = document.createElement('option'); opt.value=m; opt.textContent=`${m} mo`; termSel.appendChild(opt);
+    });
+  }
+  function populateAnnualMiles(){
+    annualMilesSel.innerHTML = '';
+    const milesMap = data?.annual_mileage_adjustments_percent?.miles_per_year || {
+      "2500":6,"5000":5,"7500":4,"10000":3,"12000":2,"15000":0
+    };
+    Object.keys(milesMap).map(k=>parseInt(k,10)).sort((a,b)=>a-b).forEach(k=>{
+      const opt=document.createElement('option'); opt.value=String(k); opt.textContent=`${k.toLocaleString()} mi/yr`;
+      annualMilesSel.appendChild(opt);
+    });
+    annualMilesSel.value = "15000";
+  }
+
+  // ========= CALC HELPERS =========
+  function parseRange(str){
+    if(!str) return null;
+    const s = str.replace(/,/g,'').replace(/\s/g,'');
+    const parts = s.split(/–|-/);
+    if(parts.length !== 2) return null;
+    const a = parseInt(parts[0],10), b = parseInt(parts[1],10);
+    if(Number.isNaN(a)||Number.isNaN(b)) return null;
+    return [a,b];
+  }
+  function findInceptionAdj(myKey, odo){
+    const bands = data?.mileage_at_inception_adjustments_percent?.[myKey];
+    if(!bands || odo==null) return 0;
+    for(const band of bands){
+      const rng = parseRange(band.miles_range);
+      if(!rng) continue;
+      const [lo,hi] = rng;
+      if(odo >= lo && odo <= hi) return band.adj || 0;
+    }
+    return 0;
+  }
+  function buildHeader(visibleMonths){
+    theadRow.innerHTML = '';
+    const th1 = document.createElement('th'); th1.textContent = 'Trim / Term Table';
+    theadRow.appendChild(th1);
+    visibleMonths.forEach(m=>{ const th=document.createElement('th'); th.textContent=m; theadRow.appendChild(th); });
+  }
+  function visibleMonthsFor(entry){
+    if(!hideNA.checked) return MONTHS.slice();
+    return MONTHS.filter(m => entry?.residuals?.[m] != null);
+  }
+
+  // ========= COMPUTE =========
+  function compute(){
+    const fam = familySel.value;
+    const branch = branchForFamily(fam);
+    const dispYear = yearSel.value;
+
+    const yearKeys = Object.keys(branch).filter(k => normalizeYearKey(k).display === dispYear);
+    const yrKey = yearKeys[0];
+    const code = trimSel.value;
+    const term = termSel.value;
+    const milesPerYear = parseInt(annualMilesSel.value,10);
+    const odo = odoInput.value ? parseInt(odoInput.value.replace(/,/g,''),10) : null;
+
+    if(!yrKey || !code){ return; }
+    const entry = branch[yrKey][code];
+    const base = term ? (entry?.residuals?.[term] ?? null) : null;
+
+    const pacpoAdj = pacpoToggle.checked ? (data.pacpo_bonus_percent ?? 2) : 0;
+    const milesMap = data?.annual_mileage_adjustments_percent?.miles_per_year || {};
+    let annualAdj = 0;
+    if(base !== null && parseInt(term||"0",10) >= 24){
+      annualAdj = milesMap[String(milesPerYear)] ?? 0;
+    }
+
+    // Try raw MY key, then display (MY20), then no-space variant
+    const inceptionKeyCandidates = [yrKey, dispYear, dispYear.replace(/\s+/g,'')];
+    let inceptionAdj = 0;
+    for (const cand of inceptionKeyCandidates) {
+      const bands = data?.mileage_at_inception_adjustments_percent?.[cand];
+      if (bands) { inceptionAdj = findInceptionAdj(cand, odo); break; }
+    }
+
+    const monthsShown = visibleMonthsFor(entry);
+    buildHeader(monthsShown);
+
+    const final = (base === null || term==null) ? null : (base + pacpoAdj + annualAdj + inceptionAdj);
+    finalOut.textContent = final === null ? '—' : `${final}%`;
+    detailOut.textContent = final===null ? `Select a term` : `Final residual with all adjustments`;
+    codeBadge.textContent = `MY Code: ${code || '—'}`;
+
+    // Table
+    tvalRow.innerHTML = '';
+    const lead = document.createElement('td'); lead.textContent = entry?.model || '—';
+    tvalRow.appendChild(lead);
+    monthsShown.forEach(m=>{
+      const td = document.createElement('td');
+      const v = entry?.residuals?.[m];
+      let shown = '—';
+      if(v!==null && v!==undefined){
+        const mN = parseInt(m,10);
+        const aAdj = (mN >= 24) ? (milesMap[String(milesPerYear)] ?? 0) : 0;
+        const total = v + pacpoAdj + aAdj + inceptionAdj;
+        shown = `${total}%`; td.classList.add('ok');
+      } else { td.classList.add('err'); }
+      td.textContent = shown; tvalRow.appendChild(td);
+    });
+
+    // Summary (always show inception when odo provided)
+    const parts = [];
+    if(base !== null && term) parts.push(`Base ${base}%`);
+    if(pacpoToggle.checked) parts.push(`${pacpoAdj>=0?'+':''}${pacpoAdj}% PACPO`);
+    if(term && parseInt(term,10) >= 24) parts.push(`${annualAdj>=0?'+':''}${annualAdj}% Annual Miles (${milesPerYear.toLocaleString()}/yr)`);
+    if(odo != null && !Number.isNaN(odo)) parts.push(`${inceptionAdj>=0?'+':''}${inceptionAdj}% Inception (${odo.toLocaleString()} mi)`);
+
+    const line1 = `${dispYear} • ${fam} • ${entry?.model ?? '—'} • ${term||'—'} mo`;
+    const line2 = (final===null) ? `N/A` : `Final Residual: ${final}%  (${parts.join('  |  ')})`;
+    summaryText.textContent = `${line1}\n${line2}`;
+  }
+
+  // ========= COPY =========
+  copyBtn.addEventListener('click', ()=>{
+    const txt = summaryText.textContent || '';
+    navigator.clipboard.writeText(txt).then(()=>{
+      const old = copyBtn.textContent;
+      copyBtn.textContent = 'Copied!';
+      setTimeout(()=>copyBtn.textContent = old, 900);
+    });
+  });
+
+  // ========= INIT / EVENTS =========
+  function init(){
+    // Populate controls
+    familySel.innerHTML = '';
+    populateFamilies();
+    yearSel.innerHTML = '';
+    populateYears();
+    termSel.innerHTML = '';
+    populateTerms();
+    annualMilesSel.innerHTML = '';
+    populateAnnualMiles();
+    // Trims
+    collectTrimsForYear(); populateTrims();
+    compute();
+  }
+
+  familySel.addEventListener('change', ()=>{ populateYears(); collectTrimsForYear(); populateTrims(trimSearch.value); compute(); });
+  yearSel.addEventListener('change', ()=>{ collectTrimsForYear(); populateTrims(trimSearch.value); compute(); });
+  trimSearch.addEventListener('input', ()=>{ populateTrims(trimSearch.value); compute(); });
+  trimSel.addEventListener('change', compute);
+  termSel.addEventListener('change', compute);
+  pacpoToggle.addEventListener('change', compute);
+  hideNA.addEventListener('change', compute);
+  annualMilesSel.addEventListener('change', compute);
+  odoInput.addEventListener('input', compute);
+
+  init();
+})();
+</script>
+</body>
+</html>
