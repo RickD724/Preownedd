@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Residual App — By Ricardo</title>
 
-<!-- A2HS / PWA basics (no external files; generated at runtime) -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="mobile-web-app-capable" content="yes">
@@ -61,19 +60,17 @@
     background: var(--bg); background-image: var(--bg-gradient); background-attachment: fixed;
     color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    min-height: 100%;
   }
-  .wrap{ max-width: 1200px; margin: 0 auto; padding: 20px 16px 40px; }
+  .wrap{ max-width: 1200px; margin: 0 auto; padding: 20px 16px 80px; } /* extra bottom padding helps mobile scrolling */
   body::before{ content:''; position:fixed; top:0; left:0; right:0; height:400px;
     background: radial-gradient(circle at 50% 0%, var(--accent-glow), transparent 60%); opacity:.35; pointer-events:none; z-index:0; }
 
   .top{
     position: sticky; top: 0; z-index: 40; backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
     background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 12px 14px; margin-bottom: 16px; box-shadow: var(--shadow); animation: slideDown .4s ease;
+    padding: 12px 14px; margin-bottom: 16px; box-shadow: var(--shadow);
   }
-  @keyframes slideDown{ from{transform:translateY(-12px);opacity:0} to{transform:translateY(0);opacity:1} }
-  @keyframes fadeIn{ from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
-
   .brand{ display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
   .leftRow{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
 
@@ -92,9 +89,13 @@
 
   .card{
     background:var(--card); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border:1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; animation: fadeIn .35s ease;
+    border:1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px;
   }
-  .controls{ position: sticky; top: 64px; z-index: 20; }
+  .controls{ position: sticky; top: 60px; z-index: 20; }
+  /* MOBILE: disable sticky to avoid trapping the Summary */
+  @media (max-width: 900px){
+    .controls{ position: static; }
+  }
 
   .grid{ display:grid; gap: 14px; }
   .g4{ grid-template-columns: repeat(4, minmax(0,1fr)); }
@@ -133,7 +134,8 @@
   td.err{ color:var(--danger); opacity:.55; }
   td:first-child, th:first-child{ position:sticky; left:0; background:var(--card); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:2; font-weight:800; }
 
-  .summary{ margin-top: 16px; padding: 18px; border:1px solid var(--border); border-radius: var(--radius); background: var(--card); }
+  .summary{ margin-top: 16px; padding: 18px; border:1px solid var(--border); border-radius: var(--radius); background: var(--card);
+    scroll-margin-top: 80px; } /* when jumping to summary, avoid hiding under sticky top */
   .sum-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-top:12px; }
   @media (max-width: 700px){ .sum-grid{ grid-template-columns:1fr; } }
   .srow{ display:flex; gap:12px; align-items:center; justify-content:space-between; background:var(--badge); border:1px solid var(--badge-border); border-radius:12px; padding:10px 12px; }
@@ -147,7 +149,6 @@
   .foot-title{ font-weight:900; letter-spacing:.3px; margin-bottom:6px; font-size:1.05rem; }
   .foot-text{ color:var(--muted); font-size:.92rem; }
 
-  /* Print: only summary block */
   @media print{
     body{ background:#fff; }
     .top, .controls, .tableWrap, #leaseCard, .footer, #validatorCard { display:none !important; }
@@ -165,12 +166,10 @@
             <option value="__current__">Program: Current (from ?data or default)</option>
             <option value="porsche_residuals_all.json">Program: PB 25-10R (Default)</option>
             <option value="porsche_residuals_25-09R.json">Program: PB 25-09R (Oct)</option>
-            <!-- Add more datasets as needed:
-                 <option value="porsche_residuals_25-11R.json">Program: PB 25-11R (Nov)</option>
-            -->
           </select>
         </div>
         <div class="leftRow">
+          <button id="jumpSummaryBtn" class="btn" type="button" title="Scroll to Summary">Summary</button>
           <button id="validateBtn" class="btn" type="button" title="Validate loaded JSON">Validate JSON</button>
           <button id="exportCsvBtn" class="btn" type="button" title="Export table as CSV">Export</button>
           <button id="printBtn" class="btn" type="button" title="Print summary">Print</button>
@@ -246,7 +245,6 @@
         <div class="big" id="finalOut">-</div>
         <div class="small muted" id="detailOut">Select a term to calculate</div>
         <div class="small" id="trueOut" style="font-weight:800;"></div>
-        <!-- LVI badge (only shows when MF is present) -->
         <div class="small muted" id="lviBadge" style="font-weight:700;"></div>
       </div>
 
@@ -268,18 +266,36 @@
           <span class="sval" id="sumFinal" style="font-size:1.2rem;color:var(--accent);">-</span>
         </div>
 
+        <!-- Clean 2-column pairs -->
         <div class="sum-grid">
-          <div class="srow"><span class="slabel">Program</span><span class="sval" id="sumProgram">-</span></div>
+          <!-- Program (hidden but kept for copy/export) -->
+          <div class="srow" style="display:none;">
+            <span class="slabel">Program</span><span class="sval" id="sumProgram">-</span>
+          </div>
+
+          <!-- Pair 1 -->
           <div class="srow"><span class="slabel">Model Year</span><span class="sval" id="sumYear">-</span></div>
           <div class="srow"><span class="slabel">Family</span><span class="sval" id="sumFamily">-</span></div>
+
+          <!-- Pair 2 -->
           <div class="srow"><span class="slabel">Trim</span><span class="sval" id="sumTrim">-</span></div>
           <div class="srow"><span class="slabel">Term</span><span class="sval" id="sumTerm">-</span></div>
+
+          <!-- Pair 3 -->
           <div class="srow"><span class="slabel">Miles/Year</span><span class="sval" id="sumMilesYear">-</span></div>
           <div class="srow"><span class="slabel">Odometer</span><span class="sval" id="sumOdo">-</span></div>
-          <!-- If you want fewer rows, you can hide MSRP by commenting it out -->
-          <div class="srow" style="display:none;">   <span class="slabel">MSRP</span>   <span class="sval" id="sumMsrp">-</span> </div>
+
+          <!-- MSRP (hidden but kept for copy/export) -->
+          <div class="srow" style="display:none;">
+            <span class="slabel">MSRP</span><span class="sval" id="sumMsrp">-</span>
+          </div>
+
+          <!-- Always shown -->
           <div class="srow"><span class="slabel">MSRP × RV%</span><span class="sval" id="sumTrue">-</span></div>
-          <div class="srow"><span class="slabel">Lease Value Index</span><span class="sval" id="sumLvi" title="Higher is better — more residual per unit of rent charge.">-</span></div>
+          <div class="srow">
+            <span class="slabel">Lease Value Index</span>
+            <span class="sval" id="sumLvi" title="Higher is better — more residual per unit of rent charge.">-</span>
+          </div>
         </div>
         <div class="hint" id="lviHelp">Higher is better — more residual per unit of rent charge.</div>
 
@@ -287,7 +303,7 @@
       </div>
     </div>
 
-    <!-- Lease Estimator (lightweight) -->
+    <!-- Lease Estimator (Quick) -->
     <div class="card" id="leaseCard" style="margin-top: 16px;">
       <div class="rowline" style="justify-content:space-between; margin-bottom:8px;">
         <strong>Lease Estimator (Quick)</strong>
@@ -340,7 +356,6 @@
         <div class="srow"><span class="slabel">Monthly (Pre-Tax)</span><span class="sval" id="leasePreTax">-</span></div>
         <div class="srow"><span class="slabel">Monthly (With Tax)</span><span class="sval" id="leaseWithTax">-</span></div>
       </div>
-      <!-- Red warning removed per request -->
     </div>
 
     <!-- Validator Panel -->
@@ -356,7 +371,7 @@
       <div class="foot-card">
         <div class="foot-title">Made by Ricardo</div>
         <div class="foot-text">
-          © Ricardo. This internal tool is confidential and intended for authorized use only.  
+          © Ricardo. This internal tool is confidential and intended for authorized use only.
           Do not share, copy, or redistribute without written permission.
         </div>
       </div>
@@ -365,7 +380,7 @@
 
 <script>
 (function(){
-  // ===== A2HS: generate a simple icon & manifest at runtime =====
+  // Simple PWA bits (optional, safe if it fails)
   (function generateIconsAndManifest(){
     try{
       const canvas = document.createElement('canvas');
@@ -384,10 +399,7 @@
       canvas.toBlob(function(blob){
         if(!blob) return;
         const iconURL = URL.createObjectURL(blob);
-
-        const linkApple = document.createElement('link');
-        linkApple.rel = 'apple-touch-icon';
-        linkApple.href = iconURL;
+        const linkApple = document.createElement('link'); linkApple.rel = 'apple-touch-icon'; linkApple.href = iconURL;
         document.head.appendChild(linkApple);
 
         const manifest = {
@@ -401,15 +413,13 @@
         };
         const blobMan = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
         const manURL = URL.createObjectURL(blobMan);
-        const linkMan = document.createElement('link');
-        linkMan.rel = 'manifest';
-        linkMan.href = manURL;
+        const linkMan = document.createElement('link'); linkMan.rel = 'manifest'; linkMan.href = manURL;
         document.head.appendChild(linkMan);
       }, 'image/png');
-    }catch(e){ /* non-fatal */ }
+    }catch(e){ /* ignore */ }
   })();
 
-  // ===== Theme =====
+  // Theme
   var themeBtn = document.getElementById('themeBtn');
   var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
@@ -421,11 +431,12 @@
     themeBtn.textContent = next === 'light' ? 'Dark Mode' : 'Light Mode';
   });
 
-  // ===== DOM refs =====
+  // DOM refs
   var programSel = document.getElementById('programSel');
   var validateBtn = document.getElementById('validateBtn');
   var exportCsvBtn = document.getElementById('exportCsvBtn');
   var printBtn = document.getElementById('printBtn');
+  var jumpSummaryBtn = document.getElementById('jumpSummaryBtn');
 
   var familySel = document.getElementById('familySel');
   var yearSel = document.getElementById('yearSel');
@@ -460,7 +471,6 @@
   var badgeRow = document.getElementById('badgeRow');
   var copyBtn = document.getElementById('copyBtn');
 
-  // Lease Estimator refs
   var leaseCapCost = document.getElementById('leaseCapCost');
   var leaseMF = document.getElementById('leaseMF');
   var leaseTax = document.getElementById('leaseTax');
@@ -474,7 +484,6 @@
   var leaseWithTax = document.getElementById('leaseWithTax');
   var mfAprHint = document.getElementById('mfAprHint');
 
-  // LVI
   var lviBadge = document.getElementById('lviBadge');
   var sumLvi = document.getElementById('sumLvi');
 
@@ -482,24 +491,16 @@
   var closeValBtn = document.getElementById('closeValBtn');
   var validatorOutput = document.getElementById('validatorOutput');
 
-  // ===== State & data =====
   var data, MONTHS = [], PACPO = 2;
   var fullTrimList = [];
   var currentProgramLabel = 'Current';
 
-  // URL helpers (deep-link)
   function readParams(){
     var p = new URLSearchParams(location.search);
     return {
-      program: p.get('data') || null,
-      family: p.get('family') || null,
-      year: p.get('year') || null,
-      trim: p.get('trim') || null,
-      term: p.get('term') || null,
-      miles: p.get('miles') || null,
-      odo: p.get('odo') || null,
-      pacpo: p.get('pacpo') || null,
-      hidena: p.get('hidena') || null,
+      program: p.get('data') || null, family: p.get('family') || null, year: p.get('year') || null,
+      trim: p.get('trim') || null, term: p.get('term') || null, miles: p.get('miles') || null,
+      odo: p.get('odo') || null, pacpo: p.get('pacpo') || null, hidena: p.get('hidena') || null,
       msrp: p.get('msrp') || null
     };
   }
@@ -521,13 +522,11 @@
     history.replaceState(null, '', url);
   }
 
-  // dataset resolve
   var initialProgram = (function(){
     var params = new URLSearchParams(location.search);
     return params.get('data') || 'porsche_residuals_all.json';
   })();
 
-  // load data
   function loadProgram(file, label){
     var cacheBuster = 't=' + Date.now();
     currentProgramLabel = label || (file === '__current__' ? 'Current' : file);
@@ -538,8 +537,7 @@
         return res.json();
       })
       .then(function(j){
-        data = j;
-        window.__data = data;
+        data = j; window.__data = data;
         MONTHS = data.months || ["12","18","24","27","30","36","39","42","48","51","60"];
         PACPO = data.pacpo_bonus_percent || 2;
         sumProgram.textContent = label || target;
@@ -550,38 +548,29 @@
       });
   }
 
-  // helpers
   function normalizeYearKey(k){
     var s = String(k).trim();
-    var mPlain = s.match(/^(20\d{2})$/);
-    if (mPlain) return { display: 'MY' + mPlain[1].slice(-2), key: k };
-    var mMY = s.toUpperCase().replace(/\s+/g,'').match(/^MY(\d{2})$/);
-    if (mMY) return { display: 'MY' + mMY[1], key: k };
+    var mPlain = s.match(/^(20\d{2})$/); if (mPlain) return { display: 'MY' + mPlain[1].slice(-2), key: k };
+    var mMY = s.toUpperCase().replace(/\s+/g,'').match(/^MY(\d{2})$/); if (mMY) return { display: 'MY' + mMY[1], key: k };
     return { display: s, key: k };
   }
   function getCaseInsensitive(obj, name){
     if(!obj || typeof obj !== "object") return undefined;
     var target = String(name).replace(/\s+/g,'').toLowerCase();
     var keys = Object.keys(obj);
-    for(var i=0;i<keys.length;i++){
-      var norm = keys[i].replace(/\s+/g,'').toLowerCase();
-      if(norm === target) return obj[keys[i]];
-    }
+    for(var i=0;i<keys.length;i++){ if(keys[i].replace(/\s+/g,'').toLowerCase() === target) return obj[keys[i]]; }
     return undefined;
   }
   function getVirtualFamilies(){
     var out = new Set();
     var models = data.models || {};
-    var keys = Object.keys(models);
-    for(var i=0;i<keys.length;i++){
-      var f = keys[i];
+    Object.keys(models).forEach(function(f){
       if(f === '718'){
         var cay = getCaseInsensitive(models['718'],'Cayman');
         var box = getCaseInsensitive(models['718'],'Boxster');
-        if (cay) out.add('718 Cayman');
-        if (box) out.add('718 Boxster');
+        if (cay) out.add('718 Cayman'); if (box) out.add('718 Boxster');
       } else { out.add(f); }
-    }
+    });
     if(models['Cayman']) out.add('718 Cayman');
     if(models['Boxster']) out.add('718 Boxster');
     var order = ['911','718 Cayman','718 Boxster','Taycan','Macan','Cayenne','Panamera'];
@@ -599,11 +588,9 @@
   }
   function yearsForFamily(famDisp){
     var out = new Set(); var branch = branchForFamily(famDisp);
-    var keys = Object.keys(branch);
-    for(var i=0;i<keys.length;i++){ out.add(normalizeYearKey(keys[i]).display); }
+    Object.keys(branch).forEach(function(k){ out.add(normalizeYearKey(k).display); });
     return Array.from(out).sort(function(a,b){
-      var ay = parseInt(a.replace(/\D/g,''),10);
-      var by = parseInt(b.replace(/\D/g,''),10);
+      var ay = parseInt(a.replace(/\D/g,''),10), by = parseInt(b.replace(/\D/g,''),10);
       if (isNaN(ay) || isNaN(by)) return b.localeCompare(a);
       return by - ay;
     });
@@ -611,21 +598,13 @@
 
   function populate(select, arr){
     select.innerHTML = '';
-    arr.forEach(function(v){
-      var opt = document.createElement('option');
-      opt.value = v; opt.textContent = v;
-      select.appendChild(opt);
-    });
+    arr.forEach(function(v){ var opt = document.createElement('option'); opt.value = v; opt.textContent = v; select.appendChild(opt); });
   }
   function initSelectors(){
     populate(familySel, getVirtualFamilies());
     populate(yearSel, yearsForFamily(familySel.value));
     termSel.innerHTML = '';
-    MONTHS.forEach(function(m){
-      var opt = document.createElement('option');
-      opt.value = m; opt.textContent = m + ' months';
-      termSel.appendChild(opt);
-    });
+    MONTHS.forEach(function(m){ var opt = document.createElement('option'); opt.value = m; opt.textContent = m + ' months'; termSel.appendChild(opt); });
     populateAnnualMiles();
     collectTrimsForYear();
     populateTrims('');
@@ -636,45 +615,22 @@
       "2500":6,"5000":5,"7500":4,"10000":3,"12000":2,"15000":0
     };
     Object.keys(milesMap).map(function(k){ return parseInt(k,10); }).sort(function(a,b){ return a-b; })
-      .forEach(function(n){
-        var opt = document.createElement('option');
-        opt.value = String(n); opt.textContent = n.toLocaleString() + ' mi/yr';
-        annualMilesSel.appendChild(opt);
-      });
+      .forEach(function(n){ var opt = document.createElement('option'); opt.value = String(n); opt.textContent = n.toLocaleString() + ' mi/yr'; annualMilesSel.appendChild(opt); });
     annualMilesSel.value = "15000";
   }
   function collectTrimsForYear(){
     fullTrimList = [];
     var branch = branchForFamily(familySel.value);
     var dispYear = yearSel.value;
-    var keys = Object.keys(branch);
-    var yearKeys = [];
-    for(var i=0;i<keys.length;i++){
-      if(normalizeYearKey(keys[i]).display === dispYear) yearKeys.push(keys[i]);
-    }
-    var yearKey = yearKeys[0];
+    var yearKey = Object.keys(branch).find(function(k){ return normalizeYearKey(k).display === dispYear; });
     var rows = (yearKey && branch[yearKey]) || {};
-    var entries = Object.entries(rows);
-    for(var j=0;j<entries.length;j++){
-      var code = entries[j][0];
-      var row = entries[j][1];
-      fullTrimList.push({code: code, model: row.model || code});
-    }
+    Object.entries(rows).forEach(function([code,row]){ fullTrimList.push({code: code, model: row.model || code}); });
   }
   function populateTrims(filterTerm){
-    if(filterTerm === undefined) filterTerm = "";
     trimSel.innerHTML = '';
-    var term = filterTerm.trim().toLowerCase();
-    var filtered = [];
-    for(var i=0;i<fullTrimList.length;i++){
-      var hay = (fullTrimList[i].model + " " + fullTrimList[i].code).toLowerCase();
-      if(hay.indexOf(term) !== -1){ filtered.push(fullTrimList[i]); }
-    }
-    filtered.forEach(function(item){
-      var opt = document.createElement('option');
-      opt.value = item.code; opt.textContent = item.model; opt.dataset.code = item.code;
-      trimSel.appendChild(opt);
-    });
+    var term = (filterTerm||'').trim().toLowerCase();
+    var filtered = fullTrimList.filter(function(t){ return (t.model + " " + t.code).toLowerCase().indexOf(term) !== -1; });
+    filtered.forEach(function(item){ var opt = document.createElement('option'); opt.value = item.code; opt.textContent = item.model; opt.dataset.code = item.code; trimSel.appendChild(opt); });
     trimCount.textContent = filtered.length ? (filtered.length + ' trim(s) available') : 'No trims match filter';
     trimWarn.style.display = filtered.length ? 'none' : 'block';
   }
@@ -682,9 +638,8 @@
   function parseRange(str){
     if(!str) return null;
     var s = str.replace(/,/g,'').replace(/\s/g,'');
-    var parts = s.split(/–|-/);
-    if(parts.length !== 2) return null;
-    var a = parseInt(parts[0],10); var b = parseInt(parts[1],10);
+    var parts = s.split(/–|-/); if(parts.length !== 2) return null;
+    var a = parseInt(parts[0],10), b = parseInt(parts[1],10);
     if(isNaN(a) || isNaN(b)) return null;
     return [a,b];
   }
@@ -692,8 +647,7 @@
     var bands = (data && data.mileage_at_inception_adjustments_percent && data.mileage_at_inception_adjustments_percent[myKey]) || null;
     if(!bands || odo == null) return 0;
     for(var i=0;i<bands.length;i++){
-      var rng = parseRange(bands[i].miles_range);
-      if(!rng) continue;
+      var rng = parseRange(bands[i].miles_range); if(!rng) continue;
       if(odo >= rng[0] && odo <= rng[1]) return bands[i].adj || 0;
     }
     return 0;
@@ -701,50 +655,22 @@
   function visibleMonthsFor(entry){
     if(!hideNA.checked) return MONTHS.slice();
     var result = [];
-    for(var i=0;i<MONTHS.length;i++){
-      if(entry && entry.residuals && entry.residuals[MONTHS[i]] != null) result.push(MONTHS[i]);
-    }
+    for(var i=0;i<MONTHS.length;i++){ if(entry && entry.residuals && entry.residuals[MONTHS[i]] != null) result.push(MONTHS[i]); }
     return result;
   }
   function buildHeader(visibleMonths){
     theadRow.innerHTML = '';
     var th1 = document.createElement('th'); th1.textContent = 'Trim / Term'; theadRow.appendChild(th1);
-    for(var i=0;i<visibleMonths.length;i++){
-      var th = document.createElement('th'); th.textContent = visibleMonths[i] + ' mo'; theadRow.appendChild(th);
-    }
+    visibleMonths.forEach(function(m){ var th = document.createElement('th'); th.textContent = m + ' mo'; theadRow.appendChild(th); });
   }
 
-  // adjusted residual for a trim (applies PACPO, miles, inception)
-  function adjustedResidualForEntry(entry, term, milesPerYear, pacpoChecked, inceptionAdj){
-    if(!entry || !entry.residuals) return null;
-    var base = entry.residuals[term];
-    if(base == null) return null;
-
-    var pacpoAdj = pacpoChecked ? (data.pacpo_bonus_percent || 2) : 0;
-    var milesMap = (data && data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {};
-    var annualAdj = 0;
-    var termN = parseInt(term || "0", 10);
-    if(termN >= 24){
-      annualAdj = milesMap[String(milesPerYear)] || 0;
-    }
-    return base + pacpoAdj + annualAdj + (inceptionAdj || 0);
-  }
-  // LVI = Residual% / MF (higher is better)
-  function computeLVI(rvPercent, mf){
-    if(!isFinite(rvPercent) || !isFinite(mf) || mf <= 0) return null;
-    return rvPercent / mf;
-  }
+  function computeLVI(rvPercent, mf){ if(!isFinite(rvPercent) || !isFinite(mf) || mf <= 0) return null; return rvPercent / mf; }
 
   function compute(){
     var fam = familySel.value;
     var branch = branchForFamily(fam);
     var dispYear = yearSel.value;
-    var keys = Object.keys(branch);
-    var yearKeys = [];
-    for(var i=0;i<keys.length;i++){
-      if(normalizeYearKey(keys[i]).display === dispYear){ yearKeys.push(keys[i]); }
-    }
-    var yrKey = yearKeys[0];
+    var yrKey = Object.keys(branch).find(function(k){ return normalizeYearKey(k).display === dispYear; });
     var code = trimSel.value;
     var term = termSel.value;
     var milesPerYear = parseInt(annualMilesSel.value, 10);
@@ -763,14 +689,12 @@
     var entry = branch[yrKey][code];
     var base = term ? ((entry && entry.residuals && entry.residuals[term]) || null) : null;
 
-    PACPO = data.pacpo_bonus_percent || 2;
+    var PACPO = data.pacpo_bonus_percent || 2;
     var pacpoAdj = pacpoToggle.checked ? PACPO : 0;
 
     var milesMap = (data && data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {};
     var annualAdj = 0;
-    if(base !== null && parseInt(term || "0", 10) >= 24){
-      annualAdj = milesMap[String(milesPerYear)] || 0;
-    }
+    if(base !== null && parseInt(term || "0", 10) >= 24){ annualAdj = milesMap[String(milesPerYear)] || 0; }
 
     var inceptionKeyCandidates = [yrKey, dispYear, dispYear.replace(/\s+/g,'')];
     var inceptionAdj = 0;
@@ -790,18 +714,18 @@
     // table row
     tvalRow.innerHTML = '';
     var lead = document.createElement('td'); lead.textContent = (entry && entry.model) || '-'; tvalRow.appendChild(lead);
-    for(var i=0;i<monthsShown.length;i++){
+    monthsShown.forEach(function(m){
       var td = document.createElement('td');
-      var v = entry && entry.residuals && entry.residuals[monthsShown[i]];
+      var v = entry && entry.residuals && entry.residuals[m];
       var shown = '-';
       if(v !== null && v !== undefined){
-        var mN = parseInt(monthsShown[i], 10);
+        var mN = parseInt(m, 10);
         var aAdj = (mN >= 24) ? (milesMap[String(milesPerYear)] || 0) : 0;
         var total = v + pacpoAdj + aAdj + inceptionAdj;
         shown = total + '%'; td.classList.add('ok');
       } else { td.classList.add('err'); }
       td.textContent = shown; tvalRow.appendChild(td);
-    }
+    });
 
     // summary
     sumProgram.textContent = currentProgramLabel;
@@ -813,7 +737,7 @@
     sumOdo.textContent = (odo != null && !isNaN(odo)) ? odo.toLocaleString() + ' mi' : '-';
 
     var msrp = msrpInput.value ? Number(msrpInput.value) : null;
-    sumMsrp.textContent = (msrp != null && !isNaN(msrp)) ? ('$' + msrp.toLocaleString()) : '-';
+    if (sumMsrp) sumMsrp.textContent = (msrp != null && !isNaN(msrp)) ? ('$' + msrp.toLocaleString()) : '-';
     var trueResidual = (final != null && msrp != null && !isNaN(msrp)) ? Math.round(msrp * (final/100)) : null;
     sumTrue.textContent = (trueResidual != null) ? ('$' + trueResidual.toLocaleString()) : '-';
     trueOut.textContent = (trueResidual != null) ? ('MSRP × RV% = $' + trueResidual.toLocaleString()) : '';
@@ -827,12 +751,11 @@
 
     sumFinal.textContent = final === null ? '-' : final + '%';
 
-    // ---- Lease Value Index (uses current MF if provided) ----
+    // LVI
     var mfVal = leaseMF && leaseMF.value ? Number(leaseMF.value) : NaN;
     var lviCurrent = computeLVI(final, mfVal);
-
     if(lviCurrent != null){
-      var lviText = (lviCurrent/1000).toFixed(1) + ' k'; // scaled display
+      var lviText = (lviCurrent/1000).toFixed(1) + ' k';
       if(lviBadge) lviBadge.textContent = 'Value Index: ' + lviText;
       if(sumLvi) sumLvi.textContent = lviText;
     } else {
@@ -840,10 +763,8 @@
       if(sumLvi) sumLvi.textContent = '-';
     }
 
-    // Sync deep-link
     updateShareURL();
 
-    // Keep Lease Estimator in sync with current selection
     if(leaseTerm && (!leaseTerm.value || leaseTerm.value === '')) {
       if(termSel && termSel.value) leaseTerm.value = termSel.value;
     }
@@ -853,17 +774,11 @@
     var b = document.createElement('div'); b.className = 'badge'; b.textContent = txt; badgeRow.appendChild(b);
   }
 
-  // Export CSV of visible row
   function exportVisibleCSV(){
     var fam = familySel.value;
     var branch = branchForFamily(fam);
     var dispYear = yearSel.value;
-    var keys = Object.keys(branch);
-    var yearKeys = [];
-    for(var i=0;i<keys.length;i++){
-      if(normalizeYearKey(keys[i]).display === dispYear) yearKeys.push(keys[i]);
-    }
-    var yrKey = yearKeys[0];
+    var yrKey = Object.keys(branch).find(function(k){ return normalizeYearKey(k).display === dispYear; });
     if(!yrKey || !trimSel.value){ alert('Select family/year/trim first.'); return; }
     var entry = branch[yrKey][trimSel.value];
     var monthsShown = visibleMonthsFor(entry);
@@ -915,11 +830,8 @@
     document.body.appendChild(a); a.click(); a.remove();
     URL.revokeObjectURL(url);
   }
-
-  // Print summary
   function printSummary(){ window.print(); }
 
-  // Validator
   function validateJSON(){
     if(!data){ alert('Load a program first.'); return; }
     var issues = [];
@@ -975,12 +887,10 @@
     validatorCard.style.display = 'block';
   }
 
-  // Lease Estimator
   function leaseCompute(){
-    var rvPctText = sumFinal.textContent;                   // "58%" or "-"
+    var rvPctText = sumFinal.textContent; // "58%" or "-"
     var rvPct = (rvPctText && rvPctText.endsWith('%')) ? parseFloat(rvPctText) : NaN;
     var msrp = msrpInput.value ? Number(msrpInput.value) : NaN;
-
     var term = leaseTerm.value ? parseInt(leaseTerm.value, 10)
                                : (termSel && termSel.value ? parseInt(termSel.value,10) : NaN);
 
@@ -997,7 +907,7 @@
       leaseAdjCap.textContent = '-';
       leasePreTax.textContent = '-';
       leaseWithTax.textContent = '-';
-      if(mfAprHint) mfAprHint.textContent = isFinite(mf) ? ('≈ ' + (mf*2400).toFixed(2) + '% APR') : '';
+      mfAprHint.textContent = isFinite(mf) ? ('≈ ' + (mf*2400).toFixed(2) + '% APR') : '';
       return;
     }
 
@@ -1007,15 +917,13 @@
     var adjCap = (isFinite(cap) ? cap : 0) - (isFinite(capRed) ? capRed : 0) + (isFinite(fees) ? fees : 0);
     leaseAdjCap.textContent = isFinite(adjCap) ? ('$' + adjCap.toLocaleString()) : '-';
 
-    // If Adj Cap doesn't pencil, keep payment as "–" quietly (no red banner)
     if(!isFinite(adjCap) || adjCap <= 0 || !isFinite(mf) || mf <= 0){
       leasePreTax.textContent = '-';
       leaseWithTax.textContent = '-';
-      if(mfAprHint) mfAprHint.textContent = isFinite(mf) ? ('≈ ' + (mf*2400).toFixed(2) + '% APR') : '';
+      mfAprHint.textContent = isFinite(mf) ? ('≈ ' + (mf*2400).toFixed(2) + '% APR') : '';
       return;
     }
 
-    // Core lease math:
     var dep = (adjCap - rvAmt) / term;
     var fin = (adjCap + rvAmt) * mf;
     var preTax = dep + fin;
@@ -1024,13 +932,13 @@
     if(!isFinite(preTax) || preTax < 0){
       leasePreTax.textContent = '-';
       leaseWithTax.textContent = '-';
-      if(mfAprHint) mfAprHint.textContent = isFinite(mf) ? ('≈ ' + (mf*2400).toFixed(2) + '% APR') : '';
+      mfAprHint.textContent = isFinite(mf) ? ('≈ ' + (mf*2400).toFixed(2) + '% APR') : '';
       return;
     }
 
     leasePreTax.textContent = '$' + Math.round(preTax).toLocaleString();
     leaseWithTax.textContent = '$' + Math.round(withTax).toLocaleString();
-    if(mfAprHint) mfAprHint.textContent = isFinite(mf) ? ('≈ ' + (mf*2400).toFixed(2) + '% APR') : '';
+    mfAprHint.textContent = isFinite(mf) ? ('≈ ' + (mf*2400).toFixed(2) + '% APR') : '';
   }
 
   function restoreFromParams(){
@@ -1057,6 +965,10 @@
       programSel.value = '__current__';
     });
   });
+  jumpSummaryBtn.addEventListener('click', function(){
+    var el = document.getElementById('summaryBox');
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  });
 
   familySel.addEventListener('change', function(){ populate(yearSel, yearsForFamily(familySel.value)); collectTrimsForYear(); populateTrims(trimSearch.value); compute(); });
   yearSel.addEventListener('change', function(){ collectTrimsForYear(); populateTrims(trimSearch.value); compute(); });
@@ -1070,19 +982,20 @@
   msrpInput.addEventListener('input', compute);
 
   copyBtn.addEventListener('click', function(){
-    var text = [
-      'Program: ' + sumProgram.textContent,
+    var parts = [
+      'Program: ' + (sumProgram ? sumProgram.textContent : '-'),
       'Year: ' + sumYear.textContent,
       'Family: ' + sumFamily.textContent,
       'Trim: ' + sumTrim.textContent,
       'Term: ' + sumTerm.textContent,
       'Miles/Year: ' + sumMilesYear.textContent,
       'Odometer: ' + sumOdo.textContent,
-      'MSRP: ' + sumMsrp.textContent,
+      (sumMsrp ? ('MSRP: ' + sumMsrp.textContent) : null),
       'Final Residual: ' + sumFinal.textContent,
       'MSRP × RV%: ' + sumTrue.textContent,
       'LVI: ' + (sumLvi ? sumLvi.textContent : '-')
-    ].join(' | ');
+    ].filter(Boolean);
+    var text = parts.join(' | ');
     navigator.clipboard.writeText(text).then(function(){
       var old = copyBtn.textContent; copyBtn.textContent = 'Copied!'; setTimeout(function(){ copyBtn.textContent = old; }, 1200);
     });
@@ -1090,27 +1003,22 @@
 
   exportCsvBtn.addEventListener('click', exportVisibleCSV);
   printBtn.addEventListener('click', printSummary);
-
   validateBtn.addEventListener('click', validateJSON);
-  closeValBtn.addEventListener('click', function(){ validatorCard.style.display='none'; });
+  closeValBtn && closeValBtn.addEventListener('click', function(){ validatorCard.style.display='none'; });
 
-  // Lease Estimator events
   leaseCapCost.addEventListener('input', leaseCompute);
   leaseMF.addEventListener('input', leaseCompute);
   leaseTax.addEventListener('input', leaseCompute);
   leaseCapReduction.addEventListener('input', leaseCompute);
   leaseFees.addEventListener('input', leaseCompute);
   leaseTerm.addEventListener('input', leaseCompute);
+  leaseMF.addEventListener('input', compute); // also update LVI live
 
-  // Also recompute main view when MF changes (so LVI updates live)
-  leaseMF.addEventListener('input', compute);
-
-  // Boot
-  var params = readParams();
-  if(params.program){
-    var opt = Array.from(programSel.options).find(o=>o.value===params.program);
-    if(opt){ programSel.value = params.program; currentProgramLabel = opt.textContent.replace(/^Program:\s*/,''); }
-    else { programSel.value = '__current__'; currentProgramLabel = params.program; }
+  var initialParams = readParams();
+  if(initialParams.program){
+    var opt = Array.from(programSel.options).find(o=>o.value===initialParams.program);
+    if(opt){ programSel.value = initialParams.program; currentProgramLabel = opt.textContent.replace(/^Program:\s*/,''); }
+    else { programSel.value = '__current__'; currentProgramLabel = initialParams.program; }
     loadProgram(programSel.value, currentProgramLabel).catch(function(err){ alert(err.message); });
   } else {
     programSel.value = 'porsche_residuals_all.json';
