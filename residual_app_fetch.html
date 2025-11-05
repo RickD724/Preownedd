@@ -3,86 +3,186 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Residual App — By Ricardo (11/25 Programs)</title>
+<title>Residual App — By Ricardo</title>
+
+<!-- A2HS / PWA basics (no external files; generated at runtime) -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0e1a">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
   :root{
-    --bg:#0b1020; --card:#121932; --text:#e6ebff; --muted:#a8b3d1; --border:#233057;
-    --accent:#2ea66a; --chip:#243156; --chip-text:#cfe1ff; --danger:#ff5d5d;
-    --radius:14px; --shadow:0 10px 26px rgba(0,0,0,.28);
-    --badge:#1d263f; --badge-border:#2a3a68;
+    --bg: #0a0e1a;
+    --bg-gradient: linear-gradient(135deg, #0a0e1a 0%, #1a1f35 100%);
+    --card: rgba(255, 255, 255, 0.03);
+    --card-hover: rgba(255, 255, 255, 0.07);
+    --text: #e6ebff;
+    --muted: #8b92b0;
+    --border: rgba(255, 255, 255, 0.08);
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --accent-glow: rgba(59, 130, 246, 0.3);
+    --chip: #1e293b;
+    --chip-text: #cbd5e1;
+    --danger: #ef4444;
+    --success: #10b981;
+    --radius: 16px;
+    --shadow: 0 20px 50px rgba(0,0,0,0.4);
+    --glow: 0 0 20px var(--accent-glow);
+    --badge: #1e293b;
+    --badge-border: #334155;
   }
   [data-theme="light"]{
-    --bg:#f6f7fb; --card:#ffffff; --text:#0f172a; --muted:#64748b; --border:#e8ecf5;
-    --chip:#eef2ff; --chip-text:#2f2f91; --shadow:0 10px 26px rgba(16,24,40,.08);
-    --badge:#f3f5ff; --badge-border:#d9defa;
+    --bg: #f8fafc;
+    --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    --card: #ffffff;
+    --card-hover: #f8fafc;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --accent-glow: rgba(59, 130, 246, 0.15);
+    --chip: #f1f5f9;
+    --chip-text: #475569;
+    --shadow: 0 20px 50px rgba(15,23,42,0.08);
+    --glow: 0 0 30px rgba(59, 130, 246, 0.1);
+    --badge: #f1f5f9;
+    --badge-border: #cbd5e1;
   }
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.45 -apple-system,BlinkMacSystemFont,Inter,Segoe UI,Roboto,system-ui,sans-serif}
-  .wrap{max-width:1040px;margin:20px auto;padding:0 14px}
-  .top{position:sticky;top:0;z-index:30;background:var(--bg);padding:10px 0 8px}
-  .brand{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-  .pill{display:inline-flex;align-items:center;gap:8px;background:var(--chip);color:var(--chip-text);padding:8px 12px;border-radius:999px;border:1px solid var(--border);font-weight:600}
-  .theme{border:1px solid var(--border);background:var(--chip);color:var(--chip-text);padding:8px 12px;border-radius:999px;cursor:pointer}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:14px}
-  .controls{position:sticky;top:56px;z-index:20}
-  .grid{display:grid;gap:10px}
-  .g3{grid-template-columns:repeat(3, minmax(0,1fr))}
-  .g2{grid-template-columns:repeat(2, minmax(0,1fr))}
-  @media (max-width:900px){.g3,.g2{grid-template-columns:1fr}}
-  label{font-size:.85rem;color:var(--muted);display:block;margin:0 0 6px}
-  select,input[type="number"],input[type="text"],button{width:100%;appearance:none;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
-  select:focus,input:focus,button:focus{outline:2px solid var(--accent);outline-offset:0}
-  .rowline{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .muted{color:var(--muted)}
-  .hint{font-size:.8rem;color:var(--muted);margin-top:6px}
-  .warn{color:var(--danger);font-size:.86rem;margin-top:6px;display:none}
 
-  /* Search sizing — smaller, non-overlapping */
-  .searchWrap{max-width:360px; min-width:220px}
-  @media (max-width:900px){ .searchWrap{max-width:100%} }
+  *{ box-sizing: border-box; margin: 0; padding: 0; }
+  html, body{
+    background: var(--bg); background-image: var(--bg-gradient); background-attachment: fixed;
+    color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  }
+  .wrap{ max-width: 1200px; margin: 0 auto; padding: 20px 16px 40px; }
+  body::before{ content:''; position:fixed; top:0; left:0; right:0; height:400px;
+    background: radial-gradient(circle at 50% 0%, var(--accent-glow), transparent 60%); opacity:.35; pointer-events:none; z-index:0; }
 
-  .result{display:flex;align-items:baseline;gap:12px;margin-top:6px;flex-wrap:wrap}
-  .result .big{font-size:2.0rem;font-weight:800;letter-spacing:.25px}
-  .result .small{font-size:.95rem}
+  .top{
+    position: sticky; top: 0; z-index: 40; backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 12px 14px; margin-bottom: 16px; box-shadow: var(--shadow); animation: slideDown .4s ease;
+  }
+  @keyframes slideDown{ from{transform:translateY(-12px);opacity:0} to{transform:translateY(0);opacity:1} }
+  @keyframes fadeIn{ from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
 
-  .tableWrap{margin-top:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:12px}
-  table{min-width:720px;width:100%;border-collapse:separate;border-spacing:0;background:var(--card)}
-  th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
-  thead th{font-size:.82rem;color:var(--muted);font-weight:600;position:sticky;top:0;background:var(--card);z-index:1}
-  tbody tr:last-child td{border-bottom:0}
-  td.ok{color:var(--accent);font-weight:600}
-  td.err{color:var(--danger)}
-  td:first-child, th:first-child{position:sticky;left:0;background:var(--card);z-index:2}
+  .brand{ display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+  .leftRow{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
 
-  /* Pretty Summary */
-  .summary{margin-top:12px;padding:14px;border:1px dashed var(--border);border-radius:12px;background:var(--chip);color:var(--chip-text)}
-  .sum-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
-  @media (max-width:700px){.sum-grid{grid-template-columns:1fr}}
-  .srow{display:flex;gap:8px;align-items:center;justify-content:space-between;background:var(--badge);border:1px solid var(--badge-border);border-radius:10px;padding:8px 10px}
-  .slabel{font-weight:600}
-  .sval{font-variant-numeric:tabular-nums}
-  .badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .badge{background:var(--badge);border:1px solid var(--badge-border);padding:6px 10px;border-radius:999px;font-size:.85rem}
-  .copybtn{margin-left:auto}
+  .pill{
+    display:inline-flex; align-items:center; gap:10px; background:linear-gradient(135deg,var(--accent),var(--accent-hover));
+    color:#fff; padding:8px 12px; border-radius:999px; font-weight:800; font-size:.9rem; letter-spacing:.3px;
+    box-shadow:0 4px 20px var(--accent-glow); white-space:nowrap;
+  }
+  .theme, .btn{
+    border:1px solid var(--border); background:var(--card); color:var(--text);
+    padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600; transition:.2s; white-space:nowrap;
+  }
+  .theme:hover, .btn:hover{ background:var(--card-hover); border-color:var(--accent); transform:translateY(-1px); box-shadow:0 4px 16px var(--accent-glow); }
 
-  /* Footer disclaimer */
-  .footer{margin:16px 0 8px}
-  .foot-card{background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:12px}
-  .foot-title{font-weight:800;letter-spacing:.2px;margin-bottom:6px}
-  .foot-text{color:var(--muted);font-size:.92rem}
+  .select{ min-width: 170px; }
+
+  .card{
+    background:var(--card); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border:1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; animation: fadeIn .35s ease;
+  }
+  .controls{ position: sticky; top: 64px; z-index: 20; }
+
+  .grid{ display:grid; gap: 14px; }
+  .g4{ grid-template-columns: repeat(4, minmax(0,1fr)); }
+  .g3{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .g2{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+  @media (max-width: 900px){ .g4,.g3,.g2{ grid-template-columns: 1fr; } }
+
+  label{ font-size:.8rem; color:var(--muted); display:block; margin:0 0 6px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+  select, input[type="number"], input[type="text"]{
+    width:100%; appearance:none; -webkit-appearance:none; background:var(--bg); color:var(--text);
+    border:1px solid var(--border); border-radius:12px; padding:9px 12px; font-size:.95rem; transition:.2s;
+  }
+  select:focus, input:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow); background:var(--card); }
+  select:hover, input:hover{ border-color:var(--accent); }
+  select{ cursor:pointer; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 10px center; padding-right:34px; }
+
+  .muted{ color:var(--muted); }
+  .hint{ font-size:.8rem; color:var(--muted); margin-top:6px; font-weight:500; }
+  .warn{ color:var(--danger); font-size:.875rem; margin-top:8px; display:none; font-weight:700; padding:8px 12px; background:rgba(239,68,68,.1); border-radius:8px; }
+
+  .searchWrap{ max-width:240px; min-width:200px; }
+  .rowline{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+
+  .result{ display:flex; align-items:baseline; gap:16px; margin:18px 0 14px; flex-wrap:wrap; padding:16px;
+    background:linear-gradient(135deg, var(--accent-glow), transparent); border-radius:12px; border:1px solid var(--border); }
+  .result .big{ font-size:2.3rem; font-weight:900; letter-spacing:.4px; background:linear-gradient(135deg,var(--accent),var(--accent-hover)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .result .small{ font-size:1rem; font-weight:600; }
+
+  .tableWrap{ margin-top: 10px; overflow-x:auto; -webkit-overflow-scrolling:touch; border:1px solid var(--border); border-radius:12px; background:var(--bg); }
+  table{ min-width:720px; width:100%; border-collapse:separate; border-spacing:0; }
+  th, td{ padding:12px 14px; border-bottom:1px solid var(--border); text-align:left; white-space:nowrap; transition:.2s; }
+  thead th{ font-size:.78rem; color:var(--muted); font-weight:800; position:sticky; top:0; background:var(--card);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:1; text-transform:uppercase; letter-spacing:.5px; }
+  tbody tr:hover{ background: var(--card-hover); }
+  td.ok{ color:var(--success); font-weight:800; font-variant-numeric:tabular-nums; }
+  td.err{ color:var(--danger); opacity:.55; }
+  td:first-child, th:first-child{ position:sticky; left:0; background:var(--card); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:2; font-weight:800; }
+
+  .summary{ margin-top: 16px; padding: 18px; border:1px solid var(--border); border-radius: var(--radius); background: var(--card); }
+  .sum-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-top:12px; }
+  @media (max-width: 700px){ .sum-grid{ grid-template-columns:1fr; } }
+  .srow{ display:flex; gap:12px; align-items:center; justify-content:space-between; background:var(--badge); border:1px solid var(--badge-border); border-radius:12px; padding:10px 12px; }
+  .slabel{ font-weight:700; color:var(--muted); font-size:.9rem; }
+  .sval{ font-variant-numeric:tabular-nums; font-weight:800; font-size:1rem; }
+  .badges{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+  .badge{ background:linear-gradient(135deg,var(--badge),var(--badge-border)); border:1px solid var(--badge-border); padding:6px 10px; border-radius:999px; font-size:.82rem; font-weight:800; }
+
+  .footer{ margin:24px 0 12px; }
+  .foot-card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; }
+  .foot-title{ font-weight:900; letter-spacing:.3px; margin-bottom:6px; font-size:1.05rem; }
+  .foot-text{ color:var(--muted); font-size:.92rem; }
+
+  /* Print: only summary block */
+  @media print{
+    body{ background:#fff; }
+    .top, .controls, .tableWrap, #leaseCard, .footer, #validatorCard { display:none !important; }
+    .summary{ border:0; box-shadow:none; }
+  }
 </style>
 </head>
 <body>
   <div class="wrap">
     <div class="top">
       <div class="brand">
-        <div class="pill">Residual App — By Ricardo (11/25 Programs)</div>
-        <button id="themeBtn" class="theme" type="button">Light</button>
+        <div class="leftRow">
+          <div class="pill">Residual App — By Ricardo</div>
+          <!-- PROGRAM OPTIONS HERE -->
+          <select id="programSel" class="select">
+            <option value="__current__">Program: Current (from ?data or default)</option>
+            <option value="porsche_residuals_all.json">Program: PB 25-10R (Default)</option>
+            <option value="porsche_residuals_25-09R.json">Program: PB 25-09R (Oct)</option>
+            <!-- Add new datasets here:
+                 <option value="porsche_residuals_25-11R.json">Program: PB 25-11R (Nov)</option>
+            -->
+          </select>
+        </div>
+        <div class="leftRow">
+          <button id="validateBtn" class="btn" type="button" title="Validate loaded JSON">Validate JSON</button>
+          <button id="exportCsvBtn" class="btn" type="button" title="Export table as CSV">Export CSV</button>
+          <button id="printBtn" class="btn" type="button" title="Print summary">Print</button>
+          <button id="themeBtn" class="theme" type="button">Dark Mode</button>
+        </div>
       </div>
     </div>
 
-    <div class="card controls">
-      <!-- ORDER: Family → Year → Trim (search) → Miles@Inception → Miles/Year → PACPO → Term -->
-      <div class="grid g3">
+    <div class="card controls" id="controls">
+      <div class="grid g4">
         <div>
           <label>Model Family</label>
           <select id="familySel"></select>
@@ -97,47 +197,57 @@
           <div class="hint" id="trimCount"></div>
           <div class="warn" id="trimWarn">No trims found for this family/year. Check JSON spelling/case.</div>
         </div>
-      </div>
-
-      <div class="grid g3" style="margin-top:10px">
         <div class="searchWrap">
           <label>Search Trim</label>
-          <input id="trimSearch" type="text" placeholder="Type to filter by name or code… (e.g. 992, 95B)" />
+          <input id="trimSearch" type="text" placeholder="Type to filter by name or code" />
         </div>
+      </div>
+
+      <div class="grid g3" style="margin-top: 10px">
         <div>
           <label>Term (months)</label>
           <select id="termSel"></select>
         </div>
-        <div class="rowline" style="margin-top:22px">
-          <label class="rowline" style="gap:8px;">
+        <div>
+          <label>Miles per Year</label>
+          <select id="annualMilesSel"></select>
+        </div>
+        <div class="rowline" style="margin-top: 26px">
+          <label class="rowline" style="gap: 8px;">
             <input id="pacpoToggle" type="checkbox" />
             <span>+2% PACPO</span>
           </label>
-          <label class="rowline" style="gap:8px;">
+          <label class="rowline" style="gap: 8px;">
             <input id="hideNA" type="checkbox" />
-            <span>Hide N/A Columns</span>
+            <span>Hide N/A</span>
           </label>
-          <div class="pill" id="codeBadge">MY Code: —</div>
+          <div class="pill" id="codeBadge" style="font-size:.82rem;padding:6px 10px;">MY Code: -</div>
         </div>
       </div>
 
-      <div class="grid g2" style="margin-top:10px">
+      <div class="grid g3" style="margin-top: 10px">
         <div>
-          <label>Miles at Inception (odometer)</label>
+          <label>Miles at Inception</label>
           <input id="odoInput" type="number" min="0" step="1" placeholder="e.g., 3,450" />
-          <div class="hint">Summary shows this adjustment even when it’s +0%.</div>
+          <div class="hint">Adjustment shows even when it is +0%.</div>
         </div>
         <div>
-          <label>Miles per Year (24–60 mo)</label>
-          <select id="annualMilesSel"></select>
+          <label>MSRP ($)</label>
+          <input id="msrpInput" type="number" min="0" step="100" placeholder="e.g., 142,000" />
+        </div>
+        <div>
+          <label>Shareable Link</label>
+          <input id="shareLink" type="text" readonly />
+          <div class="hint">URL auto-updates — copy to share this exact calc.</div>
         </div>
       </div>
     </div>
 
-    <div class="card" style="margin-top:12px">
+    <div class="card" style="margin-top: 16px">
       <div class="result">
-        <div class="big" id="finalOut">—</div>
-        <div class="small muted" id="detailOut"></div>
+        <div class="big" id="finalOut">-</div>
+        <div class="small muted" id="detailOut">Select a term to calculate</div>
+        <div class="small" id="trueOut" style="font-weight:800;"></div>
       </div>
 
       <div class="tableWrap">
@@ -147,146 +257,327 @@
         </table>
       </div>
 
-      <!-- Nicer, structured Summary -->
       <div class="summary" id="summaryBox">
-        <div class="rowline">
-          <strong>Summary</strong>
-          <button id="copyBtn" class="theme copybtn" type="button">Copy</button>
+        <div class="rowline" style="justify-content:space-between;">
+          <strong style="font-size:1.05rem">Summary</strong>
+          <button id="copyBtn" class="theme btn" type="button">Copy</button>
+        </div>
+
+        <div class="srow" style="margin-top:12px; border:2px solid var(--accent); box-shadow: var(--glow);">
+          <span class="slabel" style="color:var(--accent);">Final Residual</span>
+          <span class="sval" id="sumFinal" style="font-size:1.2rem;color:var(--accent);">-</span>
         </div>
 
         <div class="sum-grid">
-          <div class="srow"><span class="slabel">Model Year</span><span class="sval" id="sumYear">—</span></div>
-          <div class="srow"><span class="slabel">Family</span><span class="sval" id="sumFamily">—</span></div>
-          <div class="srow"><span class="slabel">Trim</span><span class="sval" id="sumTrim">—</span></div>
-          <div class="srow"><span class="slabel">Term</span><span class="sval" id="sumTerm">—</span></div>
-          <div class="srow"><span class="slabel">Miles/Year</span><span class="sval" id="sumMilesYear">—</span></div>
-          <div class="srow"><span class="slabel">Odometer</span><span class="sval" id="sumOdo">—</span></div>
+          <div class="srow"><span class="slabel">Program</span><span class="sval" id="sumProgram">-</span></div>
+          <div class="srow"><span class="slabel">Model Year</span><span class="sval" id="sumYear">-</span></div>
+          <div class="srow"><span class="slabel">Family</span><span class="sval" id="sumFamily">-</span></div>
+          <div class="srow"><span class="slabel">Trim</span><span class="sval" id="sumTrim">-</span></div>
+          <div class="srow"><span class="slabel">Term</span><span class="sval" id="sumTerm">-</span></div>
+          <div class="srow"><span class="slabel">Miles/Year</span><span class="sval" id="sumMilesYear">-</span></div>
+          <div class="srow"><span class="slabel">Odometer</span><span class="sval" id="sumOdo">-</span></div>
+          <div class="srow"><span class="slabel">MSRP</span><span class="sval" id="sumMsrp">-</span></div>
+          <div class="srow"><span class="slabel">MSRP × RV%</span><span class="sval" id="sumTrue">-</span></div>
         </div>
 
         <div class="badges" id="badgeRow" aria-label="Adjustments"></div>
-        <div class="srow" style="margin-top:10px">
-          <span class="slabel">Final Residual</span>
-          <span class="sval" id="sumFinal">—</span>
+      </div>
+    </div>
+
+    <!-- Lease Estimator (lightweight) -->
+    <div class="card" id="leaseCard" style="margin-top: 16px;">
+      <div class="rowline" style="justify-content:space-between; margin-bottom:8px;">
+        <strong>Lease Estimator (Quick)</strong>
+        <span class="muted" style="font-size:.9rem">Manual MF/Tax/Cap — uses current RV% & term</span>
+      </div>
+
+      <div class="grid g3">
+        <div>
+          <label>Cap Cost ($)</label>
+          <input id="leaseCapCost" type="number" min="0" step="100" placeholder="e.g., 138000" />
+        </div>
+        <div>
+          <label>Money Factor</label>
+          <input id="leaseMF" type="number" min="0" step="0.00001" placeholder="e.g., 0.00210" />
+          <div class="hint">Enter as decimal (0.00210 ≈ 5.04% APR)</div>
+        </div>
+        <div>
+          <label>Tax Rate (%)</label>
+          <input id="leaseTax" type="number" min="0" step="0.01" placeholder="e.g., 9.375" />
         </div>
       </div>
+
+      <div class="grid g3" style="margin-top:10px">
+        <div>
+          <label>Cap Reduction ($)</label>
+          <input id="leaseCapReduction" type="number" min="0" step="100" placeholder="0" />
+          <div class="hint">Cash down applied to reduce cap (optional)</div>
+        </div>
+        <div>
+          <label>Rolled-In Fees ($)</label>
+          <input id="leaseFees" type="number" min="0" step="25" placeholder="0" />
+          <div class="hint">Acq/Doc/etc. added to cap (optional)</div>
+        </div>
+        <div>
+          <label>Term (mo)</label>
+          <input id="leaseTerm" type="number" min="12" step="1" placeholder="auto" />
+          <div class="hint">Auto-fills from selected term; you can override</div>
+        </div>
+      </div>
+
+      <div class="grid g3" style="margin-top:12px">
+        <div class="srow"><span class="slabel">Residual %</span><span class="sval" id="leaseRvPct">-</span></div>
+        <div class="srow"><span class="slabel">Residual $</span><span class="sval" id="leaseRvAmt">-</span></div>
+        <div class="srow"><span class="slabel">Adj Cap Cost</span><span class="sval" id="leaseAdjCap">-</span></div>
+      </div>
+
+      <div class="grid g2" style="margin-top:12px">
+        <div class="srow"><span class="slabel">Monthly (Pre-Tax)</span><span class="sval" id="leasePreTax">-</span></div>
+        <div class="srow"><span class="slabel">Monthly (With Tax)</span><span class="sval" id="leaseWithTax">-</span></div>
+      </div>
+    </div>
+
+    <!-- Validator Panel -->
+    <div class="card" id="validatorCard" style="margin-top:12px; display:none;">
+      <div class="rowline" style="justify-content:space-between; margin-bottom:8px;">
+        <strong>JSON Validator</strong>
+        <button id="closeValBtn" class="btn" type="button">Close</button>
+      </div>
+      <div id="validatorOutput" class="muted" style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:.9rem;"></div>
     </div>
 
     <div class="footer">
       <div class="foot-card">
         <div class="foot-title">Made by Ricardo</div>
         <div class="foot-text">
-          This tool is proprietary. Redistribution, copying, or use without Ricardo’s explicit written consent is prohibited.
-          By viewing or using this app, you agree not to duplicate the data, design, or logic in any form.  
-          <strong>Ask first. Respect the craft.</strong>
+          This tool is proprietary. Redistribution, copying, or use without Ricardo's explicit written consent is prohibited.
+          By viewing or using this app, you agree not to duplicate the data, design, or logic in any form. <strong>Ask first. Respect the craft.</strong>
         </div>
       </div>
     </div>
   </div>
 
 <script>
-(async function(){
-  // ========= THEME =========
-  const themeBtn = document.getElementById('themeBtn');
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+(function(){
+  // ===== A2HS: generate a simple icon & manifest at runtime (no extra files needed) =====
+  (function generateIconsAndManifest(){
+    try{
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 512;
+      const ctx = canvas.getContext('2d');
+      const grad = ctx.createLinearGradient(0,0,512,512);
+      grad.addColorStop(0,'#0a0e1a'); grad.addColorStop(1,'#1a1f35');
+      ctx.fillStyle = grad; ctx.fillRect(0,0,512,512);
+      ctx.fillStyle = '#3b82f6';
+      ctx.beginPath(); ctx.arc(256, 220, 120, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#0a0e1a';
+      ctx.font = 'bold 180px Inter, Arial, sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('R', 256, 230);
+
+      canvas.toBlob(function(blob){
+        if(!blob) return;
+        const iconURL = URL.createObjectURL(blob);
+
+        const linkApple = document.createElement('link');
+        linkApple.rel = 'apple-touch-icon';
+        linkApple.href = iconURL;
+        document.head.appendChild(linkApple);
+
+        const manifest = {
+          name: "Residual App — By Ricardo",
+          short_name: "Residual",
+          start_url: ".",
+          display: "standalone",
+          background_color: "#0a0e1a",
+          theme_color: "#0a0e1a",
+          icons: [{ src: iconURL, sizes: "512x512", type: "image/png", purpose: "any maskable" }]
+        };
+        const blobMan = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
+        const manURL = URL.createObjectURL(blobMan);
+        const linkMan = document.createElement('link');
+        linkMan.rel = 'manifest';
+        linkMan.href = manURL;
+        document.head.appendChild(linkMan);
+      }, 'image/png');
+    }catch(e){ /* non-fatal */ }
+  })();
+
+  // ===== Theme =====
+  var themeBtn = document.getElementById('themeBtn');
+  var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-  themeBtn.textContent = prefersDark ? 'Light' : 'Dark';
-  themeBtn.addEventListener('click', ()=>{
-    const cur = document.documentElement.getAttribute('data-theme');
-    const next = cur === 'light' ? 'dark' : 'light';
+  themeBtn.textContent = prefersDark ? 'Light Mode' : 'Dark Mode';
+  themeBtn.addEventListener('click', function(){
+    var cur = document.documentElement.getAttribute('data-theme');
+    var next = cur === 'light' ? 'dark' : 'light';
     document.documentElement.setAttribute('data-theme', next);
-    themeBtn.textContent = next === 'light' ? 'Dark' : 'Light';
+    themeBtn.textContent = next === 'light' ? 'Dark Mode' : 'Light Mode';
   });
 
-  // ========= DOM HANDLES =========
-  const familySel = document.getElementById('familySel');
-  const yearSel = document.getElementById('yearSel');
-  const trimSel = document.getElementById('trimSel');
-  const trimSearch = document.getElementById('trimSearch');
-  const trimCount = document.getElementById('trimCount');
-  const trimWarn = document.getElementById('trimWarn');
-  const termSel = document.getElementById('termSel');
-  const pacpoToggle = document.getElementById('pacpoToggle');
-  const hideNA = document.getElementById('hideNA');
-  const codeBadge = document.getElementById('codeBadge');
-  const finalOut = document.getElementById('finalOut');
-  const detailOut = document.getElementById('detailOut');
-  const theadRow = document.getElementById('theadRow');
-  const tvalRow  = document.getElementById('tvalRow');
-  const annualMilesSel = document.getElementById('annualMilesSel');
-  const odoInput = document.getElementById('odoInput');
+  // ===== DOM refs =====
+  var programSel = document.getElementById('programSel');
+  var validateBtn = document.getElementById('validateBtn');
+  var exportCsvBtn = document.getElementById('exportCsvBtn');
+  var printBtn = document.getElementById('printBtn');
 
-  // Summary fields
-  const sumYear = document.getElementById('sumYear');
-  const sumFamily = document.getElementById('sumFamily');
-  const sumTrim = document.getElementById('sumTrim');
-  const sumTerm = document.getElementById('sumTerm');
-  const sumMilesYear = document.getElementById('sumMilesYear');
-  const sumOdo = document.getElementById('sumOdo');
-  const sumFinal = document.getElementById('sumFinal');
-  const badgeRow = document.getElementById('badgeRow');
-  const copyBtn = document.getElementById('copyBtn');
+  var familySel = document.getElementById('familySel');
+  var yearSel = document.getElementById('yearSel');
+  var trimSel = document.getElementById('trimSel');
+  var trimSearch = document.getElementById('trimSearch');
+  var trimCount = document.getElementById('trimCount');
+  var trimWarn = document.getElementById('trimWarn');
+  var termSel = document.getElementById('termSel');
+  var pacpoToggle = document.getElementById('pacpoToggle');
+  var hideNA = document.getElementById('hideNA');
+  var codeBadge = document.getElementById('codeBadge');
+  var finalOut = document.getElementById('finalOut');
+  var detailOut = document.getElementById('detailOut');
+  var trueOut = document.getElementById('trueOut');
+  var theadRow = document.getElementById('theadRow');
+  var tvalRow = document.getElementById('tvalRow');
+  var annualMilesSel = document.getElementById('annualMilesSel');
+  var odoInput = document.getElementById('odoInput');
+  var msrpInput = document.getElementById('msrpInput');
+  var shareLink = document.getElementById('shareLink');
 
-  // ========= FETCH JSON =========
-  const params = new URLSearchParams(location.search);
-  const jsonFile = params.get('data') || 'porsche_residuals_all.json';
-  const cacheBuster = `v=${Date.now()}`;
-  let data;
+  var sumProgram = document.getElementById('sumProgram');
+  var sumYear = document.getElementById('sumYear');
+  var sumFamily = document.getElementById('sumFamily');
+  var sumTrim = document.getElementById('sumTrim');
+  var sumTerm = document.getElementById('sumTerm');
+  var sumMilesYear = document.getElementById('sumMilesYear');
+  var sumOdo = document.getElementById('sumOdo');
+  var sumMsrp = document.getElementById('sumMsrp');
+  var sumTrue = document.getElementById('sumTrue');
+  var sumFinal = document.getElementById('sumFinal');
+  var badgeRow = document.getElementById('badgeRow');
+  var copyBtn = document.getElementById('copyBtn');
 
-  try {
-    const res = await fetch(`${jsonFile}?${cacheBuster}`, {cache: 'no-store'});
-    if (!res.ok) throw new Error(`HTTP ${res.status} loading ${jsonFile}`);
-    data = await res.json();
-  } catch (err) {
-    alert(`Failed to load JSON: ${err.message}.
-- Ensure ${jsonFile} exists in the same folder as this HTML
-- If using file://, the browser may block fetch; use GitHub Pages or a local server`);
-    throw err;
+  // Lease Estimator refs
+  var leaseCapCost = document.getElementById('leaseCapCost');
+  var leaseMF = document.getElementById('leaseMF');
+  var leaseTax = document.getElementById('leaseTax');
+  var leaseCapReduction = document.getElementById('leaseCapReduction');
+  var leaseFees = document.getElementById('leaseFees');
+  var leaseTerm = document.getElementById('leaseTerm');
+  var leaseRvPct = document.getElementById('leaseRvPct');
+  var leaseRvAmt = document.getElementById('leaseRvAmt');
+  var leaseAdjCap = document.getElementById('leaseAdjCap');
+  var leasePreTax = document.getElementById('leasePreTax');
+  var leaseWithTax = document.getElementById('leaseWithTax');
+
+  var validatorCard = document.getElementById('validatorCard');
+  var closeValBtn = document.getElementById('closeValBtn');
+  var validatorOutput = document.getElementById('validatorOutput');
+
+  // ===== State & data =====
+  var data, MONTHS = [], PACPO = 2;
+  var fullTrimList = [];
+  var currentProgramLabel = 'Current';
+
+  // URL helpers (deep-link)
+  function readParams(){
+    var p = new URLSearchParams(location.search);
+    return {
+      program: p.get('data') || null,
+      family: p.get('family') || null,
+      year: p.get('year') || null,
+      trim: p.get('trim') || null,
+      term: p.get('term') || null,
+      miles: p.get('miles') || null,
+      odo: p.get('odo') || null,
+      pacpo: p.get('pacpo') || null,
+      hidena: p.get('hidena') || null,
+      msrp: p.get('msrp') || null
+    };
   }
-  window.__data = data;
+  function updateShareURL(){
+    var p = new URLSearchParams();
+    var program = (programSel.value === '__current__') ? (initialProgram || 'porsche_residuals_all.json') : programSel.value;
+    p.set('data', program);
+    if(familySel.value) p.set('family', familySel.value);
+    if(yearSel.value) p.set('year', yearSel.value);
+    if(trimSel.value) p.set('trim', trimSel.value);
+    if(termSel.value) p.set('term', termSel.value);
+    if(annualMilesSel.value) p.set('miles', annualMilesSel.value);
+    if(odoInput.value) p.set('odo', odoInput.value);
+    if(pacpoToggle.checked) p.set('pacpo', '1');
+    if(hideNA.checked) p.set('hidena', '1');
+    if(msrpInput.value) p.set('msrp', msrpInput.value);
+    var url = location.pathname + '?' + p.toString();
+    shareLink.value = location.origin + url;
+    history.replaceState(null, '', url);
+  }
 
-  const MONTHS = data.months || ["12","18","24","27","30","36","39","42","48","51","60"];
-  const PACPO = data.pacpo_bonus_percent ?? 2;
+  // dataset resolve
+  var initialProgram = (function(){
+    var params = new URLSearchParams(location.search);
+    return params.get('data') || 'porsche_residuals_all.json';
+  })();
 
-  // ========= HELPERS =========
+  // load data
+  function loadProgram(file, label){
+    var cacheBuster = 't=' + Date.now();
+    currentProgramLabel = label || (file === '__current__' ? 'Current' : file);
+    var target = (file === '__current__') ? initialProgram : file;
+    return fetch(target + '?' + cacheBuster, {cache:'no-store'})
+      .then(function(res){
+        if(!res.ok) throw new Error('HTTP ' + res.status + ' loading ' + target);
+        return res.json();
+      })
+      .then(function(j){
+        data = j;
+        window.__data = data;
+        MONTHS = data.months || ["12","18","24","27","30","36","39","42","48","51","60"];
+        PACPO = data.pacpo_bonus_percent || 2;
+        sumProgram.textContent = label || target;
+        initSelectors();
+        restoreFromParams();
+        compute();
+        updateShareURL();
+      });
+  }
+
+  // helpers
   function normalizeYearKey(k){
-    const s = String(k).trim();
-    const mPlain = s.match(/^(20\d{2})$/);
-    if (mPlain) return { display: `MY${mPlain[1].slice(-2)}`, key: k };
-    const mMY = s.toUpperCase().replace(/\s+/g,'').match(/^MY(\d{2})$/);
-    if (mMY) return { display: `MY${mMY[1]}`, key: k };
+    var s = String(k).trim();
+    var mPlain = s.match(/^(20\d{2})$/);
+    if (mPlain) return { display: 'MY' + mPlain[1].slice(-2), key: k };
+    var mMY = s.toUpperCase().replace(/\s+/g,'').match(/^MY(\d{2})$/);
+    if (mMY) return { display: 'MY' + mMY[1], key: k };
     return { display: s, key: k };
   }
   function getCaseInsensitive(obj, name){
-    if(!obj || typeof obj!=="object") return undefined;
-    const target = String(name).replace(/\s+/g,'').toLowerCase();
-    for(const k of Object.keys(obj)){
-      const norm = k.replace(/\s+/g,'').toLowerCase();
-      if(norm === target) return obj[k];
+    if(!obj || typeof obj !== "object") return undefined;
+    var target = String(name).replace(/\s+/g,'').toLowerCase();
+    var keys = Object.keys(obj);
+    for(var i=0;i<keys.length;i++){
+      var norm = keys[i].replace(/\s+/g,'').toLowerCase();
+      if(norm === target) return obj[keys[i]];
     }
     return undefined;
   }
-
-  // Families with flat 718 (accept nested or top-level)
   function getVirtualFamilies(){
-    const out = new Set();
-    const models = data.models || {};
-    Object.keys(models).forEach(f=>{
+    var out = new Set();
+    var models = data.models || {};
+    var keys = Object.keys(models);
+    for(var i=0;i<keys.length;i++){
+      var f = keys[i];
       if(f === '718'){
-        const cay = getCaseInsensitive(models['718'],'Cayman');
-        const box = getCaseInsensitive(models['718'],'Boxster');
+        var cay = getCaseInsensitive(models['718'],'Cayman');
+        var box = getCaseInsensitive(models['718'],'Boxster');
         if (cay) out.add('718 Cayman');
         if (box) out.add('718 Boxster');
-      } else {
-        out.add(f);
-      }
-    });
+      } else { out.add(f); }
+    }
     if(models['Cayman']) out.add('718 Cayman');
     if(models['Boxster']) out.add('718 Boxster');
-    const order = ['911','718 Cayman','718 Boxster','Taycan','Macan','Cayenne','Panamera'];
-    return Array.from(out).sort((a,b)=> order.indexOf(a) - order.indexOf(b));
+    var order = ['911','718 Cayman','718 Boxster','Taycan','Macan','Cayenne','Panamera'];
+    return Array.from(out).sort(function(a,b){ return order.indexOf(a) - order.indexOf(b); });
   }
   function branchForFamily(famDisp){
-    const models = data.models || {};
+    var models = data.models || {};
     if (famDisp === '718 Cayman'){
       return getCaseInsensitive(models['718']||{}, 'Cayman') || models['Cayman'] || {};
     }
@@ -296,234 +587,486 @@
     return models[famDisp] || {};
   }
   function yearsForFamily(famDisp){
-    const out = new Set();
-    const branch = branchForFamily(famDisp);
-    Object.keys(branch).forEach(y => out.add(normalizeYearKey(y).display));
-    return Array.from(out).sort((a,b)=>{
-      const ay = parseInt(a.replace(/\D/g,''),10);
-      const by = parseInt(b.replace(/\D/g,''),10);
-      if (Number.isNaN(ay) || Number.isNaN(by)) return b.localeCompare(a);
+    var out = new Set(); var branch = branchForFamily(famDisp);
+    var keys = Object.keys(branch);
+    for(var i=0;i<keys.length;i++){ out.add(normalizeYearKey(keys[i]).display); }
+    return Array.from(out).sort(function(a,b){
+      var ay = parseInt(a.replace(/\D/g,''),10);
+      var by = parseInt(b.replace(/\D/g,''),10);
+      if (isNaN(ay) || isNaN(by)) return b.localeCompare(a);
       return by - ay;
     });
   }
 
-  // ========= UI POPULATION =========
-  function populateFamilies(){
-    familySel.innerHTML = '';
-    getVirtualFamilies().forEach(f=>{
-      const opt = document.createElement('option'); opt.value=f; opt.textContent=f; familySel.appendChild(opt);
+  function populate(select, arr){
+    select.innerHTML = '';
+    arr.forEach(function(v){
+      var opt = document.createElement('option');
+      opt.value = v; opt.textContent = v;
+      select.appendChild(opt);
     });
   }
-  function populateYears(){
-    yearSel.innerHTML = '';
-    yearsForFamily(familySel.value).forEach(d=>{
-      const opt = document.createElement('option'); opt.value=d; opt.textContent=d; yearSel.appendChild(opt);
-    });
-  }
-
-  let fullTrimList = [];
-  function collectTrimsForYear(){
-    fullTrimList = [];
-    const branch = branchForFamily(familySel.value);
-    const dispYear = yearSel.value;
-    const yearKeys = Object.keys(branch).filter(k => normalizeYearKey(k).display === dispYear);
-    const yearKey = yearKeys[0];
-    const rows = (yearKey && branch[yearKey]) || {};
-    Object.entries(rows).forEach(([code,row])=>{
-      fullTrimList.push({code, model: row.model || code});
-    });
-  }
-  function populateTrims(filterTerm=""){
-    trimSel.innerHTML = '';
-    const term = filterTerm.trim().toLowerCase();
-    const filtered = fullTrimList.filter(x=>{
-      const hay = (x.model + " " + x.code).toLowerCase();
-      return hay.includes(term);
-    });
-    filtered.forEach(({code,model})=>{
-      const opt = document.createElement('option');
-      opt.value = code; opt.textContent = model; opt.dataset.code = code;
-      trimSel.appendChild(opt);
-    });
-    trimCount.textContent = filtered.length ? `${filtered.length} trim(s)` : 'No trims match filter';
-    trimWarn.style.display = filtered.length ? 'none' : 'block';
-  }
-  function populateTerms(){
+  function initSelectors(){
+    populate(familySel, getVirtualFamilies());
+    populate(yearSel, yearsForFamily(familySel.value));
     termSel.innerHTML = '';
-    (data.months || ["12","18","24","27","30","36","39","42","48","51","60"]).forEach(m=>{
-      const opt = document.createElement('option'); opt.value=m; opt.textContent=`${m} mo`; termSel.appendChild(opt);
+    MONTHS.forEach(function(m){
+      var opt = document.createElement('option');
+      opt.value = m; opt.textContent = m + ' months';
+      termSel.appendChild(opt);
     });
+    populateAnnualMiles();
+    collectTrimsForYear();
+    populateTrims('');
   }
   function populateAnnualMiles(){
     annualMilesSel.innerHTML = '';
-    const milesMap = data?.annual_mileage_adjustments_percent?.miles_per_year || {
+    var milesMap = (data && data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {
       "2500":6,"5000":5,"7500":4,"10000":3,"12000":2,"15000":0
     };
-    Object.keys(milesMap).map(k=>parseInt(k,10)).sort((a,b)=>a-b).forEach(k=>{
-      const opt=document.createElement('option'); opt.value=String(k); opt.textContent=`${k.toLocaleString()} mi/yr`;
-      annualMilesSel.appendChild(opt);
-    });
+    Object.keys(milesMap).map(function(k){ return parseInt(k,10); }).sort(function(a,b){ return a-b; })
+      .forEach(function(n){
+        var opt = document.createElement('option');
+        opt.value = String(n); opt.textContent = n.toLocaleString() + ' mi/yr';
+        annualMilesSel.appendChild(opt);
+      });
     annualMilesSel.value = "15000";
   }
+  function collectTrimsForYear(){
+    fullTrimList = [];
+    var branch = branchForFamily(familySel.value);
+    var dispYear = yearSel.value;
+    var keys = Object.keys(branch);
+    var yearKeys = [];
+    for(var i=0;i<keys.length;i++){
+      if(normalizeYearKey(keys[i]).display === dispYear) yearKeys.push(keys[i]);
+    }
+    var yearKey = yearKeys[0];
+    var rows = (yearKey && branch[yearKey]) || {};
+    var entries = Object.entries(rows);
+    for(var j=0;j<entries.length;j++){
+      var code = entries[j][0];
+      var row = entries[j][1];
+      fullTrimList.push({code: code, model: row.model || code});
+    }
+  }
+  function populateTrims(filterTerm){
+    if(filterTerm === undefined) filterTerm = "";
+    trimSel.innerHTML = '';
+    var term = filterTerm.trim().toLowerCase();
+    var filtered = [];
+    for(var i=0;i<fullTrimList.length;i++){
+      var hay = (fullTrimList[i].model + " " + fullTrimList[i].code).toLowerCase();
+      if(hay.indexOf(term) !== -1){ filtered.push(fullTrimList[i]); }
+    }
+    filtered.forEach(function(item){
+      var opt = document.createElement('option');
+      opt.value = item.code; opt.textContent = item.model; opt.dataset.code = item.code;
+      trimSel.appendChild(opt);
+    });
+    trimCount.textContent = filtered.length ? (filtered.length + ' trim(s) available') : 'No trims match filter';
+    trimWarn.style.display = filtered.length ? 'none' : 'block';
+  }
 
-  // ========= CALC HELPERS =========
   function parseRange(str){
     if(!str) return null;
-    const s = str.replace(/,/g,'').replace(/\s/g,'');
-    const parts = s.split(/–|-/);
+    var s = str.replace(/,/g,'').replace(/\s/g,'');
+    var parts = s.split(/–|-/);
     if(parts.length !== 2) return null;
-    const a = parseInt(parts[0],10), b = parseInt(parts[1],10);
-    if(Number.isNaN(a)||Number.isNaN(b)) return null;
+    var a = parseInt(parts[0],10); var b = parseInt(parts[1],10);
+    if(isNaN(a) || isNaN(b)) return null;
     return [a,b];
   }
   function findInceptionAdj(myKey, odo){
-    const bands = data?.mileage_at_inception_adjustments_percent?.[myKey];
-    if(!bands || odo==null) return 0;
-    for(const band of bands){
-      const rng = parseRange(band.miles_range);
+    var bands = (data && data.mileage_at_inception_adjustments_percent && data.mileage_at_inception_adjustments_percent[myKey]) || null;
+    if(!bands || odo == null) return 0;
+    for(var i=0;i<bands.length;i++){
+      var rng = parseRange(bands[i].miles_range);
       if(!rng) continue;
-      const [lo,hi] = rng;
-      if(odo >= lo && odo <= hi) return band.adj || 0;
+      if(odo >= rng[0] && odo <= rng[1]) return bands[i].adj || 0;
     }
     return 0;
   }
-  function buildHeader(visibleMonths){
-    theadRow.innerHTML = '';
-    const th1 = document.createElement('th'); th1.textContent = 'Trim / Term Table';
-    theadRow.appendChild(th1);
-    visibleMonths.forEach(m=>{ const th=document.createElement('th'); th.textContent=m; theadRow.appendChild(th); });
-  }
   function visibleMonthsFor(entry){
     if(!hideNA.checked) return MONTHS.slice();
-    return MONTHS.filter(m => entry?.residuals?.[m] != null);
+    var result = [];
+    for(var i=0;i<MONTHS.length;i++){
+      if(entry && entry.residuals && entry.residuals[MONTHS[i]] != null) result.push(MONTHS[i]);
+    }
+    return result;
+  }
+  function buildHeader(visibleMonths){
+    theadRow.innerHTML = '';
+    var th1 = document.createElement('th'); th1.textContent = 'Trim / Term'; theadRow.appendChild(th1);
+    for(var i=0;i<visibleMonths.length;i++){
+      var th = document.createElement('th'); th.textContent = visibleMonths[i] + ' mo'; theadRow.appendChild(th);
+    }
   }
 
-  // ========= COMPUTE =========
   function compute(){
-    const fam = familySel.value;
-    const branch = branchForFamily(fam);
-    const dispYear = yearSel.value;
+    var fam = familySel.value;
+    var branch = branchForFamily(fam);
+    var dispYear = yearSel.value;
+    var keys = Object.keys(branch);
+    var yearKeys = [];
+    for(var i=0;i<keys.length;i++){
+      if(normalizeYearKey(keys[i]).display === dispYear){ yearKeys.push(keys[i]); }
+    }
+    var yrKey = yearKeys[0];
+    var code = trimSel.value;
+    var term = termSel.value;
+    var milesPerYear = parseInt(annualMilesSel.value, 10);
+    var odo = odoInput.value ? parseInt(String(odoInput.value).replace(/,/g,''), 10) : null;
 
-    const yearKeys = Object.keys(branch).filter(k => normalizeYearKey(k).display === dispYear);
-    const yrKey = yearKeys[0];
-    const code = trimSel.value;
-    const term = termSel.value;
-    const milesPerYear = parseInt(annualMilesSel.value,10);
-    const odo = odoInput.value ? parseInt(odoInput.value.replace(/,/g,''),10) : null;
-
-    if(!yrKey || !code){ return; }
-    const entry = branch[yrKey][code];
-    const base = term ? (entry?.residuals?.[term] ?? null) : null;
-
-    const pacpoAdj = pacpoToggle.checked ? (data.pacpo_bonus_percent ?? 2) : 0;
-    const milesMap = data?.annual_mileage_adjustments_percent?.miles_per_year || {};
-    let annualAdj = 0;
-    if(base !== null && parseInt(term||"0",10) >= 24){
-      annualAdj = milesMap[String(milesPerYear)] ?? 0;
+    if(!yrKey || !code){
+      finalOut.textContent = '-';
+      detailOut.textContent = 'Select family/year/trim';
+      trueOut.textContent = '';
+      updateShareURL();
+      return;
     }
 
-    // Try raw MY key, then display (MY20), then no-space variant
-    const inceptionKeyCandidates = [yrKey, dispYear, dispYear.replace(/\s+/g,'')];
-    let inceptionAdj = 0;
-    for (const cand of inceptionKeyCandidates) {
-      const bands = data?.mileage_at_inception_adjustments_percent?.[cand];
-      if (bands) { inceptionAdj = findInceptionAdj(cand, odo); break; }
+    var entry = branch[yrKey][code];
+    var base = term ? ((entry && entry.residuals && entry.residuals[term]) || null) : null;
+
+    PACPO = data.pacpo_bonus_percent || 2;
+    var pacpoAdj = pacpoToggle.checked ? PACPO : 0;
+
+    var milesMap = (data && data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {};
+    var annualAdj = 0;
+    if(base !== null && parseInt(term || "0", 10) >= 24){
+      annualAdj = milesMap[String(milesPerYear)] || 0;
     }
 
-    const monthsShown = visibleMonthsFor(entry);
+    var inceptionKeyCandidates = [yrKey, dispYear, dispYear.replace(/\s+/g,'')];
+    var inceptionAdj = 0;
+    for(var i=0;i<inceptionKeyCandidates.length;i++){
+      var bands = (data && data.mileage_at_inception_adjustments_percent && data.mileage_at_inception_adjustments_percent[inceptionKeyCandidates[i]]) || null;
+      if(bands){ inceptionAdj = findInceptionAdj(inceptionKeyCandidates[i], odo); break; }
+    }
+
+    var monthsShown = visibleMonthsFor(entry);
     buildHeader(monthsShown);
 
-    const final = (base === null || term==null) ? null : (base + pacpoAdj + annualAdj + inceptionAdj);
-    finalOut.textContent = final === null ? '—' : `${final}%`;
-    detailOut.textContent = final===null ? `Select a term` : `Final residual with all adjustments`;
-    codeBadge.textContent = `MY Code: ${code || '—'}`;
+    var final = (base === null || term == null) ? null : (base + pacpoAdj + annualAdj + inceptionAdj);
+    finalOut.textContent = final === null ? '-' : final + '%';
+    detailOut.textContent = final === null ? 'Select a term to calculate' : 'Final residual with all adjustments applied';
+    codeBadge.textContent = 'MY Code: ' + (code || '-');
 
-    // Table
+    // table row
     tvalRow.innerHTML = '';
-    const lead = document.createElement('td'); lead.textContent = entry?.model || '—';
-    tvalRow.appendChild(lead);
-    monthsShown.forEach(m=>{
-      const td = document.createElement('td');
-      const v = entry?.residuals?.[m];
-      let shown = '—';
-      if(v!==null && v!==undefined){
-        const mN = parseInt(m,10);
-        const aAdj = (mN >= 24) ? (milesMap[String(milesPerYear)] ?? 0) : 0;
-        const total = v + pacpoAdj + aAdj + inceptionAdj;
-        shown = `${total}%`; td.classList.add('ok');
+    var lead = document.createElement('td'); lead.textContent = (entry && entry.model) || '-'; tvalRow.appendChild(lead);
+    for(var i=0;i<monthsShown.length;i++){
+      var td = document.createElement('td');
+      var v = entry && entry.residuals && entry.residuals[monthsShown[i]];
+      var shown = '-';
+      if(v !== null && v !== undefined){
+        var mN = parseInt(monthsShown[i], 10);
+        var aAdj = (mN >= 24) ? (milesMap[String(milesPerYear)] || 0) : 0;
+        var total = v + pacpoAdj + aAdj + inceptionAdj;
+        shown = total + '%'; td.classList.add('ok');
       } else { td.classList.add('err'); }
       td.textContent = shown; tvalRow.appendChild(td);
-    });
+    }
 
-    // Structured summary values
-    sumYear.textContent = dispYear || '—';
-    sumFamily.textContent = fam || '—';
-    sumTrim.textContent = entry?.model ?? '—';
-    sumTerm.textContent = term ? `${term} mo` : '—';
-    sumMilesYear.textContent = isFinite(milesPerYear) ? `${milesPerYear.toLocaleString()} mi/yr` : '—';
-    sumOdo.textContent = (odo!=null && !Number.isNaN(odo)) ? `${odo.toLocaleString()} mi` : '—';
+    // summary
+    sumProgram.textContent = currentProgramLabel;
+    sumYear.textContent = dispYear || '-';
+    sumFamily.textContent = fam || '-';
+    sumTrim.textContent = (entry && entry.model) || '-';
+    sumTerm.textContent = term ? (term + ' mo') : '-';
+    sumMilesYear.textContent = Number.isFinite(milesPerYear) ? milesPerYear.toLocaleString() + ' mi/yr' : '-';
+    sumOdo.textContent = (odo != null && !isNaN(odo)) ? odo.toLocaleString() + ' mi' : '-';
 
-    // Badges (adjustments)
+    var msrp = msrpInput.value ? Number(msrpInput.value) : null;
+    sumMsrp.textContent = (msrp != null && !isNaN(msrp)) ? ('$' + msrp.toLocaleString()) : '-';
+    var trueResidual = (final != null && msrp != null && !isNaN(msrp)) ? Math.round(msrp * (final/100)) : null;
+    sumTrue.textContent = (trueResidual != null) ? ('$' + trueResidual.toLocaleString()) : '-';
+    trueOut.textContent = (trueResidual != null) ? ('MSRP × RV% = $' + trueResidual.toLocaleString()) : '';
+
+    // badges
     badgeRow.innerHTML = '';
-    if (base !== null && term) {
-      const b = document.createElement('div'); b.className='badge'; b.textContent = `Base ${base}%`; badgeRow.appendChild(b);
-    }
-    if (pacpoToggle.checked){
-      const b = document.createElement('div'); b.className='badge'; b.textContent = `+${PACPO}% PACPO`; badgeRow.appendChild(b);
-    }
-    if (term && parseInt(term,10) >= 24){
-      const a = document.createElement('div'); a.className='badge';
-      const adj = annualAdj>=0?`+${annualAdj}%`:`${annualAdj}%`;
-      a.textContent = `${adj} Annual Miles`; badgeRow.appendChild(a);
-    }
-    if (odo != null && !Number.isNaN(odo)){
-      const i = document.createElement('div'); i.className='badge';
-      const adj = inceptionAdj>=0?`+${inceptionAdj}%`:`${inceptionAdj}%`;
-      i.textContent = `${adj} Inception`; badgeRow.appendChild(i);
-    }
+    if(base !== null && term){ addBadge('Base ' + base + '%'); }
+    if(pacpoToggle.checked){ addBadge('+' + PACPO + '% PACPO'); }
+    if(term && parseInt(term, 10) >= 24){ addBadge(((annualAdj>=0?'+':'') + annualAdj + '%') + ' Annual Miles'); }
+    if(odo != null && !isNaN(odo)){ addBadge(((inceptionAdj>=0?'+':'') + inceptionAdj + '%') + ' Inception'); }
 
-    sumFinal.textContent = final===null ? '—' : `${final}%`;
+    sumFinal.textContent = final === null ? '-' : final + '%';
+
+    // Sync deep-link
+    updateShareURL();
+
+    // Keep Lease Estimator in sync with current selection
+    if(leaseTerm && (!leaseTerm.value || leaseTerm.value === '')) {
+      if(termSel && termSel.value) leaseTerm.value = termSel.value;
+    }
+    leaseCompute();
+  }
+  function addBadge(txt){
+    var b = document.createElement('div'); b.className = 'badge'; b.textContent = txt; badgeRow.appendChild(b);
   }
 
-  // ========= COPY =========
-  copyBtn.addEventListener('click', ()=>{
-    const text = [
-      `Year: ${sumYear.textContent}`,
-      `Family: ${sumFamily.textContent}`,
-      `Trim: ${sumTrim.textContent}`,
-      `Term: ${sumTerm.textContent}`,
-      `Miles/Year: ${sumMilesYear.textContent}`,
-      `Odometer: ${sumOdo.textContent}`,
-      `Final Residual: ${sumFinal.textContent}`
-    ].join(' | ');
-    navigator.clipboard.writeText(text).then(()=>{
-      const old = copyBtn.textContent;
-      copyBtn.textContent = 'Copied!';
-      setTimeout(()=>copyBtn.textContent = old, 900);
+  // Export CSV of visible row
+  function exportVisibleCSV(){
+    var fam = familySel.value;
+    var branch = branchForFamily(fam);
+    var dispYear = yearSel.value;
+    var keys = Object.keys(branch);
+    var yearKeys = [];
+    for(var i=0;i<keys.length;i++){
+      if(normalizeYearKey(keys[i]).display === dispYear) yearKeys.push(keys[i]);
+    }
+    var yrKey = yearKeys[0];
+    if(!yrKey || !trimSel.value){ alert('Select family/year/trim first.'); return; }
+    var entry = branch[yrKey][trimSel.value];
+    var monthsShown = visibleMonthsFor(entry);
+
+    var rows = [];
+    rows.push(['Trim/Term'].concat(monthsShown.map(function(m){return m + ' mo';})));
+    var line = [(entry && entry.model) || '-'];
+    var milesPerYear = parseInt(annualMilesSel.value, 10);
+    var term = termSel.value;
+    var msrp = msrpInput.value ? Number(msrpInput.value) : null;
+
+    var pacpoAdj = pacpoToggle.checked ? (data.pacpo_bonus_percent || 2) : 0;
+    var milesMap = (data && data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {};
+    var inceptionKeyCandidates = [yrKey, dispYear, dispYear.replace(/\s+/g,'')];
+    var inceptionAdj = 0;
+    var odo = odoInput.value ? parseInt(String(odoInput.value).replace(/,/g,''), 10) : null;
+    for(var i=0;i<inceptionKeyCandidates.length;i++){
+      var bands = (data && data.mileage_at_inception_adjustments_percent && data.mileage_at_inception_adjustments_percent[inceptionKeyCandidates[i]]) || null;
+      if(bands){ inceptionAdj = findInceptionAdj(inceptionKeyCandidates[i], odo); break; }
+    }
+
+    monthsShown.forEach(function(m){
+      var v = entry && entry.residuals && entry.residuals[m];
+      if(v==null){ line.push(''); return; }
+      var aAdj = (parseInt(m,10) >= 24) ? (milesMap[String(milesPerYear)] || 0) : 0;
+      var total = v + pacpoAdj + aAdj + inceptionAdj;
+      line.push(total + '%');
+    });
+    rows.push(line);
+
+    // Add footer with key summary
+    rows.push([]);
+    rows.push(['Program', currentProgramLabel]);
+    rows.push(['Year', dispYear], ['Family', fam], ['Trim', (entry && entry.model)||'-'], ['Term', term ? term+' mo':'-']);
+    rows.push(['Miles/Year', sumMilesYear.textContent], ['Odometer', sumOdo.textContent], ['Final Residual', sumFinal.textContent]);
+    if(msrp != null && !isNaN(msrp)){ rows.push(['MSRP', '$'+msrp.toLocaleString()], ['MSRP × RV%', sumTrue.textContent]); }
+
+    var csv = rows.map(function(r){
+      return r.map(function(c){
+        var s = (c==null ? '' : String(c));
+        if(s.indexOf('"')!=-1 || s.indexOf(',')!=-1) s='"'+s.replace(/"/g,'""')+'"';
+        return s;
+      }).join(',');
+    }).join('\r\n');
+
+    var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    var safeTrim = ((entry && entry.model)||'trim').replace(/[^\w\-]+/g,'_');
+    a.download = 'residual_' + safeTrim + '_' + (dispYear||'MY').replace(/\s+/g,'') + '.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  // Print summary
+  function printSummary(){
+    window.print();
+  }
+
+  // Validator
+  function validateJSON(){
+    if(!data){ alert('Load a program first.'); return; }
+    var issues = [];
+    var models = data.models || {};
+    var totalTrims = 0, missingCells = 0;
+
+    function checkEntry(modelFamily, yearKey, code, entry){
+      totalTrims++;
+      var resids = entry.residuals || {};
+      MONTHS.forEach(function(m){
+        if(!(m in resids) || resids[m] == null){
+          missingCells++;
+          issues.push('Missing residual → ['+modelFamily+'] ['+yearKey+'] ['+(entry.model||code)+'] term '+m+' mo');
+        }
+      });
+    }
+
+    Object.keys(models).forEach(function(fam){
+      var famBranch = (fam === '718') ? models[fam] : models[fam];
+      if(!famBranch || typeof famBranch!=='object') return;
+      Object.keys(famBranch).forEach(function(yearKey){
+        var group = famBranch[yearKey];
+        if(!group || typeof group!=='object'){ issues.push('Bad year group at '+fam+' / '+yearKey); return; }
+        Object.keys(group).forEach(function(code){
+          var entry = group[code];
+          if(!entry || typeof entry!=='object'){ issues.push('Bad trim entry at '+fam+' / '+yearKey+' / '+code); return; }
+          if(!('model' in entry)) issues.push('No "model" field at '+fam+' / '+yearKey+' / '+code);
+          if(!('residuals' in entry)) issues.push('No "residuals" map at '+fam+' / '+yearKey+' / '+code);
+          else checkEntry(fam, yearKey, code, entry);
+        });
+      });
+    });
+
+    if(!data.annual_mileage_adjustments_percent || !data.annual_mileage_adjustments_percent.miles_per_year){
+      issues.push('annual_mileage_adjustments_percent.miles_per_year is missing');
+    }
+    if(!data.mileage_at_inception_adjustments_percent){
+      issues.push('mileage_at_inception_adjustments_percent is missing');
+    }
+
+    var out = [];
+    out.push('Program: ' + (currentProgramLabel || 'Unknown'));
+    out.push('MONTHS: ' + JSON.stringify(MONTHS));
+    out.push('PACPO bonus: ' + (data.pacpo_bonus_percent || 2) + '%');
+    out.push('Total trims scanned: ' + totalTrims);
+    out.push('Missing cells: ' + missingCells);
+    out.push('—');
+    if(issues.length===0) out.push('✅ No issues found.');
+    else out.push('⚠️ Issues ('+issues.length+'):');
+    issues.forEach(function(line){ out.push(' - ' + line); });
+
+    validatorOutput.textContent = out.join('\n');
+    validatorCard.style.display = 'block';
+  }
+
+  // Lease Estimator
+  function leaseCompute(){
+    var rvPctText = sumFinal.textContent;                   // "58%" or "-"
+    var rvPct = (rvPctText && rvPctText.endsWith('%')) ? parseFloat(rvPctText) : NaN;
+    var msrp = msrpInput.value ? Number(msrpInput.value) : NaN;
+
+    var term = leaseTerm.value ? parseInt(leaseTerm.value, 10)
+                               : (termSel && termSel.value ? parseInt(termSel.value,10) : NaN);
+
+    var cap = leaseCapCost.value ? Number(leaseCapCost.value) : NaN;
+    var mf = leaseMF.value ? Number(leaseMF.value) : NaN;
+    var tax = leaseTax.value ? Number(leaseTax.value)/100 : 0;
+    var capRed = leaseCapReduction.value ? Number(leaseCapReduction.value) : 0;
+    var fees = leaseFees.value ? Number(leaseFees.value) : 0;
+
+    leaseRvPct.textContent = isFinite(rvPct) ? (rvPct.toFixed(2) + '%') : '-';
+
+    if(!isFinite(msrp) || !isFinite(rvPct) || !isFinite(term) || term <= 0){
+      leaseRvAmt.textContent = '-';
+      leaseAdjCap.textContent = '-';
+      leasePreTax.textContent = '-';
+      leaseWithTax.textContent = '-';
+      return;
+    }
+
+    var rvAmt = Math.round(msrp * (rvPct/100));
+    leaseRvAmt.textContent = '$' + rvAmt.toLocaleString();
+
+    var adjCap = (isFinite(cap) ? cap : 0) - (isFinite(capRed) ? capRed : 0) + (isFinite(fees) ? fees : 0);
+    leaseAdjCap.textContent = isFinite(adjCap) ? ('$' + adjCap.toLocaleString()) : '-';
+
+    if(!isFinite(adjCap) || !isFinite(mf)){
+      leasePreTax.textContent = '-';
+      leaseWithTax.textContent = '-';
+      return;
+    }
+
+    var dep = (adjCap - rvAmt) / term;
+    var fin = (adjCap + rvAmt) * mf;
+    var preTax = dep + fin;
+    var withTax = preTax * (1 + (isFinite(tax) ? tax : 0));
+
+    if(!isFinite(preTax) || preTax < 0){
+      leasePreTax.textContent = '-';
+      leaseWithTax.textContent = '-';
+      return;
+    }
+
+    leasePreTax.textContent = '$' + Math.round(preTax).toLocaleString();
+    leaseWithTax.textContent = '$' + Math.round(withTax).toLocaleString();
+  }
+
+  function restoreFromParams(){
+    var p = readParams();
+    if(p.family){ familySel.value = p.family; }
+    populate(yearSel, yearsForFamily(familySel.value));
+    if(p.year && Array.from(yearSel.options).some(o=>o.value===p.year)){ yearSel.value = p.year; }
+    collectTrimsForYear(); populateTrims('');
+    if(p.trim && Array.from(trimSel.options).some(o=>o.value===p.trim)){ trimSel.value = p.trim; }
+    if(p.term && Array.from(termSel.options).some(o=>o.value===p.term)){ termSel.value = p.term; }
+    if(p.miles){ annualMilesSel.value = p.miles; }
+    if(p.odo){ odoInput.value = p.odo; }
+    pacpoToggle.checked = (p.pacpo === '1');
+    hideNA.checked = (p.hidena === '1');
+    if(p.msrp){ msrpInput.value = p.msrp; }
+  }
+
+  // Events
+  programSel.addEventListener('change', function(){
+    var val = programSel.value;
+    var label = programSel.options[programSel.selectedIndex].textContent.replace(/^Program:\s*/,'');
+    loadProgram(val, label).catch(function(err){
+      alert('Could not load program "'+val+'". Make sure the JSON exists in the same folder.\n\n' + err.message);
+      programSel.value = '__current__';
     });
   });
 
-  // ========= INIT / EVENTS =========
-  function init(){
-    populateFamilies();
-    populateYears();
-    populateTerms();
-    populateAnnualMiles();
-    collectTrimsForYear(); populateTrims();
-    compute();
-  }
-
-  familySel.addEventListener('change', ()=>{ populateYears(); collectTrimsForYear(); populateTrims(trimSearch.value); compute(); });
-  yearSel.addEventListener('change', ()=>{ collectTrimsForYear(); populateTrims(trimSearch.value); compute(); });
-  trimSearch.addEventListener('input', ()=>{ populateTrims(trimSearch.value); compute(); });
+  familySel.addEventListener('change', function(){ populate(yearSel, yearsForFamily(familySel.value)); collectTrimsForYear(); populateTrims(trimSearch.value); compute(); });
+  yearSel.addEventListener('change', function(){ collectTrimsForYear(); populateTrims(trimSearch.value); compute(); });
+  trimSearch.addEventListener('input', function(){ populateTrims(trimSearch.value); compute(); });
   trimSel.addEventListener('change', compute);
   termSel.addEventListener('change', compute);
   pacpoToggle.addEventListener('change', compute);
   hideNA.addEventListener('change', compute);
   annualMilesSel.addEventListener('change', compute);
   odoInput.addEventListener('input', compute);
+  msrpInput.addEventListener('input', compute);
 
-  init();
+  copyBtn.addEventListener('click', function(){
+    var text = [
+      'Program: ' + sumProgram.textContent,
+      'Year: ' + sumYear.textContent,
+      'Family: ' + sumFamily.textContent,
+      'Trim: ' + sumTrim.textContent,
+      'Term: ' + sumTerm.textContent,
+      'Miles/Year: ' + sumMilesYear.textContent,
+      'Odometer: ' + sumOdo.textContent,
+      'MSRP: ' + sumMsrp.textContent,
+      'Final Residual: ' + sumFinal.textContent,
+      'MSRP × RV%: ' + sumTrue.textContent
+    ].join(' | ');
+    navigator.clipboard.writeText(text).then(function(){
+      var old = copyBtn.textContent; copyBtn.textContent = 'Copied!'; setTimeout(function(){ copyBtn.textContent = old; }, 1200);
+    });
+  });
+
+  exportCsvBtn.addEventListener('click', exportVisibleCSV);
+  printBtn.addEventListener('click', printSummary);
+
+  validateBtn.addEventListener('click', validateJSON);
+  closeValBtn.addEventListener('click', function(){ validatorCard.style.display='none'; });
+
+  // Lease Estimator events
+  leaseCapCost.addEventListener('input', leaseCompute);
+  leaseMF.addEventListener('input', leaseCompute);
+  leaseTax.addEventListener('input', leaseCompute);
+  leaseCapReduction.addEventListener('input', leaseCompute);
+  leaseFees.addEventListener('input', leaseCompute);
+  leaseTerm.addEventListener('input', leaseCompute);
+
+  // Boot
+  var params = readParams();
+  if(params.program){
+    var opt = Array.from(programSel.options).find(o=>o.value===params.program);
+    if(opt){ programSel.value = params.program; currentProgramLabel = opt.textContent.replace(/^Program:\s*/,''); }
+    else { programSel.value = '__current__'; currentProgramLabel = params.program; }
+    loadProgram(programSel.value, currentProgramLabel).catch(function(err){ alert(err.message); });
+  } else {
+    programSel.value = 'porsche_residuals_all.json';
+    loadProgram(programSel.value, 'PB 25-10R (Default)').catch(function(){
+      programSel.value = '__current__';
+      loadProgram('__current__', 'Current').catch(function(err){ alert(err.message); });
+    });
+  }
 })();
 </script>
 </body>
