@@ -1247,4 +1247,144 @@
       var btn = document.createElement('button');
       btn.className = 'sniff-btn' + (idx===0 ? ' sniff-best' : '');
       var pacText = s.pacpo ? 'PACPO ON' : 'PACPO OFF';
-      var title = (idx===0 ? 'Best: ' : (idx===1?'Alt A: ':'Alt B: ')) + s.term + ' mo • ' + s.miles.toLocaleString() + '/yr • ' + pacText
+      var title = (idx===0 ? 'Best: ' : (idx===1?'Alt A: ':'Alt B: ')) + s.term + ' mo • ' + s.miles.toLocaleString() + '/yr • ' + pacText;
+
+      // Deltas
+      var deltaStr = '';
+      if(s.validPayment && curHasPay){
+        var diff = Math.round(s.monthlyWithTax - curMonthly);
+        deltaStr = (diff===0) ? '≈ $0/mo change' :
+                   (diff<0 ? '≈ −$'+Math.abs(diff).toLocaleString()+'/mo' : '≈ +$'+diff.toLocaleString()+'/mo');
+      } else {
+        // fallback to LVI delta if payment not available
+        var dL = (isFinite(s.lvi)&&isFinite(curLVI)) ? (s.lvi - curLVI) : NaN;
+        if(isFinite(dL)){
+          var k = (dL/1000).toFixed(1) + 'k';
+          deltaStr = (dL>=0?'+':'') + k + ' LVI';
+        } else {
+          deltaStr = '—';
+        }
+      }
+
+      // Subtitle: RV% and LVI
+      var lviTxt = isFinite(s.lvi) ? (s.lvi/1000).toFixed(1)+'k' : '—';
+      var sub = 'RV ' + (isFinite(s.finalPct)?s.finalPct.toFixed(2)+'%':'—') + ' • LVI ' + lviTxt;
+
+      btn.innerHTML =
+        '<div class="sniff-title">'+title+'</div>'+
+        '<div class="sniff-sub">'+sub+'</div>'+
+        '<div class="sniff-delta">'+deltaStr+'</div>';
+
+      btn.addEventListener('click', function(){
+        // Apply scenario → update selectors & toggle; then recompute
+        termSel.value = String(s.term);
+        annualMilesSel.value = String(s.miles);
+        pacpoToggle.checked = !!s.pacpo;
+        compute(); // will mirror leaseTerm and recompute everything
+        // scroll summary into view lightly
+        var sum = document.getElementById('summaryBox');
+        if(sum){ sum.scrollIntoView({behavior:'smooth', block:'start'}); sum.classList.add('success-flash'); setTimeout(function(){ sum.classList.remove('success-flash'); }, 600); }
+      });
+
+      snifferButtons.appendChild(btn);
+    });
+
+    // Tie-break hint if close
+    if(top.length>=2 && top[0].validPayment && top[1].validPayment){
+      var diff01 = Math.abs(top[0].monthlyWithTax - top[1].monthlyWithTax);
+      snifferHelp.textContent = diff01<=10 ? 'Near-tie detected (≤ $10/mo). Higher LVI preferred.' : 'Buttons apply changes instantly and recompute.';
+    } else {
+      snifferHelp.textContent = 'Buttons apply changes instantly and recompute.';
+    }
+  }
+  // ===== END DEAL SNIFFER =====
+
+  programSel.addEventListener('change', function(){
+    var val = programSel.value;
+    var label = programSel.options[programSel.selectedIndex].textContent.replace(/^Program:\s*/,'');
+    loadProgram(val, label).catch(function(err){
+      alert('Could not load "'+val+'". Ensure JSON exists.\n\n' + err.message);
+      programSel.value = '__current__';
+    });
+  });
+  
+  jumpSummaryBtn.addEventListener('click', function(){
+    var el = document.getElementById('summaryBox');
+    if(el){ el.scrollIntoView({behavior:'smooth', block:'start'}); el.classList.add('success-flash'); setTimeout(function(){ el.classList.remove('success-flash'); }, 600); }
+  });
+
+  familySel.addEventListener('change', function(){ populate(yearSel, yearsForFamily(familySel.value)); collectTrimsForYear(); populateTrims(trimSearch.value); compute(); });
+  yearSel.addEventListener('change', function(){ collectTrimsForYear(); populateTrims(trimSearch.value); compute(); });
+  trimSearch.addEventListener('input', function(){ populateTrims(trimSearch.value); compute(); });
+  trimSel.addEventListener('change', compute);
+
+  termSel.addEventListener('change', function(){
+    compute();
+    if(termSel && leaseTerm){ leaseTerm.value = termSel.value || ''; }
+    leaseCompute();
+  });
+
+  pacpoToggle.addEventListener('change', compute);
+  hideNA.addEventListener('change', compute);
+  annualMilesSel.addEventListener('change', compute);
+  odoInput.addEventListener('input', compute);
+  msrpInput.addEventListener('input', function(){ compute(); leaseCompute(); });
+
+  copyBtn.addEventListener('click', function(){
+    var parts = [
+      'Program: ' + (sumProgram ? sumProgram.textContent : '—'),
+      'Year: ' + sumYear.textContent,
+      'Family: ' + sumFamily.textContent,
+      'Trim: ' + sumTrim.textContent,
+      'Term: ' + sumTerm.textContent,
+      'Miles/Year: ' + sumMilesYear.textContent,
+      'Odometer: ' + sumOdo.textContent,
+      (sumMsrp ? ('MSRP: ' + sumMsrp.textContent) : null),
+      'Final: ' + sumFinal.textContent,
+      'MSRP × RV%: ' + sumTrue.textContent,
+      'LVI: ' + (sumLvi ? sumLvi.textContent : '—')
+    ].filter(Boolean);
+    var text = parts.join(' | ');
+    navigator.clipboard.writeText(text).then(function(){
+      var old = copyBtn.innerHTML; copyBtn.innerHTML = '✅ Copied!'; copyBtn.classList.add('success-flash');
+      setTimeout(function(){ copyBtn.innerHTML = old; copyBtn.classList.remove('success-flash'); }, 1500);
+    });
+  });
+
+  exportCsvBtn.addEventListener('click', exportVisibleCSV);
+  printBtn.addEventListener('click', printSummary);
+  validateBtn.addEventListener('click', validateJSON);
+  closeValBtn && closeValBtn.addEventListener('click', function(){ validatorCard.style.display='none'; });
+
+  leaseCapCost.addEventListener('input', function(){ leaseCompute(); renderSnifferDelayed(); });
+  leaseMF.addEventListener('input', function(){ leaseCompute(); compute(); renderSnifferDelayed(); });
+  leaseTax.addEventListener('input', function(){ leaseCompute(); renderSnifferDelayed(); });
+  leaseCapReduction.addEventListener('input', function(){ leaseCompute(); renderSnifferDelayed(); });
+  leaseFees.addEventListener('input', function(){ leaseCompute(); renderSnifferDelayed(); });
+  leaseTerm.addEventListener('input', function(){ leaseCompute(); renderSnifferDelayed(); });
+
+  // small debounce for sniffer re-renders when editing lease inputs
+  var sniffTimer = null;
+  function renderSnifferDelayed(){
+    if(sniffTimer) cancelAnimationFrame(sniffTimer);
+    sniffTimer = requestAnimationFrame(function(){ compute(); });
+  }
+
+  var initialParams = readParams();
+  if(initialParams.program){
+    var opt = Array.from(programSel.options).find(function(o){return o.value===initialParams.program;});
+    if(opt){ programSel.value = initialParams.program; currentProgramLabel = opt.textContent.replace(/^Program:\s*/,''); }
+    else { programSel.value = '__current__'; currentProgramLabel = initialParams.program; }
+    loadProgram(programSel.value, currentProgramLabel).catch(function(err){ alert(err.message); });
+  } else {
+    programSel.value = 'porsche_residuals_all.json';
+    loadProgram(programSel.value, 'PB 25-10R (Default)').catch(function(){
+      programSel.value = '__current__';
+      loadProgram('__current__', 'Current').catch(function(err){ alert(err.message); });
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
