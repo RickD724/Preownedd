@@ -174,6 +174,7 @@
   td.ok{ color:var(--success); font-weight:800; font-variant-numeric:tabular-nums; text-shadow:0 0 10px var(--success-glow); }
   td.err{ color:var(--danger); opacity:.5; }
   td:first-child,th:first-child{ position:sticky; left:0; background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); z-index:2; font-weight:800; }
+
   .summary{
     margin-top:24px; padding:32px; border:2px solid var(--border-hover); border-radius:var(--radius);
     background:var(--card); backdrop-filter:blur(30px); box-shadow:var(--shadow-lg);
@@ -192,6 +193,7 @@
     background:linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1)); }
   .slabel{ font-weight:700; color:var(--muted); font-size:.9rem; letter-spacing:.5px; }
   .sval{ font-variant-numeric:tabular-nums; font-weight:800; font-size:1.1rem; color:var(--text-primary); }
+
   .rv-label{ color:#bfa7ff; font-family:inherit; font-weight:700; letter-spacing:.02em; }
   .rv-value{ font-family:inherit; font-weight:800; color:var(--text-primary); }
   .badges{ display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; }
@@ -201,6 +203,45 @@
   }
   .badge:hover{ transform:translateY(-3px) scale(1.05); box-shadow:0 8px 20px var(--accent-glow);
     background:linear-gradient(135deg, rgba(59,130,246,0.3), rgba(139,92,246,0.2)); }
+
+  /* Deal Sniffer (compact) */
+  .sniffer{
+    margin-top:18px; padding-top:14px; border-top:1px dashed var(--border);
+  }
+  .sniffer .hdr{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px;
+  }
+  .sniffer .hdr strong{
+    font-size:1.05rem; letter-spacing:.2px;
+    background:linear-gradient(135deg,var(--accent),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  .sniffer .sub{ font-size:.85rem; color:var(--muted); }
+  .snifferGrid{
+    display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px;
+  }
+  @media(max-width:900px){ .snifferGrid{ grid-template-columns:1fr; } }
+  .sniff{
+    border:1px solid var(--border); border-radius:12px; padding:12px 14px; background:var(--bg-secondary);
+  }
+  .sniff.best{ border-color:var(--success); box-shadow:0 0 0 2px rgba(16,185,129,.15); }
+  .sniff .row{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .sniff .pillx{
+    font-size:.72rem; padding:4px 10px; border-radius:999px; font-weight:800;
+    border:1px solid var(--border-hover); background:linear-gradient(135deg, rgba(59,130,246,.08), rgba(139,92,246,.08));
+  }
+  .sniff .meta{ font-size:.78rem; color:var(--muted); }
+  .sniff .pay{ font-size:1.15rem; font-weight:900; }
+  .sniff .delta{ font-size:.85rem; font-weight:800; opacity:.8; }
+  .sniff .delta.pos{ color:var(--success); }
+  .sniff .delta.neg{ color:var(--danger); }
+  .sniffer .actions{ display:flex; gap:10px; margin-top:8px; }
+  .sniffer .applyBtn{
+    border:1px solid var(--success); background:linear-gradient(135deg, rgba(16,185,129,.12), rgba(59,130,246,.06));
+    padding:8px 12px; border-radius:10px; font-size:.9rem; font-weight:800; cursor:pointer;
+  }
+  .sniffer .applyBtn:hover{ transform:translateY(-1px); box-shadow:0 8px 20px var(--success-glow); }
+  .sniffer .note{ font-size:.8rem; color:var(--muted); margin-left:auto; }
+
   .footer{ margin:40px 0 20px; animation:fadeInUp 1s ease; }
   .foot-card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:28px 32px; text-align:center; }
   .foot-title{
@@ -208,15 +249,21 @@
     background:linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
   }
   .foot-text{ color:var(--muted); font-size:.95rem; line-height:1.8; }
+
   @media (max-width:768px){ .result .big{ font-size:2.5rem; } .card{ padding:20px; } .summary{ padding:20px; } }
+
   @media print{
     body{ background:#fff; }
-    .top,.controls,.tableWrap,#leaseCard,.footer,#validatorCard,#snifferCard{ display:none !important; }
+    .top,.controls,.tableWrap,#leaseCard,.footer,#validatorCard{ display:none !important; }
+    /* Show sniffer on print as a compact list */
+    .snifferGrid{ grid-template-columns:1fr; }
     .summary{ border:0; box-shadow:none; }
   }
+
   .loading{ position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); font-size:1.2rem; color:var(--accent); font-weight:700; animation:pulse 1.5s infinite; }
   .success-flash{ animation:successPulse .6s ease; }
   @keyframes successPulse{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.05); box-shadow:0 0 30px var(--success-glow)} }
+
   .error-banner{
     display:none; margin:0 0 16px; padding:12px 16px; border-radius:12px; border:1px solid rgba(239,68,68,.35);
     background: rgba(239,68,68,.08); color:#fecaca; font-weight:700;
@@ -225,29 +272,6 @@
     display:none; margin:0 0 16px; padding:12px 16px; border-radius:12px; border:1px solid rgba(59,130,246,.35);
     background: rgba(59,130,246,.08); color:#c7d2fe; font-weight:700;
   }
-
-  /* === Deal Sniffer (compact) === */
-  #snifferCard .title { 
-    font-size:1.05rem; font-weight:900;
-    background:linear-gradient(135deg,var(--accent),var(--purple));
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-  }
-  .sniffer-grid{
-    display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:14px;
-  }
-  @media (max-width:900px){ .sniffer-grid{ grid-template-columns:1fr; } }
-  .sniff{
-    border:1px solid var(--border); border-radius:12px; padding:12px 14px;
-    background:linear-gradient(135deg,rgba(59,130,246,.06),rgba(139,92,246,.06));
-    display:flex; flex-direction:column; gap:6px; min-height:84px;
-  }
-  .sniff .row { display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
-  .sniff .pay { font-size:1.05rem; font-weight:900; }
-  .sniff .delta.pos { color:var(--success); font-weight:800; }
-  .sniff .delta.neg { color:var(--danger); font-weight:800; }
-  .sniff .meta { font-size:.8rem; color:var(--muted); }
-  .sniff .pillx { font-size:.72rem; padding:2px 8px; border:1px solid var(--border-hover); border-radius:999px; }
-  .sniff.best { outline:2px solid var(--accent); box-shadow:0 0 0 4px var(--accent-glow); }
 </style>
 
 </head>
@@ -385,6 +409,21 @@
         <div class="hint" id="lviHelp" style="margin-top:12px;text-align:center;">💡 Higher Value Index = Better Deal</div>
 
         <div class="badges" id="badgeRow" aria-label="Adjustments"></div>
+
+        <!-- Deal Sniffer -->
+        <div class="sniffer" id="snifferBox" aria-live="polite">
+          <div class="hdr">
+            <strong>🔎 Deal Sniffer — Best Across Valid Terms</strong>
+            <div class="sub">Scans all valid terms (PACPO On) using your miles/yr</div>
+          </div>
+          <div id="snifferBody" class="muted" style="font-size:.9rem;">Enter Cap Cost to sniff deals.</div>
+          <div id="snifferGrid" class="snifferGrid" style="display:none;"></div>
+          <div class="actions" id="snifferActions" style="display:none;">
+            <button id="applyBestBtn" class="applyBtn" type="button">✅ Apply Best Term</button>
+            <div class="note">Sets term & enables PACPO, then recalculates</div>
+          </div>
+        </div>
+        <!-- /Deal Sniffer -->
       </div>
     </div>
 
@@ -442,16 +481,6 @@
       </div>
     </div>
 
-    <!-- === Deal Sniffer — compact, auto === -->
-    <div class="card" id="snifferCard" style="margin-top: 20px; animation-delay: 0.7s;">
-      <div class="rowline" style="justify-content:space-between;">
-        <div class="title">🔎 Deal Sniffer (Auto)</div>
-        <div class="muted" style="font-size:.85rem;">Finds lowest **with-tax** payment across valid terms</div>
-      </div>
-      <div id="snifferBody" class="muted" style="margin-top:10px;">Enter Cap Cost to sniff deals.</div>
-      <div id="snifferGrid" class="sniffer-grid" style="display:none;"></div>
-    </div>
-
     <div class="card" id="validatorCard" style="margin-top:16px; display:none; animation-delay:0.8s;">
       <div class="rowline" style="justify-content:space-between; margin-bottom:12px;">
         <strong style="font-size:1.1rem;">🔍 JSON Validator</strong>
@@ -474,7 +503,7 @@
 
 <script>
 (function(){
-  // --- Icons/manifest (unchanged) ---
+  // ---- PWA bits (unchanged) ----
   (function generateIconsAndManifest(){
     try{
       var canvas = document.createElement('canvas');
@@ -509,7 +538,7 @@
     }catch(e){}
   })();
 
-  // --- Theme: default to LIGHT regardless of prefers-color-scheme ---
+  // ---- Theme: default to LIGHT (requested) ----
   var themeBtn = document.getElementById('themeBtn');
   document.documentElement.setAttribute('data-theme', 'light');
   themeBtn.innerHTML = '🌙 Dark';
@@ -522,31 +551,37 @@
     setTimeout(function(){ themeBtn.classList.remove('success-flash'); }, 600);
   });
 
-  // --- Element refs (unchanged + sniffer) ---
+  // ---- DOM refs ----
   var programSel = document.getElementById('programSel');
   var validateBtn = document.getElementById('validateBtn');
   var exportCsvBtn = document.getElementById('exportCsvBtn');
   var printBtn = document.getElementById('printBtn');
   var jumpSummaryBtn = document.getElementById('jumpSummaryBtn');
+
   var familySel = document.getElementById('familySel');
   var yearSel = document.getElementById('yearSel');
   var trimSel = document.getElementById('trimSel');
   var trimSearch = document.getElementById('trimSearch');
   var trimCount = document.getElementById('trimCount');
   var trimWarn = document.getElementById('trimWarn');
+
   var termSel = document.getElementById('termSel');
   var pacpoToggle = document.getElementById('pacpoToggle');
   var hideNA = document.getElementById('hideNA');
   var codeBadge = document.getElementById('codeBadge');
+
   var finalOut = document.getElementById('finalOut');
   var detailOut = document.getElementById('detailOut');
   var trueOut = document.getElementById('trueOut');
+  var lviBadge = document.getElementById('lviBadge');
+
   var theadRow = document.getElementById('theadRow');
   var tvalRow = document.getElementById('tvalRow');
   var annualMilesSel = document.getElementById('annualMilesSel');
   var odoInput = document.getElementById('odoInput');
   var msrpInput = document.getElementById('msrpInput');
   var shareLink = document.getElementById('shareLink');
+
   var sumProgram = document.getElementById('sumProgram');
   var sumYear = document.getElementById('sumYear');
   var sumFamily = document.getElementById('sumFamily');
@@ -557,8 +592,11 @@
   var sumMsrp = document.getElementById('sumMsrp');
   var sumTrue = document.getElementById('sumTrue');
   var sumFinal = document.getElementById('sumFinal');
+  var sumLvi = document.getElementById('sumLvi');
+
   var badgeRow = document.getElementById('badgeRow');
   var copyBtn = document.getElementById('copyBtn');
+
   var leaseCapCost = document.getElementById('leaseCapCost');
   var leaseMF = document.getElementById('leaseMF');
   var leaseTax = document.getElementById('leaseTax');
@@ -571,39 +609,44 @@
   var leasePreTax = document.getElementById('leasePreTax');
   var leaseWithTax = document.getElementById('leaseWithTax');
   var mfAprHint = document.getElementById('mfAprHint');
-  var lviBadge = document.getElementById('lviBadge');
-  var sumLvi = document.getElementById('sumLvi');
+
   var validatorCard = document.getElementById('validatorCard');
   var closeValBtn = document.getElementById('closeValBtn');
   var validatorOutput = document.getElementById('validatorOutput');
   var errorBanner = document.getElementById('errorBanner');
   var infoBanner = document.getElementById('infoBanner');
 
-  // Deal Sniffer refs
+  // Sniffer refs
+  var snifferBox = document.getElementById('snifferBox');
   var snifferBody = document.getElementById('snifferBody');
   var snifferGrid = document.getElementById('snifferGrid');
+  var snifferActions = document.getElementById('snifferActions');
+  var applyBestBtn = document.getElementById('applyBestBtn');
 
   var data, MONTHS = [], PACPO = 2;
   var fullTrimList = [];
   var currentProgramLabel = 'Current';
 
-  // ---- Inline fallback (unchanged) ----
+  // ---- Fallback JSON (kept minimal) ----
   var FALLBACK_JSON = {
     months: ["24","36","39","48"],
     pacpo_bonus_percent: 2,
     annual_mileage_adjustments_percent: { miles_per_year: {"7500":4,"10000":3,"12000":2,"15000":0} },
     mileage_at_inception_adjustments_percent: { "MY25":[{miles_range:"0–499",adj:0},{miles_range:"500–1499",adj:-1}] },
-    models: {
-      "911": {
-        "MY25": {
-          "992C2": { model:"Carrera", residuals: {"24":72,"36":63,"39":61,"48":55} }
-        }
-      }
-    }
+    models: { "911": { "MY25": { "992C2": { model:"Carrera", residuals: {"24":72,"36":63,"39":61,"48":55} } } } }
   };
 
-  function showError(msg){ errorBanner.textContent = 'JSON Load Error: ' + msg; errorBanner.style.display = 'block'; setTimeout(function(){ errorBanner.style.display = 'none'; }, 8000); console.error(msg); }
-  function showInfo(msg){ infoBanner.textContent = msg; infoBanner.style.display = 'block'; setTimeout(function(){ infoBanner.style.display = 'none'; }, 6000); }
+  function showError(msg){
+    errorBanner.textContent = 'JSON Load Error: ' + msg;
+    errorBanner.style.display = 'block';
+    setTimeout(function(){ errorBanner.style.display = 'none'; }, 8000);
+    console.error(msg);
+  }
+  function showInfo(msg){
+    infoBanner.textContent = msg;
+    infoBanner.style.display = 'block';
+    setTimeout(function(){ infoBanner.style.display = 'none'; }, 6000);
+  }
 
   function readParams(){
     var p = new URLSearchParams(location.search);
@@ -616,11 +659,16 @@
   }
   function resolveUrlMaybe(u){ try { return new URL(u, location.href).href; } catch(e){ return u; } }
   function parseMaybeJSONText(t){ try { return JSON.parse(t); } catch(e){ return null; } }
-  function isDataUrl(u){ return /^data:application\/json(;charset=[^,]+)?,/i.test(u) || /^data:application\/json;base64,/i.test(u); }
+  function isDataUrl(u){ return /^data:application\/json/i.test(u); }
   function loadFromDataUrl(u){
     try{
-      if(/^data:application\/json;base64,/i.test(u)){ var b64 = u.split(',')[1]; var txt = atob(b64); return Promise.resolve(JSON.parse(txt)); }
-      else { var txt = decodeURIComponent(u.split(',')[1] || ''); return Promise.resolve(JSON.parse(txt)); }
+      if(/^data:application\/json;base64,/i.test(u)){
+        var b64 = u.split(',')[1]; var txt = atob(b64);
+        return Promise.resolve(JSON.parse(txt));
+      } else {
+        var txt = decodeURIComponent(u.split(',')[1] || '');
+        return Promise.resolve(JSON.parse(txt));
+      }
     }catch(e){ return Promise.reject(new Error('Invalid data: URL JSON ('+e.message+')')); }
   }
 
@@ -638,7 +686,7 @@
     if(hideNA.checked) p.set('hidena', '1');
     if(msrpInput.value) p.set('msrp', msrpInput.value);
     var url = location.pathname + '?' + p.toString();
-    document.getElementById('shareLink').value = location.origin + url;
+    shareLink.value = location.origin + url;
     history.replaceState(null, '', url);
   }
 
@@ -647,25 +695,42 @@
     return params.get('data') || 'porsche_residuals_all.json';
   })();
 
-  // ---- Data loader ----
   function loadProgram(file, label){
     currentProgramLabel = label || (file === '__current__' ? 'Current' : file);
     var target = (file === '__current__') ? initialProgram : file;
     var resolved = resolveUrlMaybe(target);
 
     if(isDataUrl(resolved)){
-      return loadFromDataUrl(resolved).then(afterJSONLoaded).catch(function(err){ showError(err.message + ' (source: data URL)'); return useFallback('Failed to parse data URL'); });
+      return loadFromDataUrl(resolved).then(afterJSONLoaded).catch(function(err){
+        showError(err.message + ' (source: data URL)');
+        return useFallback('Failed to parse data URL');
+      });
     }
 
     var cacheBuster = 't=' + Date.now();
     var tryUrl = resolved + (resolved.indexOf('?') === -1 ? '?' : '&') + cacheBuster;
 
     return fetch(tryUrl, {cache:'no-store', credentials:'omit', mode:'cors'})
-      .then(function(res){ if(!res.ok) throw new Error('HTTP ' + res.status + ' loading ' + resolved); return res.text(); })
-      .then(function(txt){ var j = parseMaybeJSONText(txt); if(!j) throw new Error('Invalid JSON at ' + resolved); afterJSONLoaded(j); })
-      .catch(function(err){ showError(err.message + ' | Tried: ' + resolved); return useFallback('Using fallback sample so UI stays usable.'); });
+      .then(function(res){
+        if(!res.ok) throw new Error('HTTP ' + res.status + ' loading ' + resolved);
+        return res.text();
+      })
+      .then(function(txt){
+        var j = parseMaybeJSONText(txt);
+        if(!j) throw new Error('Invalid JSON at ' + resolved);
+        afterJSONLoaded(j);
+      })
+      .catch(function(err){
+        showError(err.message + ' | Tried: ' + resolved);
+        return useFallback('Using fallback sample so UI stays usable.');
+      });
   }
-  function useFallback(reason){ showInfo('Fallback JSON in use: ' + reason); afterJSONLoaded(FALLBACK_JSON); return Promise.resolve(); }
+
+  function useFallback(reason){
+    showInfo('Fallback JSON in use: ' + reason);
+    afterJSONLoaded(FALLBACK_JSON);
+    return Promise.resolve();
+  }
 
   function afterJSONLoaded(j){
     data = j; window.__data = data;
@@ -744,6 +809,7 @@
       .forEach(function(n){ var opt = document.createElement('option'); opt.value = String(n); opt.textContent = n.toLocaleString() + ' mi/yr'; annualMilesSel.appendChild(opt); });
     annualMilesSel.value = "15000";
   }
+  var fullTrimList = [];
   function collectTrimsForYear(){
     fullTrimList = [];
     var branch = branchForFamily(familySel.value);
@@ -790,34 +856,31 @@
   }
   function computeLVI(rvPercent, mf){ if(!isFinite(rvPercent) || !isFinite(mf) || mf <= 0) return null; return rvPercent / mf; }
 
-  function compute(){
+  // --- helper: current entry/year key/dispYear bundle
+  function currentEntryAndYearKey(){
     var fam = familySel.value;
     var branch = branchForFamily(fam);
     var dispYear = yearSel.value;
     var yrKey = Object.keys(branch).find(function(k){ return normalizeYearKey(k).display === dispYear; });
     var code = trimSel.value;
-    var term = termSel.value;
-    var milesPerYear = parseInt(annualMilesSel.value, 10);
-    var odo = odoInput.value ? parseInt(String(odoInput.value).replace(/,/g,''), 10) : null;
+    var entry = (yrKey && code && branch[yrKey] && branch[yrKey][code]) ? branch[yrKey][code] : null;
+    return { entry: entry, yrKey: yrKey, dispYear: dispYear, fam: fam, code: code };
+  }
 
-    if(!yrKey || !code){
-      finalOut.textContent = '—';
-      detailOut.textContent = 'Select family/year/trim';
-      trueOut.textContent = '';
-      if(lviBadge) lviBadge.textContent = '';
-      if(sumLvi) sumLvi.textContent = '—';
-      updateShareURL();
-      recomputeSniffer(); // clears state
-      return;
-    }
+  // --- residual with adjustments; optional pacpoOverride=true to force PACPO ON
+  function adjustedResidualForTerm(entry, yrKey, dispYear, term, pacpoOverride){
+    if(!entry || !entry.residuals) return null;
+    var base = entry.residuals[term];
+    if(base==null) return null;
 
-    var entry = branch[yrKey][code];
-    var base = term ? ((entry && entry.residuals && entry.residuals[term]) || null) : null;
-    var PACPOv = data.pacpo_bonus_percent || 2;
-    var pacpoAdj = pacpoToggle.checked ? PACPOv : 0;
     var milesMap = (data && data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {};
-    var annualAdj = 0;
-    if(base !== null && parseInt(term || "0", 10) >= 24){ annualAdj = milesMap[String(milesPerYear)] || 0; }
+    var milesPerYear = parseInt(annualMilesSel.value,10);
+    var annualAdj = (parseInt(term,10) >= 24) ? (milesMap[String(milesPerYear)] || 0) : 0;
+
+    var PACPOv = data.pacpo_bonus_percent || 2;
+    var pacpoAdj = pacpoOverride === true ? PACPOv : (pacpoToggle.checked ? PACPOv : 0);
+
+    var odo = odoInput.value ? parseInt(String(odoInput.value).replace(/,/g,''), 10) : null;
 
     var inceptionKeyCandidates = [yrKey, dispYear, dispYear.replace(/\s+/g,'')];
     var inceptionAdj = 0;
@@ -825,16 +888,49 @@
       var bands = (data && data.mileage_at_inception_adjustments_percent && data.mileage_at_inception_adjustments_percent[inceptionKeyCandidates[i]]) || null;
       if(bands){ inceptionAdj = findInceptionAdj(inceptionKeyCandidates[i], odo); break; }
     }
+    return base + pacpoAdj + annualAdj + inceptionAdj;
+  }
+
+  // --- pricing helper (returns with-tax monthly rounded)
+  function computeMonthly(msrp, rvPct, term, cap, mf, tax, capRed, fees){
+    if(!isFinite(msrp) || !isFinite(rvPct) || !isFinite(term) || term<=0) return NaN;
+    var rvAmt = Math.round(msrp * (rvPct/100));
+    var adjCap = (isFinite(cap)?cap:0) - (isFinite(capRed)?capRed:0) + (isFinite(fees)?fees:0);
+    if(!isFinite(adjCap) || adjCap<=0 || !isFinite(mf) || mf<=0) return NaN;
+    var dep = (adjCap - rvAmt) / term;
+    var fin = (adjCap + rvAmt) * mf;
+    var preTax = dep + fin;
+    var withTax = preTax * (1 + (isFinite(tax)?tax:0));
+    return Math.round(withTax);
+  }
+
+  function compute(){
+    var ctx = currentEntryAndYearKey();
+    var fam = ctx.fam, entry = ctx.entry, yrKey = ctx.yrKey, dispYear = ctx.dispYear;
+    var term = termSel.value;
+    var milesPerYear = parseInt(annualMilesSel.value, 10);
+    var odo = odoInput.value ? parseInt(String(odoInput.value).replace(/,/g,''), 10) : null;
+
+    if(!yrKey || !entry){
+      finalOut.textContent = '—';
+      detailOut.textContent = 'Select family/year/trim';
+      trueOut.textContent = '';
+      if(lviBadge) lviBadge.textContent = '';
+      if(sumLvi) sumLvi.textContent = '—';
+      updateShareURL();
+      recomputeSniffer(); // keep sniffer status text in sync
+      return;
+    }
 
     var monthsShown = visibleMonthsFor(entry);
     buildHeader(monthsShown);
 
-    var final = (base === null || term == null) ? null : (base + pacpoAdj + annualAdj + inceptionAdj);
+    var final = (term == null) ? null : adjustedResidualForTerm(entry, yrKey, dispYear, term, /*pacpoOverride*/false);
     finalOut.textContent = final === null ? '—' : final + '%';
     finalOut.classList.add('success-flash');
     setTimeout(function(){ finalOut.classList.remove('success-flash'); }, 600);
     detailOut.textContent = final === null ? 'Select a term' : 'Final with all adjustments';
-    codeBadge.textContent = 'Code: ' + (code || '—');
+    codeBadge.textContent = 'Code: ' + (ctx.code || '—');
 
     tvalRow.innerHTML = '';
     var lead = document.createElement('td'); lead.textContent = (entry && entry.model) || '—'; tvalRow.appendChild(lead);
@@ -843,10 +939,9 @@
       var v = entry && entry.residuals && entry.residuals[m];
       var shown = '—';
       if(v !== null && v !== undefined){
-        var mN = parseInt(m, 10);
-        var aAdj = (mN >= 24) ? (milesMap[String(milesPerYear)] || 0) : 0;
-        var total = v + (pacpoToggle.checked ? PACPOv : 0) + aAdj + inceptionAdj;
-        shown = total + '%'; td.classList.add('ok');
+        var total = adjustedResidualForTerm(entry, yrKey, dispYear, m, /*pacpoOverride*/false);
+        shown = (total!=null ? total + '%' : '—');
+        td.classList.add(total!=null ? 'ok' : 'err');
       } else { td.classList.add('err'); }
       td.textContent = shown; tvalRow.appendChild(td);
     });
@@ -867,73 +962,79 @@
       ? ('<span class="rv-label">MSRP × RV% = </span><span class="rv-value">$' + trueResidual.toLocaleString() + '</span>')
       : '';
 
+    // badges
     badgeRow.innerHTML = '';
+    var base = (term && entry.residuals[term] != null) ? entry.residuals[term] : null;
     if(base !== null && term){ addBadge('Base ' + base + '%'); }
-    if(pacpoToggle.checked){ addBadge('+' + PACPOv + '% PACPO'); }
-    if(term && parseInt(term, 10) >= 24){ addBadge(((annualAdj>=0?'+':'') + annualAdj + '%') + ' Annual'); }
-    if(odo != null && !isNaN(odo)){ addBadge(((inceptionAdj>=0?'+':'') + inceptionAdj + '%') + ' Inception'); }
+    if(pacpoToggle.checked){ addBadge('+' + (data.pacpo_bonus_percent||2) + '% PACPO'); }
+    var milesMap = (data && data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {};
+    if(term && parseInt(term,10) >= 24){ addBadge(((milesMap[String(milesPerYear)]>=0?'+':'') + (milesMap[String(milesPerYear)]||0) + '%') + ' Annual'); }
+    if(odo != null && !isNaN(odo)){
+      var inceptionAdj = findInceptionAdj(yrKey, odo) || findInceptionAdj(dispYear, odo) || 0;
+      addBadge(((inceptionAdj>=0?'+':'') + inceptionAdj + '%') + ' Inception');
+    }
 
     sumFinal.textContent = final === null ? '—' : final + '%';
 
+    // LVI based on your current MF
     var mfVal = leaseMF && leaseMF.value ? Number(leaseMF.value) : NaN;
     var lviCurrent = computeLVI(final, mfVal);
     if(lviCurrent != null){
       var lviText = (lviCurrent/1000).toFixed(1) + 'k';
       if(lviBadge) lviBadge.textContent = 'LVI: ' + lviText;
       if(sumLvi) sumLvi.textContent = lviText;
-    } else { if(lviBadge) lviBadge.textContent = ''; if(sumLvi) sumLvi.textContent = '—'; }
+    } else {
+      if(lviBadge) lviBadge.textContent = '';
+      if(sumLvi) sumLvi.textContent = '—';
+    }
 
-    if(leaseTerm) { if (termSel && termSel.value) leaseTerm.value = termSel.value; }
+    if(leaseTerm && termSel && termSel.value) leaseTerm.value = termSel.value;
 
     updateShareURL();
-    leaseCompute();
-    recomputeSniffer(); // <— auto update
+    leaseCompute();       // keep payments fresh
+    recomputeSniffer();   // keep sniffer fresh
   }
-  function addBadge(txt){ var b = document.createElement('div'); b.className = 'badge'; b.textContent = txt; badgeRow.appendChild(b); }
-  function exportVisibleCSV(){ /* unchanged from your version (omitted for brevity in this block) */ 
-    var fam = familySel.value;
-    var branch = branchForFamily(fam);
-    var dispYear = yearSel.value;
-    var yrKey = Object.keys(branch).find(function(k){ return normalizeYearKey(k).display === dispYear; });
+
+  function addBadge(txt){
+    var b = document.createElement('div'); b.className = 'badge'; b.textContent = txt; badgeRow.appendChild(b);
+  }
+  function exportVisibleCSV(){
+    var ctx = currentEntryAndYearKey();
+    var entry = ctx.entry, yrKey = ctx.yrKey, dispYear = ctx.dispYear;
     if(!yrKey || !trimSel.value){ alert('Select family/year/trim first.'); return; }
-    var entry = branch[yrKey][trimSel.value];
     var monthsShown = visibleMonthsFor(entry);
 
     var rows = [];
     rows.push(['Trim/Term'].concat(monthsShown.map(function(m){return m + ' mo';})));
     var line = [(entry && entry.model) || '—'];
-    var milesPerYear = parseInt(annualMilesSel.value, 10);
-    var pacpoAdj = pacpoToggle.checked ? (data.pacpo_bonus_percent || 2) : 0;
-    var milesMap = (data && data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {};
-    var inceptionKeyCandidates = [yrKey, dispYear, dispYear.replace(/\s+/g,'')];
-    var inceptionAdj = 0;
-    var odo = odoInput.value ? parseInt(String(odoInput.value).replace(/,/g,''), 10) : null;
-    for(var i=0;i<inceptionKeyCandidates.length;i++){
-      var bands = (data && data.mileage_at_inception_adjustments_percent && data.mileage_at_inception_adjustments_percent[inceptionKeyCandidates[i]]) || null;
-      if(bands){ inceptionAdj = findInceptionAdj(inceptionKeyCandidates[i], odo); break; }
-    }
 
     monthsShown.forEach(function(m){
-      var v = entry && entry.residuals && entry.residuals[m];
-      if(v==null){ line.push(''); return; }
-      var aAdj = (parseInt(m,10) >= 24) ? (milesMap[String(milesPerYear)] || 0) : 0;
-      var total = v + pacpoAdj + aAdj + inceptionAdj;
-      line.push(total + '%');
+      var total = adjustedResidualForTerm(entry, yrKey, dispYear, m, /*pacpoOverride*/false);
+      line.push(total!=null ? (total + '%') : '');
     });
     rows.push(line);
 
     rows.push([]);
     rows.push(['Program', currentProgramLabel]);
-    rows.push(['Year', dispYear], ['Family', fam], ['Trim', (entry && entry.model)||'—'], ['Term', termSel.value ? termSel.value+' mo':'—']);
+    rows.push(['Year', dispYear], ['Family', ctx.fam], ['Trim', (entry && entry.model)||'—'], ['Term', termSel.value ? termSel.value+' mo':'—']);
     rows.push(['Miles/Year', sumMilesYear.textContent], ['Odometer', sumOdo.textContent], ['Final', sumFinal.textContent]);
     if(msrpInput.value){ rows.push(['MSRP', '$'+Number(msrpInput.value).toLocaleString()], ['MSRP × RV%', sumTrue.textContent]); }
 
-    var csv = rows.map(function(r){ return r.map(function(c){ var s = (c==null ? '' : String(c)); if(s.indexOf('"')!=-1 || s.indexOf(',')!=-1) s='"'+s.replace(/"/g,'""')+'"'; return s; }).join(','); }).join('\r\n');
+    var csv = rows.map(function(r){
+      return r.map(function(c){
+        var s = (c==null ? '' : String(c));
+        if(s.indexOf('"')!=-1 || s.indexOf(',')!=-1) s='"'+s.replace(/"/g,'""')+'"';
+        return s;
+      }).join(',');
+    }).join('\r\n');
 
-    var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'}); var url = URL.createObjectURL(blob);
-    var a = document.createElement('a'); a.href = url; var safeTrim = ((entry && entry.model)||'trim').replace(/[^\w\-]+/g,'_');
+    var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a'); a.href = url;
+    var safeTrim = ((entry && entry.model)||'trim').replace(/[^\w\-]+/g,'_');
     a.download = 'residual_' + safeTrim + '_' + (dispYear||'MY').replace(/\s+/g,'') + '.csv';
-    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
   }
   function printSummary(){ window.print(); }
 
@@ -970,8 +1071,12 @@
       });
     });
 
-    if(!data.annual_mileage_adjustments_percent || !data.annual_mileage_adjustments_percent.miles_per_year){ issues.push('annual_mileage_adjustments_percent.miles_per_year missing'); }
-    if(!data.mileage_at_inception_adjustments_percent){ issues.push('mileage_at_inception_adjustments_percent missing'); }
+    if(!data.annual_mileage_adjustments_percent || !data.annual_mileage_adjustments_percent.miles_per_year){
+      issues.push('annual_mileage_adjustments_percent.miles_per_year missing');
+    }
+    if(!data.mileage_at_inception_adjustments_percent){
+      issues.push('mileage_at_inception_adjustments_percent missing');
+    }
 
     var out = [];
     out.push('Program: ' + (currentProgramLabel || 'Unknown'));
@@ -1029,22 +1134,11 @@
     var preTax = dep + fin;
     var withTax = preTax * (1 + (isFinite(tax) ? tax : 0));
 
-    if(!isFinite(preTax) || preTax < 0){
-      leasePreTax.textContent = '—';
-      leaseWithTax.textContent = '—';
-      mfAprHint.textContent = isFinite(mf) ? ('≈ ' + (mf*2400).toFixed(2) + '% APR') : '';
-      return;
-    }
-
     leasePreTax.textContent = '$' + Math.round(preTax).toLocaleString();
     leaseWithTax.textContent = '$' + Math.round(withTax).toLocaleString();
     mfAprHint.textContent = isFinite(mf) ? ('≈ ' + (mf*2400).toFixed(2) + '% APR') : '';
-
-    // keep sniffer live
-    recomputeSniffer();
   }
 
-  // Preload lease defaults if fields are empty
   function applyLeaseDefaultsIfEmpty(){
     if(!leaseMF.value) leaseMF.value = '0.00400';
     if(!leaseTax.value) leaseTax.value = '9.75';
@@ -1069,54 +1163,15 @@
     if(p.msrp){ msrpInput.value = p.msrp; }
   }
 
-  // === Deal Sniffer logic ===
-  function currentEntryAndYearKey(){
-    var fam = familySel.value;
-    var branch = branchForFamily(fam);
-    var dispYear = yearSel.value;
-    var yrKey = Object.keys(branch).find(function(k){ return normalizeYearKey(k).display === dispYear; });
-    if(!yrKey || !trimSel.value) return {entry:null, yrKey:null, branch:null, dispYear:dispYear};
-    var entry = branch[yrKey][trimSel.value];
-    return {entry:entry, yrKey:yrKey, branch:branch, dispYear:dispYear};
-  }
-  function adjustedResidualForTerm(entry, yrKey, dispYear, term){
-    if(!entry || !entry.residuals) return null;
-    var base = entry.residuals[term];
-    if(base==null) return null;
-    var milesMap = (data && data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {};
-    var milesPerYear = parseInt(annualMilesSel.value,10);
-    var annualAdj = (parseInt(term,10) >= 24) ? (milesMap[String(milesPerYear)] || 0) : 0;
-    var PACPOv = data.pacpo_bonus_percent || 2;
-    var pacpoAdj = pacpoToggle.checked ? PACPOv : 0;
-    var odo = odoInput.value ? parseInt(String(odoInput.value).replace(/,/g,''), 10) : null;
-
-    var inceptionKeyCandidates = [yrKey, dispYear, dispYear.replace(/\s+/g,'')];
-    var inceptionAdj = 0;
-    for(var i=0;i<inceptionKeyCandidates.length;i++){
-      var bands = (data && data.mileage_at_inception_adjustments_percent && data.mileage_at_inception_adjustments_percent[inceptionKeyCandidates[i]]) || null;
-      if(bands){ inceptionAdj = findInceptionAdj(inceptionKeyCandidates[i], odo); break; }
-    }
-    return base + pacpoAdj + annualAdj + inceptionAdj;
-  }
-  function computeMonthly(msrp, rvPct, term, cap, mf, tax, capRed, fees){
-    if(!isFinite(msrp)||!isFinite(rvPct)||!isFinite(term)||!isFinite(cap)||!isFinite(mf)) return NaN;
-    if(term<=0 || cap<=0 || mf<=0) return NaN;
-    var rvAmt = Math.round(msrp * (rvPct/100));
-    var adjCap = cap - (isFinite(capRed)?capRed:0) + (isFinite(fees)?fees:0);
-    var dep = (adjCap - rvAmt) / term;
-    var fin = (adjCap + rvAmt) * mf;
-    var preTax = dep + fin;
-    var withTax = preTax * (1 + (isFinite(tax)?tax:0));
-    return Math.round(withTax);
-  }
+  // --- Deal Sniffer core
+  var lastBestTerm = null; // remember the current best for Apply button
   function recomputeSniffer(){
-    // Clear if essentials missing
     var cap = leaseCapCost.value ? Number(leaseCapCost.value) : NaN;
-    var mf = leaseMF.value ? Number(leaseMF.value) : NaN;
-    var tax = leaseTax.value ? Number(leaseTax.value)/100 : 0;
+    var mf  = leaseMF.value      ? Number(leaseMF.value)      : NaN;
+    var tax = leaseTax.value     ? Number(leaseTax.value)/100 : 0;
     var capRed = leaseCapReduction.value ? Number(leaseCapReduction.value) : 0;
-    var fees = leaseFees.value ? Number(leaseFees.value) : 0;
-    var msrp = msrpInput.value ? Number(msrpInput.value) : NaN;
+    var fees   = leaseFees.value         ? Number(leaseFees.value)         : 0;
+    var msrp   = msrpInput.value         ? Number(msrpInput.value)         : NaN;
 
     var curPay = leaseWithTax.textContent && leaseWithTax.textContent.startsWith('$')
       ? Number(leaseWithTax.textContent.replace(/[^0-9]/g,'')) : NaN;
@@ -1124,8 +1179,10 @@
     var ctx = currentEntryAndYearKey();
     if(!ctx.entry || !isFinite(cap) || !isFinite(mf) || !isFinite(msrp)){
       snifferGrid.style.display = 'none';
+      snifferActions.style.display = 'none';
       snifferBody.style.display = 'block';
       snifferBody.textContent = 'Enter Cap Cost to sniff deals.';
+      lastBestTerm = null;
       return;
     }
 
@@ -1133,16 +1190,17 @@
                   .filter(function(n){ return isFinite(n); });
     if(months.length===0){
       snifferGrid.style.display = 'none';
+      snifferActions.style.display = 'none';
       snifferBody.style.display = 'block';
       snifferBody.textContent = 'No valid terms for this trim.';
+      lastBestTerm = null;
       return;
     }
 
-    // Build candidates (same miles/PACPO/odo as selected)
     var candidates = [];
     for(var i=0;i<months.length;i++){
-      var term = String(months[i]);
-      var rv = adjustedResidualForTerm(ctx.entry, ctx.yrKey, ctx.dispYear, term);
+      var t = String(months[i]);
+      var rv = adjustedResidualForTerm(ctx.entry, ctx.yrKey, ctx.dispYear, t, /*PACPO ON*/true);
       if(rv==null) continue;
       var pay = computeMonthly(msrp, rv, months[i], cap, mf, tax, capRed, fees);
       if(!isFinite(pay)) continue;
@@ -1152,23 +1210,27 @@
 
     if(candidates.length===0){
       snifferGrid.style.display = 'none';
+      snifferActions.style.display = 'none';
       snifferBody.style.display = 'block';
       snifferBody.textContent = 'Insufficient inputs to compute deals.';
+      lastBestTerm = null;
       return;
     }
 
     candidates.sort(function(a,b){ return a.pay - b.pay; });
     var top = candidates.slice(0,3);
+    var best = top[0];
+    lastBestTerm = best ? best.term : null;
 
+    // Render
     snifferGrid.innerHTML = '';
     top.forEach(function(c, idx){
       var card = document.createElement('div');
       card.className = 'sniff' + (idx===0 ? ' best' : '');
       var lviText = (isFinite(c.lvi) ? (c.lvi/1000).toFixed(1)+'k' : '—');
       var delta = (isFinite(curPay) ? (c.pay - curPay) : null);
-      var deltaTxt = (delta==null) ? '' :
-        ((delta>0?'+':'') + '$' + Math.abs(delta).toLocaleString());
-      var deltaClass = (delta==null) ? '' : (delta<0 ? 'delta pos' : (delta>0 ? 'delta neg' : 'delta'));
+      var deltaTxt = (delta==null) ? '' : ((delta>0?'+':'') + '$' + Math.abs(delta).toLocaleString());
+      var deltaClass = (delta==null) ? 'delta' : (delta<0 ? 'delta pos' : (delta>0 ? 'delta neg' : 'delta'));
 
       card.innerHTML = `
         <div class="row">
@@ -1179,16 +1241,37 @@
           <div class="pay">$${c.pay.toLocaleString()}</div>
           <div class="${deltaClass}">${deltaTxt}</div>
         </div>
-        <div class="meta">RV ${c.rv.toFixed(2)}% • Miles ${annualMilesSel.value.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}/yr • PACPO ${pacpoToggle.checked? 'On':'Off'}</div>
+        <div class="meta">RV ${c.rv.toFixed(2)}% • Miles ${annualMilesSel.value.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}/yr • PACPO On</div>
       `;
       snifferGrid.appendChild(card);
     });
 
     snifferBody.style.display = 'none';
     snifferGrid.style.display = 'grid';
+    snifferActions.style.display = 'flex';
+
+    // Nudge if the best differs from selected term
+    var selectedTerm = termSel && termSel.value ? parseInt(termSel.value,10) : null;
+    if(isFinite(curPay) && selectedTerm && best && best.term !== selectedTerm){
+      showInfo('💡 Sniffer found a lower payment at ' + best.term + ' months (PACPO On).');
+    }
   }
 
-  // Events (unchanged + hook sniffer)
+  // Apply best term button
+  applyBestBtn.addEventListener('click', function(){
+    if(lastBestTerm){
+      // set term and PACPO On, then recompute
+      termSel.value = String(lastBestTerm);
+      pacpoToggle.checked = true;
+      // sync leaseTerm input too
+      if(leaseTerm) leaseTerm.value = String(lastBestTerm);
+      compute(); // will also leaseCompute + recomputeSniffer
+      snifferBox.classList.add('success-flash');
+      setTimeout(function(){ snifferBox.classList.remove('success-flash'); }, 700);
+    }
+  });
+
+  // UI actions
   programSel.addEventListener('change', function(){
     var val = programSel.value;
     var label = programSel.options[programSel.selectedIndex].textContent.replace(/^Program:\s*/,'');
@@ -1197,7 +1280,6 @@
       programSel.value = '__current__';
     });
   });
-
   jumpSummaryBtn.addEventListener('click', function(){
     var el = document.getElementById('summaryBox');
     if(el){ el.scrollIntoView({behavior:'smooth', block:'start'}); el.classList.add('success-flash'); setTimeout(function(){ el.classList.remove('success-flash'); }, 600); }
@@ -1212,12 +1294,14 @@
     compute();
     if(termSel && leaseTerm){ leaseTerm.value = termSel.value || ''; }
     leaseCompute();
+    recomputeSniffer();
   });
 
-  pacpoToggle.addEventListener('change', compute);
-  hideNA.addEventListener('change', compute);
-  annualMilesSel.addEventListener('change', compute);
-  odoInput.addEventListener('input', compute);
+  pacpoToggle.addEventListener('change', function(){ compute(); });
+  hideNA.addEventListener('change', function(){ compute(); });
+
+  annualMilesSel.addEventListener('change', function(){ compute(); });
+  odoInput.addEventListener('input', function(){ compute(); });
   msrpInput.addEventListener('input', function(){ compute(); leaseCompute(); });
 
   copyBtn.addEventListener('click', function(){
@@ -1246,12 +1330,13 @@
   validateBtn.addEventListener('click', validateJSON);
   closeValBtn && closeValBtn.addEventListener('click', function(){ validatorCard.style.display='none'; });
 
-  leaseCapCost.addEventListener('input', leaseCompute);
-  leaseMF.addEventListener('input', function(){ leaseCompute(); compute(); });
-  leaseTax.addEventListener('input', leaseCompute);
-  leaseCapReduction.addEventListener('input', leaseCompute);
-  leaseFees.addEventListener('input', leaseCompute);
-  leaseTerm.addEventListener('input', leaseCompute);
+  // Lease inputs trigger both payment + sniffer live
+  leaseCapCost.addEventListener('input', function(){ leaseCompute(); recomputeSniffer(); });
+  leaseMF.addEventListener('input', function(){ leaseCompute(); compute(); recomputeSniffer(); });
+  leaseTax.addEventListener('input', function(){ leaseCompute(); recomputeSniffer(); });
+  leaseCapReduction.addEventListener('input', function(){ leaseCompute(); recomputeSniffer(); });
+  leaseFees.addEventListener('input', function(){ leaseCompute(); recomputeSniffer(); });
+  leaseTerm.addEventListener('input', function(){ leaseCompute(); }); // manual override still supported
 
   // Boot
   var initialParams = readParams();
