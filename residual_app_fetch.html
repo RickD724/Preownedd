@@ -58,7 +58,7 @@
     --success-glow: rgba(16, 185, 129, 0.2);
     --purple-glow: rgba(139, 92, 246, 0.2);
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
   @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
   @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
   @keyframes slideInFromTop { from{transform:translateY(-30px);opacity:0} to{transform:translateY(0);opacity:1} }
@@ -66,49 +66,43 @@
   @keyframes scaleIn { from{transform:scale(.9);opacity:0} to{transform:scale(1);opacity:1} }
   @keyframes shimmer { 0%{background-position:-1000px 0} 100%{background-position:1000px 0} }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
-
   html, body{
     background: var(--bg);
     color: var(--text);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    min-height: 100vh;
-    overflow-x: hidden;
+    font-size: 16px; line-height:1.6; min-height:100vh; overflow-x:hidden;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
   }
-  body {
+  body{
     background: linear-gradient(135deg, var(--bg) 0%, var(--bg-secondary) 50%, var(--bg) 100%);
-    background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite;
+    background-size: 400% 400%; animation: gradientShift 15s ease infinite;
   }
-
-  .wrap { max-width: 980px; margin: 0 auto; padding: 20px 20px 120px; position: relative; }
-  body::before {
-    content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+  .wrap{ max-width:980px; margin:0 auto; padding:20px 20px 100px; position:relative; }
+  body::before{
+    content:''; position:fixed; top:-50%; left:-50%; width:200%; height:200%;
     background: radial-gradient(circle at 30% 20%, var(--accent-glow) 0%, transparent 50%),
                 radial-gradient(circle at 70% 80%, var(--purple-glow) 0%, transparent 50%);
-    opacity: 0.4; pointer-events: none; z-index: 0; animation: float 20s ease-in-out infinite;
+    opacity:.4; pointer-events:none; z-index:0; animation: float 20s ease-in-out infinite;
   }
-  body::after { content: ''; position: fixed; inset: 0; background: linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.03) 50%, transparent 100%); pointer-events: none; z-index: 0; }
-  .wrap > * { position: relative; z-index: 1; }
+  body::after{ content:''; position:fixed; inset:0; background:linear-gradient(90deg,transparent 0%, rgba(59,130,246,.03) 50%, transparent 100%); pointer-events:none; z-index:0; }
+  .wrap > *{ position:relative; z-index:1; }
 
-  .top { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%); background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 24px; box-shadow: var(--shadow); animation: slideInFromTop 0.6s ease; }
-  [data-theme="light"] .top { background: rgba(255,255,255,0.8); }
-
-  .brand { display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
-  .leftRow { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  .top{ position:sticky; top:0; z-index:50; backdrop-filter: blur(30px) saturate(180%);
+        -webkit-backdrop-filter: blur(30px) saturate(180%);
+        background: rgba(255,255,255,.02); border:1px solid var(--border); border-radius:var(--radius);
+        padding:16px 20px; margin-bottom:24px; box-shadow:var(--shadow); animation:slideInFromTop .6s ease; }
+  [data-theme="light"] .top{ background: rgba(255,255,255,.8); }
+  .brand{ display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+  .leftRow{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
 
   .pill{
     display:inline-flex; align-items:center; gap:12px;
-    background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
-    background-size:200% 200%; animation: gradientShift 8s ease infinite;
+    background:linear-gradient(135deg,var(--accent) 0%, var(--purple) 100%);
+    background-size:200% 200%; animation:gradientShift 8s ease infinite;
     color:#fff; padding:12px 24px; border-radius:999px; font-weight:900; font-size:.95rem; letter-spacing:.5px;
     box-shadow:0 8px 30px var(--accent-glow); white-space:nowrap; transition:var(--transition); position:relative; overflow:hidden;
   }
-  .pill::before{ content:''; position:absolute; inset:0; left:-100%;
-    background:linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent); animation:shimmer 3s infinite; }
+  .pill::before{ content:''; position:absolute; inset:0; left:-100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent); animation:shimmer 3s infinite; }
   .pill:hover{ transform:translateY(-3px) scale(1.05); box-shadow:0 12px 40px var(--accent-glow); }
 
   .theme,.btn{
@@ -171,32 +165,21 @@
   }
   .result::before{ content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%;
     background:linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent); animation:shimmer 3s infinite; }
-  .result .big{
-    font-size:4rem; font-weight:900; letter-spacing:-1px;
-    background:linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-    position:relative; z-index:1; text-shadow:0 0 40px var(--accent-glow);
-  }
+  .result .big{ font-size:4rem; font-weight:900; letter-spacing:-1px;
+    background:linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; position:relative; z-index:1; text-shadow:0 0 40px var(--accent-glow); }
   .result .small{ font-size:1.1rem; font-weight:600; position:relative; z-index:1; }
 
   .tableWrap{ margin-top:20px; overflow-x:auto; -webkit-overflow-scrolling:touch; border:1px solid var(--border); border-radius:var(--radius); background:var(--bg-secondary); box-shadow:inset 0 2px 10px rgba(0,0,0,0.1); }
   table{ min-width:720px; width:100%; border-collapse:separate; border-spacing:0; }
   th,td{ padding:16px 20px; border-bottom:1px solid var(--border); text-align:left; white-space:nowrap; transition:var(--transition); }
-  thead th{
-    font-size:.75rem; color:var(--muted); font-weight:800; position:sticky; top:0;
-    background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); z-index:1;
-    text-transform:uppercase; letter-spacing:1px; border-bottom:2px solid var(--border-hover);
-  }
+  thead th{ font-size:.75rem; color:var(--muted); font-weight:800; position:sticky; top:0; background:var(--card); z-index:1; text-transform:uppercase; letter-spacing:1px; border-bottom:2px solid var(--border-hover); }
   tbody tr{ transition:var(--transition); }
   tbody tr:hover{ background:var(--card-hover); transform:scale(1.01); }
   td.ok{ color:var(--success); font-weight:800; font-variant-numeric:tabular-nums; text-shadow:0 0 10px var(--success-glow); }
   td.err{ color:var(--danger); opacity:.5; }
-  td:first-child,th:first-child{ position:sticky; left:0; background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); z-index:2; font-weight:800; }
+  td:first-child,th:first-child{ position:sticky; left:0; background:var(--card); z-index:2; font-weight:800; }
 
-  .summary{
-    margin-top:24px; padding:32px; border:2px solid var(--border-hover); border-radius:var(--radius);
-    background:var(--card); backdrop-filter:blur(30px); box-shadow:var(--shadow-lg);
-    animation:scaleIn .8s ease; animation-delay:.3s; animation-fill-mode:both;
-  }
+  .summary{ margin-top:24px; padding:32px; border:2px solid var(--border-hover); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow-lg); animation:scaleIn .8s ease; animation-delay:.3s; animation-fill-mode:both; }
   .sum-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:20px; }
   @media (max-width:700px){ .sum-grid{ grid-template-columns:1fr; } }
 
@@ -212,48 +195,53 @@
   .slabel{ font-weight:700; color:var(--muted); font-size:.9rem; letter-spacing:.5px; }
   .sval{ font-variant-numeric:tabular-nums; font-weight:800; font-size:1.1rem; color:var(--text-primary); }
 
-  .rv-label{ color:#bfa7ff; font-family:inherit; font-weight:700; letter-spacing:.02em; }
-  .rv-value{ font-family:inherit; font-weight:800; color:var(--text-primary); }
+  .rv-label{ color:#bfa7ff; font-weight:700; letter-spacing:.02em; }
+  .rv-value{ font-weight:800; color:var(--text-primary); }
 
   .badges{ display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; }
   .badge{
     background:linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.1));
-    border:1px solid var(--border-hover); padding:10px 20px; border-radius:999px; font-size:.85rem; font-weight:700; transition:var(--transition); animation:fadeInUp .8s ease; letter-spacing:.3px;
+    border:1px solid var(--border-hover); padding:10px 20px; border-radius:999px; font-size:.85rem; font-weight:700; transition:var(--transition);
   }
-  .badge:hover{ transform:translateY(-3px) scale(1.05); box-shadow:0 8px 20px var(--accent-glow);
-    background:linear-gradient(135deg, rgba(59,130,246,0.3), rgba(139,92,246,0.2)); }
-
-  .footer{ margin:40px 0 20px; animation:fadeInUp 1s ease; }
-  .foot-card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:28px 32px; text-align:center; }
-  .foot-title{
-    font-weight:900; letter-spacing:.5px; margin-bottom:12px; font-size:1.2rem;
-    background:linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-  }
-  .foot-text{ color:var(--muted); font-size:.95rem; line-height:1.8; }
 
   /* Sniffer */
-  .sniff-wrap{ display:grid; gap:16px; }
+  .sniffer-head{ display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .chip{ border:1px solid var(--border); background:var(--card); padding:6px 10px; border-radius:999px; font-weight:700; font-size:.8rem; cursor:pointer; }
+  .chip[data-active="true"]{ border-color:var(--success); box-shadow:0 0 0 3px var(--success-glow); }
+  .sniff-grid{ display:grid; grid-template-columns:1fr; gap:14px; }
   .sniff-card{
-    border:2px solid var(--border);
-    border-radius: var(--radius);
-    padding:18px;
-    background: var(--bg-secondary);
-    box-shadow: var(--shadow);
-    transition: var(--transition);
+    border:2px solid var(--border); border-radius:16px; background:var(--bg-secondary); padding:14px 16px;
   }
-  .sniff-card.best{ border-color: rgba(16,185,129,.6); box-shadow: 0 10px 30px rgba(16,185,129,.15); }
-  .sniff-card .line{ display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
-  .sniff-chip{ font-weight:800; padding:6px 10px; border-radius:999px; border:1px solid var(--border-hover); background:linear-gradient(135deg, rgba(59,130,246,.06), rgba(139,92,246,.06)); }
-  .sniff-strong{ font-weight:900; letter-spacing:.2px; }
-  .sniff-muted{ color:var(--muted); }
-  .copyBtnMini{ border:1px solid var(--border); padding:6px 10px; border-radius:10px; background:var(--card); cursor:pointer; font-weight:700; }
-  @media (max-width:768px){ .result .big{ font-size:2.5rem; } .card{ padding:20px; } .summary{ padding:20px; } }
-  @media print{ body{ background:#fff; } .top,.controls,.tableWrap,#leaseCard,#snifferCard,.footer,#validatorCard{ display:none !important; } .summary{ border:0; box-shadow:none; } }
+  .sniff-top{ display:flex; gap:10px; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .pill-mini{ padding:6px 10px; border-radius:999px; border:1px solid var(--border-hover); background:var(--card); font-weight:800; font-size:.85rem; }
+  .sniff-rows{ display:flex; gap:16px; flex-wrap:wrap; }
+  .sniff-rows .label{ color:var(--muted); font-size:.85rem; }
+  .sniff-rows .val{ font-weight:800; }
+  .sniff-foot{ display:flex; align-items:center; justify-content:space-between; margin-top:8px; }
+  .sniff-best{ border-color:rgba(16,185,129,.35); box-shadow:0 0 0 3px rgba(16,185,129,.12); }
+
+  .footer{ margin:40px 0 20px; }
+  .foot-card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:28px 32px; text-align:center; }
+  .foot-title{ font-weight:900; letter-spacing:.5px; margin-bottom:12px; font-size:1.2rem;
+    background:linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .foot-text{ color:var(--muted); font-size:.95rem; line-height:1.8; }
+
+  @media (max-width:768px){
+    .result .big{ font-size:2.5rem; }
+    .card{ padding:20px; }
+    .summary{ padding:20px; }
+  }
+  @media print{
+    body{ background:#fff; }
+    .top,.controls,.tableWrap,#leaseCard,#snifferCard,.footer,#validatorCard{ display:none !important; }
+    .summary{ border:0; box-shadow:none; }
+  }
   .loading{ position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); font-size:1.2rem; color:var(--accent); font-weight:700; animation:pulse 1.5s infinite; }
   .success-flash{ animation:successPulse .6s ease; }
   @keyframes successPulse{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.05); box-shadow:0 0 30px var(--success-glow)} }
 </style>
 </head>
+
 <body>
   <div class="wrap">
     <div class="top">
@@ -279,32 +267,32 @@
     <div class="card controls" id="controls">
       <div class="grid g4">
         <div>
-          <label>🚗 Model Family</label>
+          <label for="familySel">🚗 Model Family</label>
           <select id="familySel"></select>
         </div>
         <div>
-          <label>📅 Model Year</label>
+          <label for="yearSel">📅 Model Year</label>
           <select id="yearSel"></select>
         </div>
         <div>
-          <label>🎯 Trim</label>
+          <label for="trimSel">🎯 Trim</label>
           <select id="trimSel"></select>
           <div class="hint" id="trimCount"></div>
           <div class="hint" id="trimWarn" style="display:none;color:var(--danger);">⚠️ No trims found</div>
         </div>
         <div class="searchWrap">
-          <label>🔍 Search Trim</label>
+          <label for="trimSearch">🔍 Search Trim</label>
           <input id="trimSearch" type="text" placeholder="Type to filter..." />
         </div>
       </div>
 
       <div class="grid g3" style="margin-top: 16px">
         <div>
-          <label>⏱️ Term (months)</label>
+          <label for="termSel">⏱️ Term (months)</label>
           <select id="termSel"></select>
         </div>
         <div>
-          <label>📊 Miles per Year</label>
+          <label for="annualMilesSel">📊 Miles per Year</label>
           <select id="annualMilesSel"></select>
         </div>
         <div class="rowline" style="margin-top: 32px">
@@ -322,16 +310,16 @@
 
       <div class="grid g3" style="margin-top: 16px">
         <div>
-          <label>🛣️ Miles at Inception</label>
+          <label for="odoInput">🛣️ Miles at Inception</label>
           <input id="odoInput" type="number" min="0" step="1" placeholder="e.g., 3,450" />
           <div class="hint">Adjustment shown even at +0%</div>
         </div>
         <div>
-          <label>💰 MSRP ($)</label>
+          <label for="msrpInput">💰 MSRP ($)</label>
           <input id="msrpInput" type="number" min="0" step="100" placeholder="e.g., 142,000" />
         </div>
         <div>
-          <label>🔗 Shareable Link</label>
+          <label for="shareLink">🔗 Shareable Link</label>
           <input id="shareLink" type="text" readonly style="font-size:0.85rem;" />
           <div class="hint">Auto-updates — copy to share calc</div>
         </div>
@@ -389,35 +377,35 @@
 
       <div class="grid g3">
         <div>
-          <label>💵 Cap Cost ($)</label>
+          <label for="leaseCapCost">💵 Cap Cost ($)</label>
           <input id="leaseCapCost" type="number" min="0" step="100" placeholder="e.g., 165000" />
           <div class="hint">Selling price before down</div>
         </div>
         <div>
-          <label>📈 Money Factor</label>
+          <label for="leaseMF">📈 Money Factor</label>
           <input id="leaseMF" type="number" min="0" step="0.00001" placeholder="e.g., 0.00210" />
           <div class="hint">Decimal format (0.00210)</div>
           <div class="hint" id="mfAprHint"></div>
         </div>
         <div>
-          <label>🧾 Tax Rate (%)</label>
+          <label for="leaseTax">🧾 Tax Rate (%)</label>
           <input id="leaseTax" type="number" min="0" step="0.01" placeholder="e.g., 9.375" />
         </div>
       </div>
 
       <div class="grid g3" style="margin-top:14px">
         <div>
-          <label>💸 Cap Reduction ($)</label>
+          <label for="leaseCapReduction">💸 Cap Reduction ($)</label>
           <input id="leaseCapReduction" type="number" min="0" step="100" placeholder="0" />
           <div class="hint">Cash down (optional)</div>
         </div>
         <div>
-          <label>📝 Rolled Fees ($)</label>
+          <label for="leaseFees">📝 Rolled Fees ($)</label>
           <input id="leaseFees" type="number" min="0" step="25" placeholder="0" />
           <div class="hint">Acq/Doc fees (optional)</div>
         </div>
         <div>
-          <label>⏰ Term (mo)</label>
+          <label for="leaseTerm">⏰ Term (mo)</label>
           <input id="leaseTerm" type="number" min="12" step="1" placeholder="auto" />
           <div class="hint">Auto-fills from selection</div>
         </div>
@@ -435,15 +423,19 @@
       </div>
     </div>
 
-    <!-- 🔎 Lease Sniffer (Auto-run) -->
-    <div class="card" id="snifferCard" style="margin-top:16px; animation-delay:0.7s;">
-      <div class="rowline" style="justify-content:space-between; margin-bottom:12px;">
-        <strong style="font-size:1.15rem;">🔎 Lease Sniffer (Optimizes by <span title='Residual % ÷ Money Factor'>LVI</span> → Payment)</strong>
-        <span class="muted" style="font-size:.95rem;">Tests other terms using the same structure</span>
+    <!-- Lease Sniffer -->
+    <div class="card" id="snifferCard" style="margin-top:16px; animation-delay:.7s;">
+      <div class="sniffer-head">
+        <div>
+          <strong style="font-size:1.1rem">🔎 Lease Sniffer</strong>
+          <div class="hint">Tests other terms using the same structure</div>
+        </div>
+        <div class="rowline">
+          <div id="rankByLVI" class="chip" data-active="true" title="Rank by LVI, then payment">LVI → Payment</div>
+          <div id="rankByPay" class="chip" data-active="false" title="Rank by payment only">Payment Only</div>
+        </div>
       </div>
-      <div id="sniffWrap" class="sniff-wrap">
-        <div class="sniff-muted">Run a calculation to see suggestions…</div>
-      </div>
+      <div id="sniffWrap" class="sniff-grid"></div>
     </div>
 
     <div class="card" id="validatorCard" style="margin-top:16px; display:none; animation-delay:0.8s;">
@@ -468,7 +460,7 @@
 
 <script>
 (function(){
-  /* ------ Manifest & Icons ------ */
+  // --- PWA icon + manifest (unchanged) ---
   (function generateIconsAndManifest(){
     try{
       var canvas = document.createElement('canvas');
@@ -503,20 +495,19 @@
     }catch(e){}
   })();
 
-  /* ------ Theme: force Light by default ------ */
+  // --- Theme: force default to light, allow toggle ---
   var themeBtn = document.getElementById('themeBtn');
-  document.documentElement.setAttribute('data-theme', 'light');
+  document.documentElement.setAttribute('data-theme','light');
   themeBtn.innerHTML = '🌙 Dark';
   themeBtn.addEventListener('click', function(){
     var cur = document.documentElement.getAttribute('data-theme');
     var next = cur === 'light' ? 'dark' : 'light';
     document.documentElement.setAttribute('data-theme', next);
     themeBtn.innerHTML = next === 'light' ? '🌙 Dark' : '☀️ Light';
-    themeBtn.classList.add('success-flash');
-    setTimeout(function(){ themeBtn.classList.remove('success-flash'); }, 600);
+    themeBtn.classList.add('success-flash'); setTimeout(function(){ themeBtn.classList.remove('success-flash'); }, 600);
   });
 
-  /* ------ Grab elements ------ */
+  // --- Element refs ---
   var programSel = document.getElementById('programSel');
   var validateBtn = document.getElementById('validateBtn');
   var exportCsvBtn = document.getElementById('exportCsvBtn');
@@ -570,13 +561,17 @@
   var validatorCard = document.getElementById('validatorCard');
   var closeValBtn = document.getElementById('closeValBtn');
   var validatorOutput = document.getElementById('validatorOutput');
+
+  // Sniffer
   var sniffWrap = document.getElementById('sniffWrap');
+  var rankByLVI = document.getElementById('rankByLVI');
+  var rankByPay = document.getElementById('rankByPay');
+  var rankMode = 'LVI'; // 'LVI' or 'PAY'
 
   var data, MONTHS = [], PACPO = 2;
   var fullTrimList = [];
   var currentProgramLabel = 'Current';
 
-  /* ------ Utils ------ */
   function readParams(){
     var p = new URLSearchParams(location.search);
     return {
@@ -603,7 +598,36 @@
     shareLink.value = location.origin + url;
     history.replaceState(null, '', url);
   }
-  var initialProgram = (function(){ var params = new URLSearchParams(location.search); return params.get('data') || 'porsche_residuals_all.json'; })();
+  var initialProgram = (function(){
+    var params = new URLSearchParams(location.search);
+    return params.get('data') || 'porsche_residuals_all.json';
+  })();
+
+  function loadProgram(file, label){
+    var cacheBuster = 't=' + Date.now();
+    currentProgramLabel = label || (file === '__current__' ? 'Current' : file);
+    var target = (file === '__current__') ? initialProgram : file;
+    return fetch(target + '?' + cacheBuster, {cache:'no-store'})
+      .then(function(res){
+        if(!res.ok) throw new Error('HTTP ' + res.status + ' loading ' + target);
+        return res.json();
+      })
+      .then(function(j){
+        data = j; window.__data = data;
+        MONTHS = data.months || ["12","18","24","27","30","36","39","42","48","51","60"];
+        PACPO = data.pacpo_bonus_percent || 2;
+        sumProgram.textContent = label || target;
+        initSelectors();
+        restoreFromParams();
+        // Preloads (1)
+        if(!leaseMF.value) leaseMF.value = '0.00400';
+        if(!leaseTax.value) leaseTax.value = '9.75';
+        if(!leaseCapReduction.value) leaseCapReduction.value = '7500';
+        if(!leaseFees.value) leaseFees.value = '1095';
+        compute();
+        updateShareURL();
+      });
+  }
 
   function normalizeYearKey(k){
     var s = String(k).trim();
@@ -621,8 +645,13 @@
   function getVirtualFamilies(){
     var out = new Set();
     var models = data.models || {};
-    if(models['718']){ if(getCaseInsensitive(models['718'],'Cayman')) out.add('718 Cayman'); if(getCaseInsensitive(models['718'],'Boxster')) out.add('718 Boxster'); }
-    Object.keys(models).forEach(function(f){ if(f!=='718') out.add(f); });
+    Object.keys(models).forEach(function(f){
+      if(f === '718'){
+        var cay = getCaseInsensitive(models['718'],'Cayman');
+        var box = getCaseInsensitive(models['718'],'Boxster');
+        if (cay) out.add('718 Cayman'); if (box) out.add('718 Boxster');
+      } else { out.add(f); }
+    });
     if(models['Cayman']) out.add('718 Cayman');
     if(models['Boxster']) out.add('718 Boxster');
     var order = ['911','718 Cayman','718 Boxster','Taycan','Macan','Cayenne','Panamera'];
@@ -643,25 +672,19 @@
       return by - ay;
     });
   }
+
+  function prettyModelName(txt){
+    // strip leading long alphanumeric code tokens (e.g., 20239YAAA1)
+    if(!txt) return txt;
+    var s = String(txt).trim();
+    s = s.replace(/^[0-9A-Z]{6,}\s+/i, ''); // remove one long token
+    return s;
+  }
+
   function populate(select, arr){
     select.innerHTML = '';
     arr.forEach(function(v){ var opt = document.createElement('option'); opt.value = v; opt.textContent = v; select.appendChild(opt); });
   }
-
-  // Pretty display for trims: remove code-like prefixes (fixes MY22/23 Cayenne display issue)
-  function prettyModelName(model, code){
-    var m = String(model||'').trim();
-    var c = String(code||'').trim();
-    // strip if model begins with the exact code or a 8–12 char alnum block
-    if(m.toUpperCase().startsWith(c.toUpperCase())) m = m.slice(c.length).trim();
-    m = m.replace(/^[A-Z0-9]{8,12}\s+/, '');
-    // collapse "Cayenne Cayenne" pattern
-    m = m.replace(/\b(Cayenne)\s+\1\b/i, '$1');
-    // if after clean it's empty, fallback to code
-    if(!m) m = c;
-    return m;
-  }
-
   function initSelectors(){
     populate(familySel, getVirtualFamilies());
     populate(yearSel, yearsForFamily(familySel.value));
@@ -687,15 +710,17 @@
     var yearKey = Object.keys(branch).find(function(k){ return normalizeYearKey(k).display === dispYear; });
     var rows = (yearKey && branch[yearKey]) || {};
     Object.entries(rows).forEach(function(entry){
-      var code = entry[0], obj = entry[1]||{};
-      fullTrimList.push({code: code, model: prettyModelName(obj.model || code, code)});
+      var code = entry[0], modelTxt = entry[1].model || entry[0];
+      fullTrimList.push({code: code, model: prettyModelName(modelTxt)});
     });
   }
   function populateTrims(filterTerm){
     trimSel.innerHTML = '';
     var term = (filterTerm||'').trim().toLowerCase();
     var filtered = fullTrimList.filter(function(t){ return (t.model + " " + t.code).toLowerCase().indexOf(term) !== -1; });
-    filtered.forEach(function(item){ var opt = document.createElement('option'); opt.value = item.code; opt.textContent = item.model; opt.dataset.code = item.code; trimSel.appendChild(opt); });
+    filtered.forEach(function(item){
+      var opt = document.createElement('option'); opt.value = item.code; opt.textContent = item.model; opt.dataset.code = item.code; trimSel.appendChild(opt);
+    });
     trimCount.textContent = filtered.length ? (filtered.length + ' trim(s) available') : 'No matches';
     trimWarn.style.display = filtered.length ? 'none' : 'block';
   }
@@ -728,68 +753,55 @@
     var th1 = document.createElement('th'); th1.textContent = 'Trim / Term'; theadRow.appendChild(th1);
     visibleMonths.forEach(function(m){ var th = document.createElement('th'); th.textContent = m + ' mo'; theadRow.appendChild(th); });
   }
+
   function computeLVI(rvPercent, mf){ if(!isFinite(rvPercent) || !isFinite(mf) || mf <= 0) return null; return rvPercent / mf; }
 
-  /* ------ Current context helper (shared by calculator & sniffer) ------ */
-  function getCurrentContext(){
+  function compute(){
     var fam = familySel.value;
     var branch = branchForFamily(fam);
     var dispYear = yearSel.value;
     var yrKey = Object.keys(branch).find(function(k){ return normalizeYearKey(k).display === dispYear; });
     var code = trimSel.value;
-    if(!yrKey || !code) return null;
-
-    var entry = branch[yrKey][code] || {};
+    var term = termSel.value;
     var milesPerYear = parseInt(annualMilesSel.value, 10);
-    var milesMap = (data && data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {};
-    var pacpoAdj = pacpoToggle.checked ? (data.pacpo_bonus_percent || 2) : 0;
-
-    var inceptionAdj = 0;
     var odo = odoInput.value ? parseInt(String(odoInput.value).replace(/,/g,''), 10) : null;
-    var inceptionKeyCandidates = [yrKey, dispYear, dispYear.replace(/\s+/g,'')];
-    for(var i=0;i<inceptionKeyCandidates.length;i++){
-      var bands = (data && data.mileage_at_inception_adjustments_percent && data.mileage_at_inception_adjustments_percent[inceptionKeyCandidates[i]]) || null;
-      if(bands){ inceptionAdj = findInceptionAdj(inceptionKeyCandidates[i], odo); break; }
-    }
 
-    return {
-      fam, branch, dispYear, yrKey, code, entry, milesPerYear, milesMap, pacpoAdj, inceptionAdj
-    };
-  }
-
-  /* ------ Main compute (table & summary & LVI) ------ */
-  function compute(){
-    var ctx = getCurrentContext();
-    if(!ctx){
+    if(!yrKey || !code){
       finalOut.textContent = '—';
       detailOut.textContent = 'Select family/year/trim';
       trueOut.textContent = '';
       if(lviBadge) lviBadge.textContent = '';
       if(sumLvi) sumLvi.textContent = '—';
       updateShareURL();
+      sniffRender([]); // clear sniffer
       return;
     }
-    var entry = ctx.entry;
-    var term = termSel.value;
-    var milesPerYear = ctx.milesPerYear;
-    var milesMap = ctx.milesMap;
 
+    var entry = branch[yrKey][code];
     var base = term ? ((entry && entry.residuals && entry.residuals[term]) || null) : null;
+    var PACPOv = data.pacpo_bonus_percent || 2;
+    var pacpoAdj = pacpoToggle.checked ? PACPOv : 0;
+    var milesMap = (data && data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {};
     var annualAdj = 0;
     if(base !== null && parseInt(term || "0", 10) >= 24){ annualAdj = milesMap[String(milesPerYear)] || 0; }
+    var inceptionKeyCandidates = [yrKey, dispYear, dispYear.replace(/\s+/g,'')];
+    var inceptionAdj = 0;
+    for(var i=0;i<inceptionKeyCandidates.length;i++){
+      var bands = (data && data.mileage_at_inception_adjustments_percent && data.mileage_at_inception_adjustments_percent[inceptionKeyCandidates[i]]) || null;
+      if(bands){ inceptionAdj = findInceptionAdj(inceptionKeyCandidates[i], odo); break; }
+    }
 
     var monthsShown = visibleMonthsFor(entry);
     buildHeader(monthsShown);
 
-    var final = (base === null || term == null) ? null : (base + ctx.pacpoAdj + annualAdj + ctx.inceptionAdj);
+    var final = (base === null || term == null) ? null : (base + pacpoAdj + annualAdj + inceptionAdj);
     finalOut.textContent = final === null ? '—' : final + '%';
-    finalOut.classList.add('success-flash');
-    setTimeout(function(){ finalOut.classList.remove('success-flash'); }, 600);
+    finalOut.classList.add('success-flash'); setTimeout(function(){ finalOut.classList.remove('success-flash'); }, 600);
     detailOut.textContent = final === null ? 'Select a term' : 'Final with all adjustments';
-    codeBadge.textContent = 'Code: ' + (ctx.code || '—');
+    codeBadge.textContent = 'Code: ' + (code || '—');
 
     tvalRow.innerHTML = '';
-    var lead = document.createElement('td'); lead.textContent = (entry && entry.model ? prettyModelName(entry.model, ctx.code) : '—'); tvalRow.appendChild(lead);
+    var lead = document.createElement('td'); lead.textContent = prettyModelName((entry && entry.model) || '—'); tvalRow.appendChild(lead);
     monthsShown.forEach(function(m){
       var td = document.createElement('td');
       var v = entry && entry.residuals && entry.residuals[m];
@@ -797,19 +809,18 @@
       if(v !== null && v !== undefined){
         var mN = parseInt(m, 10);
         var aAdj = (mN >= 24) ? (milesMap[String(milesPerYear)] || 0) : 0;
-        var total = v + ctx.pacpoAdj + aAdj + ctx.inceptionAdj;
+        var total = v + pacpoAdj + aAdj + inceptionAdj;
         shown = total + '%'; td.classList.add('ok');
       } else { td.classList.add('err'); }
       td.textContent = shown; tvalRow.appendChild(td);
     });
 
     sumProgram.textContent = currentProgramLabel;
-    sumYear.textContent = ctx.dispYear || '—';
-    sumFamily.textContent = ctx.fam || '—';
-    sumTrim.textContent = (entry && entry.model ? prettyModelName(entry.model, ctx.code) : '—');
+    sumYear.textContent = dispYear || '—';
+    sumFamily.textContent = fam || '—';
+    sumTrim.textContent = prettyModelName((entry && entry.model) || '—');
     sumTerm.textContent = term ? (term + ' mo') : '—';
     sumMilesYear.textContent = Number.isFinite(milesPerYear) ? milesPerYear.toLocaleString() + ' mi/yr' : '—';
-    var odo = odoInput.value ? parseInt(String(odoInput.value).replace(/,/g,''), 10) : null;
     sumOdo.textContent = (odo != null && !isNaN(odo)) ? odo.toLocaleString() + ' mi' : '—';
 
     var msrp = msrpInput.value ? Number(msrpInput.value) : null;
@@ -822,9 +833,9 @@
 
     badgeRow.innerHTML = '';
     if(base !== null && term){ addBadge('Base ' + base + '%'); }
-    if(pacpoToggle.checked){ addBadge('+' + (data.pacpo_bonus_percent || 2) + '% PACPO'); }
+    if(pacpoToggle.checked){ addBadge('+' + PACPOv + '% PACPO'); }
     if(term && parseInt(term, 10) >= 24){ addBadge(((annualAdj>=0?'+':'') + annualAdj + '%') + ' Annual'); }
-    if(odo != null && !isNaN(odo)){ addBadge(((ctx.inceptionAdj>=0?'+':'') + ctx.inceptionAdj + '%') + ' Inception'); }
+    if(odo != null && !isNaN(odo)){ addBadge(((inceptionAdj>=0?'+':'') + inceptionAdj + '%') + ' Inception'); }
 
     sumFinal.textContent = final === null ? '—' : final + '%';
 
@@ -840,33 +851,53 @@
     }
 
     updateShareURL();
-    if(leaseTerm && (!leaseTerm.value || leaseTerm.value === '')) { if(termSel && termSel.value) leaseTerm.value = termSel.value; }
-    leaseCompute(); // also triggers sniffer
+    if(leaseTerm && (!leaseTerm.value || leaseTerm.value === '')) {
+      if(termSel && termSel.value) leaseTerm.value = termSel.value;
+    }
+    leaseCompute();
+
+    // Auto-run sniffer after compute
+    runSniffer(entry, monthsShown, final, lviCurrent);
   }
+
   function addBadge(txt){
     var b = document.createElement('div'); b.className = 'badge'; b.textContent = txt; badgeRow.appendChild(b);
   }
 
-  /* ------ CSV / Print / Validate ------ */
-  function exportVisibleCSV(){
-    var ctx = getCurrentContext(); if(!ctx){ alert('Select family/year/trim first.'); return; }
-    var entry = ctx.entry;
+  function exportVisibleCSV(){ /* unchanged from your previous version */ 
+    var fam = familySel.value;
+    var branch = branchForFamily(fam);
+    var dispYear = yearSel.value;
+    var yrKey = Object.keys(branch).find(function(k){ return normalizeYearKey(k).display === dispYear; });
+    if(!yrKey || !trimSel.value){ alert('Select family/year/trim first.'); return; }
+    var entry = branch[yrKey][trimSel.value];
     var monthsShown = visibleMonthsFor(entry);
+
     var rows = [];
     rows.push(['Trim/Term'].concat(monthsShown.map(function(m){return m + ' mo';})));
-    var line = [(entry && entry.model ? prettyModelName(entry.model, ctx.code) : '—')];
+    var line = [prettyModelName((entry && entry.model) || '—')];
+    var milesPerYear = parseInt(annualMilesSel.value, 10);
+    var pacpoAdj = pacpoToggle.checked ? (data.pacpo_bonus_percent || 2) : 0;
+    var milesMap = (data && data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {};
+    var inceptionKeyCandidates = [yrKey, dispYear, dispYear.replace(/\s+/g,'')];
+    var inceptionAdj = 0;
+    var odo = odoInput.value ? parseInt(String(odoInput.value).replace(/,/g,''), 10) : null;
+    for(var i=0;i<inceptionKeyCandidates.length;i++){
+      var bands = (data && data.mileage_at_inception_adjustments_percent && data.mileage_at_inception_adjustments_percent[inceptionKeyCandidates[i]]) || null;
+      if(bands){ inceptionAdj = findInceptionAdj(inceptionKeyCandidates[i], odo); break; }
+    }
     monthsShown.forEach(function(m){
       var v = entry && entry.residuals && entry.residuals[m];
       if(v==null){ line.push(''); return; }
-      var aAdj = (parseInt(m,10) >= 24) ? (ctx.milesMap[String(ctx.milesPerYear)] || 0) : 0;
-      var total = v + ctx.pacpoAdj + aAdj + ctx.inceptionAdj;
+      var aAdj = (parseInt(m,10) >= 24) ? (milesMap[String(milesPerYear)] || 0) : 0;
+      var total = v + pacpoAdj + aAdj + inceptionAdj;
       line.push(total + '%');
     });
     rows.push(line);
 
     rows.push([]);
     rows.push(['Program', currentProgramLabel]);
-    rows.push(['Year', ctx.dispYear], ['Family', ctx.fam], ['Trim', (entry && entry.model ? prettyModelName(entry.model, ctx.code) : '—')], ['Term', termSel.value ? termSel.value+' mo':'—']);
+    rows.push(['Year', dispYear], ['Family', fam], ['Trim', prettyModelName((entry && entry.model)||'—')], ['Term', termSel.value ? termSel.value+' mo':'—']);
     rows.push(['Miles/Year', sumMilesYear.textContent], ['Odometer', sumOdo.textContent], ['Final', sumFinal.textContent]);
     if(msrpInput.value){ rows.push(['MSRP', '$'+Number(msrpInput.value).toLocaleString()], ['MSRP × RV%', sumTrue.textContent]); }
 
@@ -881,18 +912,19 @@
     var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a'); a.href = url;
-    var safeTrim = ((entry && entry.model)||'trim').replace(/[^\w\-]+/g,'_');
-    a.download = 'residual_' + safeTrim + '_' + (ctx.dispYear||'MY').replace(/\s+/g,'') + '.csv';
+    var safeTrim = (prettyModelName((entry && entry.model)||'trim')).replace(/[^\w\-]+/g,'_');
+    a.download = 'residual_' + safeTrim + '_' + (dispYear||'MY').replace(/\s+/g,'') + '.csv';
     document.body.appendChild(a); a.click(); a.remove();
     URL.revokeObjectURL(url);
   }
+
   function printSummary(){ window.print(); }
+
   function validateJSON(){
     if(!data){ alert('Load a program first.'); return; }
     var issues = [];
     var models = data.models || {};
     var totalTrims = 0, missingCells = 0;
-
     function checkEntry(modelFamily, yearKey, code, entry){
       totalTrims++;
       var resids = entry.residuals || {};
@@ -903,7 +935,6 @@
         }
       });
     }
-
     Object.keys(models).forEach(function(fam){
       var famBranch = models[fam];
       if(!famBranch || typeof famBranch!=='object') return;
@@ -919,14 +950,12 @@
         });
       });
     });
-
     if(!data.annual_mileage_adjustments_percent || !data.annual_mileage_adjustments_percent.miles_per_year){
       issues.push('annual_mileage_adjustments_percent.miles_per_year missing');
     }
     if(!data.mileage_at_inception_adjustments_percent){
       issues.push('mileage_at_inception_adjustments_percent missing');
     }
-
     var out = [];
     out.push('Program: ' + (currentProgramLabel || 'Unknown'));
     out.push('MONTHS: ' + JSON.stringify(MONTHS));
@@ -937,12 +966,16 @@
     if(issues.length===0) out.push('✅ No issues found!');
     else out.push('⚠️ Issues ('+issues.length+'):');
     issues.forEach(function(line){ out.push(' • ' + line); });
-
     validatorOutput.textContent = out.join('\n');
     validatorCard.style.display = 'block';
   }
 
-  /* ------ Lease Calculator ------ */
+  function asMoney(n, withCents){
+    if(!isFinite(n)) return '—';
+    return withCents ? ('$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')) 
+                     : ('$' + Math.round(n).toLocaleString());
+  }
+
   function leaseCompute(){
     var rvPctText = sumFinal.textContent;
     var rvPct = (rvPctText && rvPctText.endsWith('%')) ? parseFloat(rvPctText) : NaN;
@@ -960,7 +993,6 @@
     if(!isFinite(msrp) || !isFinite(rvPct) || !isFinite(term) || term <= 0){
       leaseRvAmt.textContent = '—'; leaseAdjCap.textContent = '—'; leasePreTax.textContent = '—'; leaseWithTax.textContent = '—';
       mfAprHint.textContent = isFinite(mf) ? ('≈ ' + (mf*2400).toFixed(2) + '% APR') : '';
-      leaseSniff(null); // clear sniffer
       return;
     }
 
@@ -973,127 +1005,127 @@
     if(!isFinite(adjCap) || adjCap <= 0 || !isFinite(mf) || mf <= 0){
       leasePreTax.textContent = '—'; leaseWithTax.textContent = '—';
       mfAprHint.textContent = isFinite(mf) ? ('≈ ' + (mf*2400).toFixed(2) + '% APR') : '';
-      leaseSniff(null); // clear sniffer
       return;
     }
 
-    var dep = (adjCap - rvAmt) / term;
+    // (4) Clamp dep >= 0
+    var dep = Math.max(0, (adjCap - rvAmt) / term);
     var fin = (adjCap + rvAmt) * mf;
     var preTax = dep + fin;
     var withTax = preTax * (1 + (isFinite(tax) ? tax : 0));
 
-    leasePreTax.textContent = '$' + Math.round(preTax).toLocaleString();
-    leaseWithTax.textContent = '$' + Math.round(withTax).toLocaleString();
-    mfAprHint.textContent = isFinite(mf) ? ('≈ ' + (mf*2400).toFixed(2) + '% APR') : '';
+    if(!isFinite(preTax) || preTax < 0){
+      leasePreTax.textContent = '—'; leaseWithTax.textContent = '—';
+      mfAprHint.textContent = isFinite(mf) ? ('≈ ' + (mf*2400).toFixed(2) + '% APR') : '';
+      return;
+    }
 
-    // Auto-run sniffer with the full structure
-    leaseSniff({
-      term: term, rvPct: rvPct, rvAmt: rvAmt, adjCap: adjCap, preTax: preTax, withTax: withTax,
-      msrp: msrp, mf: mf, tax: tax
-    });
+    // (2) show cents
+    leasePreTax.textContent = asMoney(preTax, true);
+    leaseWithTax.textContent = asMoney(withTax, true);
+    mfAprHint.textContent = isFinite(mf) ? ('≈ ' + (mf*2400).toFixed(2) + '% APR') : '';
   }
 
-  /* ------ Lease Sniffer (LVI-first ranking) ------ */
-  function leaseSniff(current){
-    // Clear when we can't compute
-    if(!current){
-      sniffWrap.innerHTML = '<div class="sniff-muted">Not enough data yet. Enter MSRP, MF, Cap Cost, and select a term.</div>';
-      return;
-    }
-    var ctx = getCurrentContext(); if(!ctx){ sniffWrap.innerHTML = '<div class="sniff-muted">Select family/year/trim…</div>'; return; }
-    var entry = ctx.entry;
-    var months = visibleMonthsFor(entry);
+  // Sniffer core
+  function paymentFor(termMonths, rvPct){
+    var msrp = msrpInput.value ? Number(msrpInput.value) : NaN;
+    var cap = leaseCapCost.value ? Number(leaseCapCost.value) : NaN;
+    var mf = leaseMF.value ? Number(leaseMF.value) : NaN;
+    var tax = leaseTax.value ? Number(leaseTax.value)/100 : 0;
+    var capRed = leaseCapReduction.value ? Number(leaseCapReduction.value) : 0;
+    var fees = leaseFees.value ? Number(leaseFees.value) : 0;
+    if(!isFinite(msrp) || !isFinite(rvPct) || !isFinite(termMonths) || termMonths <= 0 || !isFinite(mf) || mf<=0) return {pre:null, post:null};
 
-    // Build candidate list (other terms with defined residuals)
-    var candidates = [];
-    for(var i=0;i<months.length;i++){
-      var m = parseInt(months[i],10);
-      if(!isFinite(m) || m <= 0) continue;
-      if(m === parseInt(current.term,10)) continue; // other terms only
-      var base = entry.residuals[months[i]];
-      if(base == null) continue;
+    var rvAmt = msrp * (rvPct/100);
+    var adjCap = (isFinite(cap) ? cap : 0) - (isFinite(capRed) ? capRed : 0) + (isFinite(fees) ? fees : 0);
+    var dep = Math.max(0, (adjCap - rvAmt) / termMonths);
+    var fin = (adjCap + rvAmt) * mf;
+    var pre = dep + fin;
+    return {pre: pre, post: pre * (1 + (isFinite(tax) ? tax : 0))};
+  }
 
-      var aAdj = (m >= 24) ? (ctx.milesMap[String(ctx.milesPerYear)] || 0) : 0;
-      var rvPct = base + ctx.pacpoAdj + aAdj + ctx.inceptionAdj;
+  function runSniffer(entry, visibleMonths, currentFinalRV, currentLVI){
+    if(!entry){ sniffRender([]); return; }
+    var mf = leaseMF.value ? Number(leaseMF.value) : NaN;
+    var pacpoAdj = pacpoToggle.checked ? (data.pacpo_bonus_percent || 2) : 0;
+    var milesPerYear = parseInt(annualMilesSel.value, 10);
+    var milesMap = (data && data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {};
+    var annualAdjFor = function(term){ return (parseInt(term,10) >= 24) ? (milesMap[String(milesPerYear)] || 0) : 0; };
 
-      var rvAmt = Math.round(current.msrp * (rvPct/100));
-      var dep = (current.adjCap - rvAmt) / m;
-      var fin = (current.adjCap + rvAmt) * current.mf;
-      var preTax = dep + fin;
-      var withTax = preTax * (1 + (isFinite(current.tax) ? current.tax : 0));
-      var lvi = computeLVI(rvPct, current.mf);
-
-      candidates.push({
-        term:m, rvPct:rvPct, rvAmt:rvAmt, preTax:preTax, withTax:withTax, lvi:lvi
+    // Build candidates across visible months
+    var out = [];
+    for(var i=0;i<visibleMonths.length;i++){
+      var m = visibleMonths[i];
+      var base = entry.residuals && entry.residuals[m];
+      if(base==null) continue;
+      var rv = base + pacpoAdj + annualAdjFor(m); // inception ignored—uses current odo band already reflected in main calc table
+      var pay = paymentFor(parseInt(m,10), rv);
+      if(pay.pre==null) continue;
+      var lvi = computeLVI(rv, mf);
+      out.push({
+        term: parseInt(m,10),
+        rv: rv,
+        lvi: lvi,
+        pre: pay.pre,
+        post: pay.post
       });
     }
 
-    if(!candidates.length){
-      sniffWrap.innerHTML = '<div class="sniff-muted">No alternative terms available for this trim.</div>';
-      return;
+    // Sort
+    if(rankMode === 'LVI'){
+      out.sort(function(a,b){
+        var la = (a.lvi==null?-Infinity:a.lvi), lb = (b.lvi==null?-Infinity:b.lvi);
+        if(Math.abs(lb - la) > (0.01)) return lb - la; // prioritize LVI
+        return a.post - b.post; // tiebreak by cheaper
+      });
+    } else {
+      out.sort(function(a,b){ return a.post - b.post; });
     }
 
-    // Current LVI (for delta) & payment
-    var lviNow = computeLVI(current.rvPct, current.mf);
-    var payNow = current.withTax;
+    // Top 5 and render
+    sniffRender(out.slice(0,5), currentFinalRV, currentLVI);
+  }
 
-    // Rank: LVI desc, then payment asc; treat LVIs within ±1% relative as equal → payment decides
-    candidates.sort(function(a,b){
-      if(a.lvi==null && b.lvi==null) return a.withTax - b.withTax;
-      if(a.lvi==null) return 1; if(b.lvi==null) return -1;
-      var rel = function(x,y){ return Math.abs(x-y)/((x+y)/2); };
-      var close = rel(a.lvi,b.lvi) <= 0.01; // ≤1% apart
-      if(!close){
-        return b.lvi - a.lvi;
-      } else {
-        return a.withTax - b.withTax;
-      }
-    });
-
-    var top = candidates.slice(0,3);
-    // Render
+  function sniffRender(list, curRV, curLVI){
     sniffWrap.innerHTML = '';
-    top.forEach(function(cand, idx){
-      var savePay = Math.round(payNow - cand.withTax);
-      var deltaLvi = (cand.lvi!=null && lviNow!=null) ? (cand.lvi - lviNow) : null;
+    if(!list || !list.length) return;
 
-      var card = document.createElement('div');
-      card.className = 'sniff-card' + (idx===0 ? ' best' : '');
-      var title = document.createElement('div');
-      title.className = 'line';
-      title.innerHTML = '<span class="sniff-strong">Term: '+cand.term+' mo</span>'
-        + '<span class="sniff-chip">RV: '+cand.rvPct.toFixed(2)+'%</span>'
-        + (cand.lvi!=null ? '<span class="sniff-chip">LVI: '+(cand.lvi/1000).toFixed(1)+'k</span>' : '<span class="sniff-muted sniff-chip">LVI: —</span>');
-      var pay = document.createElement('div');
-      pay.className = 'line';
-      pay.innerHTML = '<span>Pre-Tax: <strong>$'+Math.round(cand.preTax).toLocaleString()+'</strong></span>'
-        + '<span>With Tax: <strong>$'+Math.round(cand.withTax).toLocaleString()+'</strong></span>'
-        + '<span class="sniff-muted">vs now: '
-        + (isFinite(savePay) ? (savePay>=0? 'save ':'add ') + '$'+Math.abs(savePay).toLocaleString()+'/mo' : '—')
-        + (deltaLvi!=null ? ' • ΔLVI '+(deltaLvi>=0?'+':'')+(deltaLvi/1000).toFixed(2)+'k' : '')
-        + '</span>';
+    // Current payment (for delta)
+    var curTerm = leaseTerm.value ? parseInt(leaseTerm.value,10) : (termSel.value?parseInt(termSel.value,10):NaN);
+    var curPay = (isFinite(curTerm) && isFinite(curRV)) ? paymentFor(curTerm, curRV) : {post:null};
 
-      var copy = document.createElement('div');
-      copy.className = 'line';
-      var btn = document.createElement('button');
-      btn.className = 'copyBtnMini';
-      var line = 'Sniffer → '+cand.term+' mo • RV '+cand.rvPct.toFixed(2)+'% • LVI '+(cand.lvi? (cand.lvi/1000).toFixed(2)+'k' : '—')+' • $'+Math.round(cand.withTax).toLocaleString()+'/mo with tax • vs now '+(isFinite(savePay)? (savePay>=0? 'save ':'add ')+'$'+Math.abs(savePay).toLocaleString()+'/mo':'—');
-      btn.textContent = 'Copy';
-      btn.addEventListener('click', function(){
-        navigator.clipboard.writeText(line).then(function(){
-          btn.textContent = '✅ Copied'; setTimeout(function(){ btn.textContent='Copy'; }, 1200);
-        });
+    list.forEach(function(item, idx){
+      var card = document.createElement('div'); card.className = 'sniff-card' + (idx===0?' sniff-best':'');
+      var top = document.createElement('div'); top.className = 'sniff-top';
+      top.innerHTML = '<div class="pill-mini">Term: '+item.term+' mo</div>'
+                    + '<div class="pill-mini">RV: '+item.rv.toFixed(2)+'%</div>';
+      var mid = document.createElement('div'); mid.className = 'sniff-rows';
+      mid.innerHTML = '<div><span class="label">LVI:</span> <span class="val">'+(item.lvi!=null? (item.lvi/1000).toFixed(1)+'k':'—')+'</span></div>'
+                    + '<div><span class="label">Pre-Tax:</span> <span class="val">'+asMoney(item.pre, true)+'</span></div>'
+                    + '<div><span class="label">With Tax:</span> <span class="val">'+asMoney(item.post, true)+'</span></div>';
+      var foot = document.createElement('div'); foot.className='sniff-foot';
+      var deltaTxt = '—';
+      if(curPay.post!=null){
+        var delta = Math.round(item.post - curPay.post);
+        deltaTxt = (delta<0?('save $'+Math.abs(delta)+'/mo'): (delta>0?('add $'+delta+'/mo') : 'same $/mo'));
+      }
+      var dlvi = (curLVI!=null && item.lvi!=null) ? (' • ΔLVI ' + ((item.lvi-curLVI)/1000).toFixed(2)+'k') : '';
+      var copyBtn = document.createElement('button'); copyBtn.className='btn'; copyBtn.textContent='Copy';
+      copyBtn.addEventListener('click', function(){
+        var line = 'Term '+item.term+' | RV '+item.rv.toFixed(2)+'% | LVI '+(item.lvi!=null?(item.lvi/1000).toFixed(1)+'k':'—')
+          +' | Pre '+asMoney(item.pre,true)+' | With Tax '+asMoney(item.post,true)
+          +(deltaTxt!=='—' ? (' | vs now: '+deltaTxt) : '');
+        navigator.clipboard.writeText(line);
+        copyBtn.textContent = '✅ Copied'; setTimeout(function(){ copyBtn.textContent='Copy'; }, 1200);
       });
-      copy.appendChild(btn);
+      var vs = document.createElement('div'); vs.className='muted'; vs.style.fontWeight='700'; vs.textContent = 'vs now: ' + deltaTxt + (dlvi||'');
+      foot.appendChild(vs); foot.appendChild(copyBtn);
 
-      card.appendChild(title);
-      card.appendChild(pay);
-      card.appendChild(copy);
+      card.appendChild(top); card.appendChild(mid); card.appendChild(foot);
       sniffWrap.appendChild(card);
     });
   }
 
-  /* ------ Restore & load program ------ */
   function restoreFromParams(){
     var p = readParams();
     if(p.family){ familySel.value = p.family; }
@@ -1109,28 +1141,7 @@
     if(p.msrp){ msrpInput.value = p.msrp; }
   }
 
-  function loadProgram(file, label){
-    var cacheBuster = 't=' + Date.now();
-    currentProgramLabel = label || (file === '__current__' ? 'Current' : file);
-    var target = (file === '__current__') ? initialProgram : file;
-    return fetch(target + '?' + cacheBuster, {cache:'no-store'})
-      .then(function(res){
-        if(!res.ok) throw new Error('HTTP ' + res.status + ' loading ' + target);
-        return res.json();
-      })
-      .then(function(j){
-        data = j; window.__data = data;
-        MONTHS = data.months || ["12","18","24","27","30","36","39","42","48","51","60"];
-        PACPO = data.pacpo_bonus_percent || 2;
-        sumProgram.textContent = label || target;
-        initSelectors();
-        restoreFromParams();
-        compute();
-        updateShareURL();
-      });
-  }
-
-  /* ------ Listeners ------ */
+  // Events
   programSel.addEventListener('change', function(){
     var val = programSel.value;
     var label = programSel.options[programSel.selectedIndex].textContent.replace(/^Program:\s*/,'');
@@ -1182,14 +1193,22 @@
   closeValBtn && closeValBtn.addEventListener('click', function(){ validatorCard.style.display='none'; });
 
   leaseCapCost.addEventListener('input', leaseCompute);
-  leaseMF.addEventListener('input', leaseCompute);
+  leaseMF.addEventListener('input', function(){ leaseCompute(); compute(); });
   leaseTax.addEventListener('input', leaseCompute);
   leaseCapReduction.addEventListener('input', leaseCompute);
   leaseFees.addEventListener('input', leaseCompute);
-  leaseTerm.addEventListener('input', leaseCompute);
-  leaseMF.addEventListener('input', compute);
+  leaseTerm.addEventListener('input', function(){ leaseCompute(); compute(); });
 
-  // Initial load
+  // Sniffer rank toggles (5)
+  function setRank(mode){
+    rankMode = mode;
+    rankByLVI.dataset.active = (mode==='LVI'); rankByPay.dataset.active = (mode==='PAY');
+    compute();
+  }
+  rankByLVI.addEventListener('click', function(){ setRank('LVI'); });
+  rankByPay.addEventListener('click', function(){ setRank('PAY'); });
+
+  // Init
   var initialParams = readParams();
   if(initialParams.program){
     var opt = Array.from(programSel.options).find(function(o){return o.value===initialParams.program;});
@@ -1205,6 +1224,5 @@
   }
 })();
 </script>
-
 </body>
 </html>
