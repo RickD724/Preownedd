@@ -255,13 +255,6 @@
   .chip.ok{ border-color: rgba(16,185,129,.5); }
   .chip.cost{ border-color: rgba(139,92,246,.5); }
   .chip.term{ border-color: rgba(59,130,246,.5); }
-
-/* micro animation & color for savings hint */
-@keyframes fadePulse { 0%{opacity:0; transform:scale(.98);} 60%{opacity:1; transform:scale(1.02);} 100%{transform:scale(1);} }
-.hint.pulse { animation: fadePulse .45s ease; }
-.hint.good { color: var(--success); font-weight: 700; }
-.hint.bad { color: var(--danger); font-weight: 700; }
-
 </style>
 
 </head>
@@ -586,7 +579,10 @@
   var mfAprHint = document.getElementById('mfAprHint');
   var lviBadge = document.getElementById('lviBadge');
   var sumLvi = document.getElementById('sumLvi');
-  var validatorCard = document.getElementById('validatorCard');
+  var validatorCard;
+  var rankToggle = document.getElementById('rankToggle');
+  var rankNote = document.getElementById('rankNote');
+  var sniffRank = (localStorage.getItem('sniffRank') || 'lvi'); = document.getElementById('validatorCard');
   var closeValBtn = document.getElementById('closeValBtn');
   var validatorOutput = document.getElementById('validatorOutput');
   var sniffCards = document.getElementById('sniffCards');
@@ -889,7 +885,6 @@
     applyLeaseDefaults();
     leaseCompute();
     sniffRun(); // auto-run sniffer after every compute
-    setTimeout(updateSnifferHints, 0);
   }
   
   function addBadge(txt){
@@ -1133,19 +1128,23 @@
 
     // LVI-first, then withTax ascending
     candidates.sort(function(a,b){
-      var al = (a.lvi==null? -Infinity : a.lvi);
-      var bl = (b.lvi==null? -Infinity : b.lvi);
-      if (bl !== al) return bl - al; // higher LVI first
-      return a.withTax - b.withTax;  // then cheaper payment
+      if (sniffRank === 'pay'){
+        if (a.withTax !== b.withTax) return a.withTax - b.withTax; // cheaper first
+        var al = (a.lvi==null? -Infinity : a.lvi), bl = (b.lvi==null? -Infinity : b.lvi); return bl - al; // then higher LVI
+      } else {
+        var al = (a.lvi==null? -Infinity : a.lvi), bl = (b.lvi==null? -Infinity : b.lvi);
+        if (bl !== al) return bl - al; // higher LVI first
+        return a.withTax - b.withTax;  // then cheaper payment
+      }
     });
 
-    var best = candidates.slice(0,5);
+    var best = candidates.slice(0,6);
     sniffCards.innerHTML = '';
     if(best.length===0){ sniffSummary.textContent='No alternatives found for this trim.'; return; }
 
     // Compute current selection for delta
     var cur = candidates.find(function(c){ return String(c.term) === String(termSel.value || '') || String(c.term)===String(leaseTerm.value||''); });
-    sniffSummary.textContent = 'Showing best 5 terms for the SAME structure (cap, MF, tax, fees). Click a card to load term into Lease Estimator.';
+    sniffSummary.textContent = 'Showing best 6 terms for the SAME structure (cap, MF, tax, fees). Click a card to load term into Lease Estimator.';
 
     best.forEach(function(c){
       var div = document.createElement('div'); div.className = 'sniff-card';
@@ -1161,13 +1160,13 @@
       var m3 = document.createElement('div'); m3.className='chip term'; m3.textContent = c.preTax>0 ? '$' + Math.round(c.preTax).toLocaleString() + ' pre-tax' : '—';
       metrics.appendChild(m1); metrics.appendChild(m2); metrics.appendChild(m3);
       div.appendChild(head); div.appendChild(metrics);
-      div.dataset.withTax = String(c.withTax);
-
 
       if(cur){
         var delta = Math.round(cur.withTax - c.withTax);
         var save = document.createElement('div'); save.className='hint';
-        if(delta>0){ save.textContent='Saves $'+delta.toLocaleString()+'/mo vs current'; save.classList.add('good','pulse'); }else if(delta<0){ save.textContent='+$'+Math.abs(delta).toLocaleString()+'/mo vs current'; save.classList.add('bad','pulse'); }else { save.textContent='Same monthly as current'; }
+        if(delta>0) save.textContent = 'Saves $' + delta.toLocaleString() + '/mo vs current';
+        else if(delta<0) save.textContent = '+$' + Math.abs(delta).toLocaleString() + '/mo vs current';
+        else save.textContent = 'Same monthly as current';
         div.appendChild(save);
       }
 
@@ -1274,33 +1273,6 @@
     });
   }
 })();
-
-// === Helper: update sniffer savings hint (colors + pulse) against current With-Tax ===
-function updateSnifferHints(){
-  try{
-    var curTxt = (leaseWithTax && leaseWithTax.textContent) ? leaseWithTax.textContent : '';
-    var curPay = Number((curTxt||'').replace(/[^0-9.]/g,''));
-    if(!isFinite(curPay) || curPay<=0) return;
-    (document.querySelectorAll('#sniffCards .sniff-card, #snifferList .sniffItem')).forEach(function(card){
-      var wt = Number(card.dataset.withTax || 'NaN');
-      var hint = card.querySelector('.hint');
-      if(!hint || !isFinite(wt)) return;
-      var delta = Math.round(curPay - wt);
-      hint.classList.remove('good','bad','pulse');
-      if(delta>0){ hint.textContent='Saves $'+Math.abs(delta).toLocaleString()+'/mo vs current'; hint.classList.add('good','pulse'); }
-      else if(delta<0){ hint.textContent='+$'+Math.abs(delta).toLocaleString()+'/mo vs current'; hint.classList.add('bad','pulse'); }
-      else { hint.textContent='Same monthly as current'; }
-    });
-  }catch(e){}
-}
-// re-run after any lease input change
-['input','change'].forEach(function(ev){
-  [leaseCapCost, leaseMF, leaseTax, leaseCapReduction, leaseFees, leaseTerm].forEach(function(el){
-    if(!el) return;
-    el.addEventListener(ev, function(){ setTimeout(updateSnifferHints, 0); });
-  });
-});
-
 </script>
 
 </body>
