@@ -255,6 +255,8 @@
   .chip.ok{ border-color: rgba(16,185,129,.5); }
   .chip.cost{ border-color: rgba(139,92,246,.5); }
   .chip.term{ border-color: rgba(59,130,246,.5); }
+
+.pillGroup .pill{margin-right:6px;}
 </style>
 
 </head>
@@ -450,8 +452,8 @@
     <!-- Lease Sniffer (Top 5, auto-run) -->
     <div class="card" id="snifferCard" style="margin-top:14px; animation-delay:0.35s;">
       <div class="rowline" style="justify-content:space-between; margin-bottom:8px;">
-        <strong style="font-size:1.05rem;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🕵️ Lease Sniffer — Top 5</strong>
-        <span class="muted" style="font-size:0.9rem;">Ranks by Value Index (LVI) first, then With-Tax payment</span>
+        <strong style="font-size:1.05rem;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🕵️ Lease Sniffer — Top 6</strong>
+        <div class="rowline" style="gap:10px; align-items:center; flex-wrap:wrap;"><div id="rankPills" class="pillGroup"><button id="pillLVI" class="pill" type="button" data-mode="lvi" style="padding:6px 12px;font-size:.85rem;">LVI → $/mo</button><button id="pillPAY" class="pill" type="button" data-mode="pay" style="padding:6px 12px;font-size:.85rem;opacity:.7;">$/mo → LVI</button></div><span id="rankNote" class="muted" style="font-size:0.9rem;">Ranks by Value Index (LVI) first, then With-Tax payment</span></div>
       </div>
       <div id="sniffSummary" class="hint" style="margin-bottom:8px;">—</div>
       <div class="sniff-cards" id="sniffCards"></div>
@@ -580,8 +582,9 @@
   var lviBadge = document.getElementById('lviBadge');
   var sumLvi = document.getElementById('sumLvi');
   var validatorCard;
-  var rankToggle = document.getElementById('rankToggle');
   var rankNote = document.getElementById('rankNote');
+  var pillLVI = document.getElementById('pillLVI');
+  var pillPAY = document.getElementById('pillPAY');
   var sniffRank = (localStorage.getItem('sniffRank') || 'lvi'); = document.getElementById('validatorCard');
   var closeValBtn = document.getElementById('closeValBtn');
   var validatorOutput = document.getElementById('validatorOutput');
@@ -1128,13 +1131,13 @@
 
     // LVI-first, then withTax ascending
     candidates.sort(function(a,b){
-      if (sniffRank === 'pay'){
-        if (a.withTax !== b.withTax) return a.withTax - b.withTax; // cheaper first
-        var al = (a.lvi==null? -Infinity : a.lvi), bl = (b.lvi==null? -Infinity : b.lvi); return bl - al; // then higher LVI
+      if(sniffRank==='pay'){
+        if(a.withTax !== b.withTax) return a.withTax - b.withTax;
+        var al=(a.lvi==null?-Infinity:a.lvi), bl=(b.lvi==null?-Infinity:b.lvi); return bl - al;
       } else {
-        var al = (a.lvi==null? -Infinity : a.lvi), bl = (b.lvi==null? -Infinity : b.lvi);
-        if (bl !== al) return bl - al; // higher LVI first
-        return a.withTax - b.withTax;  // then cheaper payment
+        var al=(a.lvi==null?-Infinity:a.lvi), bl=(b.lvi==null?-Infinity:b.lvi);
+        if(bl!==al) return bl - al;
+        return a.withTax - b.withTax;
       }
     });
 
