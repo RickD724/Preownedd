@@ -255,6 +255,13 @@
   .chip.ok{ border-color: rgba(16,185,129,.5); }
   .chip.cost{ border-color: rgba(139,92,246,.5); }
   .chip.term{ border-color: rgba(59,130,246,.5); }
+
+/* micro animation & color for savings hint */
+@keyframes fadePulse { 0%{opacity:0; transform:scale(.98);} 60%{opacity:1; transform:scale(1.02);} 100%{transform:scale(1);} }
+.hint.pulse { animation: fadePulse .45s ease; }
+.hint.good { color: var(--success); font-weight: 700; }
+.hint.bad { color: var(--danger); font-weight: 700; }
+
 </style>
 
 </head>
@@ -882,9 +889,8 @@
     applyLeaseDefaults();
     leaseCompute();
     sniffRun(); // auto-run sniffer after every compute
-  
-    setTimeout(updateSnifferDeltas, 0);
-}
+    setTimeout(updateSnifferHints, 0);
+  }
   
   function addBadge(txt){
     var b = document.createElement('div'); b.className = 'badge'; b.textContent = txt; badgeRow.appendChild(b);
@@ -1155,30 +1161,17 @@
       var m3 = document.createElement('div'); m3.className='chip term'; m3.textContent = c.preTax>0 ? '$' + Math.round(c.preTax).toLocaleString() + ' pre-tax' : '—';
       metrics.appendChild(m1); metrics.appendChild(m2); metrics.appendChild(m3);
       div.appendChild(head); div.appendChild(metrics);
-
-      
-      // data for delta computation & a placeholder line
-      div.dataset.term = String(c.term);
       div.dataset.withTax = String(c.withTax);
-      var deltaLine = document.createElement('div');
-      deltaLine.className = 'sniff-delta';
-      deltaLine.innerHTML = 'Δ$/mo <span class="deltaMo">—</span>';
-      div.appendChild(deltaLine);      if(cur){
+
+
+      if(cur){
         var delta = Math.round(cur.withTax - c.withTax);
         var save = document.createElement('div'); save.className='hint';
-        if(delta>0) save.textContent = 'Saves $' + delta.toLocaleString() + '/mo vs current';
-        else if(delta<0) save.textContent = '+$' + Math.abs(delta).toLocaleString() + '/mo vs current';
-        else save.textContent = 'Same monthly as current';
-        // Also update Δ$/mo chip immediately
-        var dm = deltaLine.querySelector('.deltaMo');
-        if(dm){
-          var sign = (delta>0? '-$' + delta.toLocaleString(): (delta<0? '+$' + Math.abs(delta).toLocaleString(): '$0'));
-          dm.textContent = sign + '/mo';
-          dm.style.color = delta>0 ? 'var(--success)' : (delta<0 ? 'var(--danger)' : '');
-        }
+        if(delta>0){ save.textContent='Saves $'+delta.toLocaleString()+'/mo vs current'; save.classList.add('good','pulse'); }else if(delta<0){ save.textContent='+$'+Math.abs(delta).toLocaleString()+'/mo vs current'; save.classList.add('bad','pulse'); }else { save.textContent='Same monthly as current'; }
         div.appendChild(save);
       }
-div.addEventListener('click', function(){
+
+      div.addEventListener('click', function(){
         // Load picked term into the Lease Estimator, preserve manual edits afterwards
         leaseTerm.value = String(c.term);
         leaseTermDirty = true; // prevent future auto-sync
@@ -1282,49 +1275,29 @@ div.addEventListener('click', function(){
   }
 })();
 
-// === Helper: recalc sniffer Δ$/mo against current Lease Estimator ===
-function updateSnifferDeltas(){
+// === Helper: update sniffer savings hint (colors + pulse) against current With-Tax ===
+function updateSnifferHints(){
   try{
     var curTxt = (leaseWithTax && leaseWithTax.textContent) ? leaseWithTax.textContent : '';
     var curPay = Number((curTxt||'').replace(/[^0-9.]/g,''));
-    if(!isFinite(curPay) || curPay<=0){
-      // Fallback: recompute from inputs if needed
-      var rvPctText = sumFinal && sumFinal.textContent || '';
-      var rvPct = rvPctText.endsWith('%') ? parseFloat(rvPctText) : NaN;
-      var msrp = msrpInput && msrpInput.value ? Number(msrpInput.value) : NaN;
-      var term = leaseTerm && leaseTerm.value ? parseInt(leaseTerm.value,10) : (termSel && termSel.value ? parseInt(termSel.value,10) : NaN);
-      var cap = leaseCapCost && leaseCapCost.value ? Number(leaseCapCost.value) : NaN;
-      var mf = leaseMF && leaseMF.value ? Number(leaseMF.value) : NaN;
-      var tax = leaseTax && leaseTax.value ? Number(leaseTax.value)/100 : 0;
-      var capRed = leaseCapReduction && leaseCapReduction.value ? Number(leaseCapReduction.value) : 0;
-      var fees = leaseFees && leaseFees.value ? Number(leaseFees.value) : 0;
-      if(isFinite(rvPct) && isFinite(msrp) && isFinite(term) && isFinite(cap) && isFinite(mf)){
-        var rvAmt = Math.round(msrp * (rvPct/100));
-        var adjCap = cap - (isFinite(capRed)?capRed:0) + (isFinite(fees)?fees:0);
-        var dep = (adjCap - rvAmt) / term;
-        var fin = (adjCap + rvAmt) * mf;
-        var preTax = dep + fin;
-        var withTax = preTax * (1 + (isFinite(tax)?tax:0));
-        curPay = Math.round(withTax);
-      }
-    }
-    document.querySelectorAll('#sniffCards .sniff-card').forEach(function(card){
+    if(!isFinite(curPay) || curPay<=0) return;
+    (document.querySelectorAll('#sniffCards .sniff-card, #snifferList .sniffItem')).forEach(function(card){
       var wt = Number(card.dataset.withTax || 'NaN');
-      var dm = card.querySelector('.deltaMo');
-      if(!dm || !isFinite(wt) || !isFinite(curPay)) return;
+      var hint = card.querySelector('.hint');
+      if(!hint || !isFinite(wt)) return;
       var delta = Math.round(curPay - wt);
-      var sign = (delta>0? '-$' + Math.abs(delta).toLocaleString(): (delta<0? '+$' + Math.abs(delta).toLocaleString(): '$0'));
-      dm.textContent = sign + '/mo';
-      dm.style.color = (delta>0) ? 'var(--success)' : (delta<0 ? 'var(--danger)' : '');
+      hint.classList.remove('good','bad','pulse');
+      if(delta>0){ hint.textContent='Saves $'+Math.abs(delta).toLocaleString()+'/mo vs current'; hint.classList.add('good','pulse'); }
+      else if(delta<0){ hint.textContent='+$'+Math.abs(delta).toLocaleString()+'/mo vs current'; hint.classList.add('bad','pulse'); }
+      else { hint.textContent='Same monthly as current'; }
     });
   }catch(e){}
 }
-
-// Re-run delta coloring whenever lease numbers change
+// re-run after any lease input change
 ['input','change'].forEach(function(ev){
   [leaseCapCost, leaseMF, leaseTax, leaseCapReduction, leaseFees, leaseTerm].forEach(function(el){
     if(!el) return;
-    el.addEventListener(ev, function(){ setTimeout(updateSnifferDeltas, 0); });
+    el.addEventListener(ev, function(){ setTimeout(updateSnifferHints, 0); });
   });
 });
 
