@@ -16,23 +16,24 @@
 
 <style>
   :root{
-    --bg: #050810; --bg-secondary: #0a0e1a; --card: rgba(255,255,255,.02); --card-hover: rgba(255,255,255,.05);
-    --text:#e8edf5; --text-primary:#fff; --muted:#7c8ba1; --border: rgba(255,255,255,.06); --border-hover: rgba(59,130,246,.3);
-    --accent:#3b82f6; --accent-hover:#2563eb; --accent-glow: rgba(59,130,246,.4);
-    --success:#10b981; --success-glow: rgba(16,185,129,.3); --danger:#ef4444; --warning:#f59e0b;
-    --purple:#8b5cf6; --purple-glow: rgba(139,92,246,.3);
-    --radius:20px; --radius-sm:12px; --shadow:0 10px 40px rgba(15,23,42,.2); --shadow-lg:0 20px 60px rgba(15,23,42,.25);
-    --transition: all .35s cubic-bezier(.4,0,.2,1);
+    --bg:#050810; --bg-secondary:#0a0e1a; --card:rgba(255,255,255,.02); --card-hover:rgba(255,255,255,.05);
+    --text:#e8edf5; --text-primary:#fff; --muted:#7c8ba1; --border:rgba(255,255,255,.08); --border-hover:rgba(59,130,246,.35);
+    --accent:#3b82f6; --accent-hover:#2563eb; --accent-glow:rgba(59,130,246,.20);
+    --success:#10b981; --success-glow:rgba(16,185,129,.22); --danger:#ef4444; --warning:#f59e0b;
+    --purple:#8b5cf6; --purple-glow:rgba(139,92,246,.18);
+    --radius:20px; --radius-sm:12px; --shadow:0 10px 40px rgba(15,23,42,.18); --shadow-lg:0 22px 60px rgba(15,23,42,.22);
+    --transition:all .35s cubic-bezier(.4,0,.2,1);
   }
   [data-theme="light"]{
     --bg:#f5f7fa; --bg-secondary:#fff; --card:#fff; --card-hover:#f8fafc; --text:#1e293b; --text-primary:#0f172a; --muted:#64748b;
-    --border:#e2e8f0; --border-hover: rgba(59,130,246,.35); --shadow:0 10px 40px rgba(15,23,42,.08); --shadow-lg:0 20px 60px rgba(15,23,42,.12);
-    --glow: 0 0 40px rgba(59,130,246,.15); --accent-glow: rgba(59,130,246,.18); --success-glow: rgba(16,185,129,.18); --purple-glow: rgba(139,92,246,.18);
+    --border:#e2e8f0; --border-hover:rgba(59,130,246,.35); --shadow:0 10px 40px rgba(15,23,42,.08); --shadow-lg:0 20px 60px rgba(15,23,42,.12);
+    --accent-glow:rgba(59,130,246,.14); --success-glow:rgba(16,185,129,.16); --purple-glow:rgba(139,92,246,.14);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,sans-serif;min-height:100vh;overflow-x:hidden}
   .wrap{max-width:980px;margin:0 auto;padding:20px 20px 120px}
 
+  /* Top */
   .top{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.82);backdrop-filter:blur(18px);border:1px solid var(--border);border-radius:16px;padding:12px 16px;margin-bottom:20px;box-shadow:var(--shadow)}
   [data-theme="dark"] .top{background:rgba(255,255,255,.06)}
   .brand{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -40,6 +41,8 @@
   .btn,.theme{border:1px solid var(--border);background:var(--card);color:var(--text);padding:9px 14px;border-radius:12px;font-weight:700;cursor:pointer;transition:var(--transition)}
   .btn:hover,.theme:hover{background:var(--card-hover);border-color:var(--border-hover);transform:translateY(-1px)}
   .select{min-width:200px}
+
+  /* Cards / layout */
   .card{background:var(--card);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:22px;transition:var(--transition)}
   .card:hover{border-color:var(--border-hover)}
   .grid{display:grid;gap:16px}
@@ -48,17 +51,17 @@
   .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
   @media(max-width:900px){.g4,.g3,.g2{grid-template-columns:1fr}}
 
-  label{font-size:.75rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin:0 0 8px}
+  label{font-size:.75rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin:0 0 8px}
   select,input[type="number"],input[type="text"]{width:100%;background:var(--bg-secondary);color:var(--text);border:2px solid var(--border);border-radius:12px;padding:12px 14px;font-weight:600}
   select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:40px}
+  .muted{color:var(--muted)}
 
+  /* Result + table + summary */
   .result{display:flex;align-items:baseline;gap:18px;margin:18px 0 14px;flex-wrap:wrap;padding:20px;border:2px solid var(--border-hover);border-radius:16px}
   .big{font-size:3rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .muted{color:var(--muted)}
   .summary{margin-top:12px;padding:18px;border:2px solid var(--border);border-radius:16px}
   .srow{display:flex;align-items:center;justify-content:space-between;background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
   .sval{font-weight:900}
-
   .tableWrap{margin-top:10px;overflow-x:auto;border:1px solid var(--border);border-radius:16px}
   table{min-width:720px;width:100%;border-collapse:separate;border-spacing:0}
   th,td{padding:12px 14px;border-bottom:1px solid var(--border);white-space:nowrap}
@@ -66,7 +69,7 @@
   td.ok{color:var(--success);font-weight:900}
   td.err{color:var(--danger);opacity:.6}
 
-  /* Deal Sniffer Pro (new big card below Lease Estimator) */
+  /* Deal Sniffer Pro */
   .snpr .best{display:flex;flex-wrap:wrap;align-items:center;gap:16px;padding:18px;border:2px solid var(--success);border-radius:16px;background:linear-gradient(135deg,rgba(16,185,129,.10),rgba(59,130,246,.08))}
   .snpr .best .pay{font-size:2rem;font-weight:900}
   .snpr .best .meta{color:var(--muted);font-weight:700}
@@ -98,11 +101,11 @@
   <div class="top">
     <div class="brand">
       <div class="pill">⚡ Residual Pro — By Ricardo</div>
-      <div class="rowline" style="display:flex;gap:8px;flex-wrap:wrap">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
         <select id="programSel" class="select">
-          <option value="__current__">Program: Current (from ?data or default)</option>
-          <option value="porsche_residuals_all.json">Program: PB 25-10R (Default)</option>
+          <option value="porsche_residuals_all.json" selected>Program: PB 25-10R (Default)</option>
           <option value="porsche_residuals_25-09R.json">Program: PB 25-09R (Oct)</option>
+          <option value="__current__">Program: Current (from ?data)</option>
         </select>
         <button id="jumpSummaryBtn" class="btn" type="button">📊 Summary</button>
         <button id="validateBtn" class="btn" type="button">✓ Validate</button>
@@ -116,16 +119,10 @@
   </div>
 
   <!-- Controls -->
-  <div class="card">
+  <div class="card" id="controls">
     <div class="grid g4">
-      <div>
-        <label>🚗 Model Family</label>
-        <select id="familySel"></select>
-      </div>
-      <div>
-        <label>📅 Model Year</label>
-        <select id="yearSel"></select>
-      </div>
+      <div><label>🚗 Model Family</label><select id="familySel"></select></div>
+      <div><label>📅 Model Year</label><select id="yearSel"></select></div>
       <div>
         <label>🎯 Trim</label>
         <select id="trimSel"></select>
@@ -139,34 +136,19 @@
     </div>
 
     <div class="grid g3" style="margin-top:12px">
-      <div>
-        <label>⏱️ Term (months)</label>
-        <select id="termSel"></select>
-      </div>
-      <div>
-        <label>📊 Miles per Year</label>
-        <select id="annualMilesSel"></select>
-      </div>
-      <div style="display:flex;gap:12px;align-items:center;margin-top:26px">
-        <label style="display:flex;gap:8px;align-items:center"><input id="pacpoToggle" type="checkbox"/> <span>+2% PACPO</span></label>
-        <label style="display:flex;gap:8px;align-items:center"><input id="hideNA" type="checkbox"/> <span>Hide N/A</span></label>
+      <div><label>⏱️ Term (months)</label><select id="termSel"></select></div>
+      <div><label>📊 Miles per Year</label><select id="annualMilesSel"></select></div>
+      <div style="display:flex;gap:12px;align-items:center;margin-top:26px;flex-wrap:wrap">
+        <label style="display:flex;gap:8px;align-items:center"><input id="pacpoToggle" type="checkbox" /> <span>+2% PACPO</span></label>
+        <label style="display:flex;gap:8px;align-items:center"><input id="hideNA" type="checkbox" /> <span>Hide N/A</span></label>
         <div class="pill" id="codeBadge" style="font-size:.85rem;padding:6px 12px">Code: —</div>
       </div>
     </div>
 
     <div class="grid g3" style="margin-top:12px">
-      <div>
-        <label>🛣️ Miles at Inception</label>
-        <input id="odoInput" type="number" min="0" step="1" placeholder="e.g., 3,450"/>
-      </div>
-      <div>
-        <label>💰 MSRP ($)</label>
-        <input id="msrpInput" type="number" min="0" step="100" placeholder="e.g., 142,000"/>
-      </div>
-      <div>
-        <label>🔗 Shareable Link</label>
-        <input id="shareLink" type="text" readonly style="font-size:.85rem"/>
-      </div>
+      <div><label>🛣️ Miles at Inception</label><input id="odoInput" type="number" min="0" step="1" placeholder="e.g., 3,450" /></div>
+      <div><label>💰 MSRP ($)</label><input id="msrpInput" type="number" min="0" step="100" placeholder="e.g., 142,000" /></div>
+      <div><label>🔗 Shareable Link</label><input id="shareLink" type="text" readonly style="font-size:.85rem" /></div>
     </div>
   </div>
 
@@ -213,14 +195,14 @@
       <span class="muted" style="font-size:.95rem">Uses current RV% & term</span>
     </div>
     <div class="grid g3">
-      <div><label>💵 Cap Cost ($)</label><input id="leaseCapCost" type="number" min="0" step="100" placeholder="e.g., 165000"/></div>
-      <div><label>📈 Money Factor</label><input id="leaseMF" type="number" min="0" step="0.00001" placeholder="0.00400"/><div class="muted" id="mfAprHint" style="font-size:.85rem;margin-top:6px"></div></div>
-      <div><label>🧾 Tax Rate (%)</label><input id="leaseTax" type="number" min="0" step="0.01" placeholder="9.75"/></div>
+      <div><label>💵 Cap Cost ($)</label><input id="leaseCapCost" type="number" min="0" step="100" placeholder="e.g., 165000" /></div>
+      <div><label>📈 Money Factor</label><input id="leaseMF" type="number" min="0" step="0.00001" placeholder="0.00400" /><div class="muted" id="mfAprHint" style="font-size:.85rem;margin-top:6px"></div></div>
+      <div><label>🧾 Tax Rate (%)</label><input id="leaseTax" type="number" min="0" step="0.01" placeholder="9.75" /></div>
     </div>
     <div class="grid g3" style="margin-top:10px">
-      <div><label>💸 Cap Reduction ($)</label><input id="leaseCapReduction" type="number" min="0" step="100" placeholder="7500"/></div>
-      <div><label>📝 Rolled Fees ($)</label><input id="leaseFees" type="number" min="0" step="25" placeholder="1095"/></div>
-      <div><label>⏰ Term (mo)</label><input id="leaseTerm" type="number" min="12" step="1" placeholder="auto"/></div>
+      <div><label>💸 Cap Reduction ($)</label><input id="leaseCapReduction" type="number" min="0" step="100" placeholder="7500" /></div>
+      <div><label>📝 Rolled Fees ($)</label><input id="leaseFees" type="number" min="0" step="25" placeholder="1095" /></div>
+      <div><label>⏰ Term (mo)</label><input id="leaseTerm" type="number" min="12" step="1" placeholder="auto" /></div>
     </div>
     <div class="grid g3" style="margin-top:10px">
       <div class="srow"><span>Residual %</span><span class="sval" id="leaseRvPct">—</span></div>
@@ -233,15 +215,15 @@
     </div>
   </div>
 
-  <!-- Deal Sniffer Pro (moved here, big card) -->
+  <!-- Deal Sniffer Pro -->
   <div class="card snpr" id="snifferProCard" style="margin-top:16px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
       <strong style="font-size:1.1rem">🔎 Deal Sniffer Pro</strong>
-      <span class="small">Scans all valid terms, locks your Miles/yr</span>
+      <span class="small">Scans terms (and optionally miles/yr) for the selected Year & Trim</span>
     </div>
-
     <div class="controls">
       <label class="toggle"><input id="sniffAllowPacpoOff" type="checkbox" checked/> Allow PACPO Off in search</label>
+      <label class="toggle"><input id="sniffVaryMiles" type="checkbox"/> Allow varying miles/yr</label>
       <label class="toggle"><input id="sniffShowAdvanced" type="checkbox" checked/> Show Top-5 + Advanced Compare</label>
     </div>
 
@@ -265,146 +247,259 @@
         <div class="tableWrap" style="margin-top:10px">
           <table>
             <thead>
-              <tr><th>Term</th><th>PACPO</th><th>RV%</th><th>LVI</th><th>$ Pre-Tax</th><th>$ With Tax</th><th>$/mi</th></tr>
+              <tr><th>Term</th><th>Miles/yr</th><th>PACPO</th><th>RV%</th><th>LVI</th><th>$ Pre-Tax</th><th>$ With Tax</th><th>$/mi</th></tr>
             </thead>
             <tbody id="snprTbody"></tbody>
           </table>
         </div>
       </details>
     </div>
-
     <div id="snprHint" class="small" style="margin-top:8px">Enter Cap Cost + MSRP + MF to sniff deals.</div>
   </div>
 
-  <div class="footer" style="margin-top:20px">
-    <div class="muted" style="text-align:center">© Ricardo — Internal tool</div>
-  </div>
+  <div class="footer" style="margin-top:20px"><div class="muted" style="text-align:center">© Ricardo — Internal tool</div></div>
 </div>
 
 <script>
 (function(){
-  // Theme default LIGHT
-  var themeBtn = document.getElementById('themeBtn');
+  // Helpers
+  const $=id=>document.getElementById(id);
+  const show=(el,vis)=>{ el.style.display = vis ? '' : 'none'; };
+  const banner=(el,msg)=>{ el.textContent=msg; el.style.display='block'; setTimeout(()=>el.style.display='none',7000); };
+
+  // Theme: light default
+  const themeBtn=$('themeBtn');
   document.documentElement.setAttribute('data-theme','light');
-  themeBtn.onclick = function(){
-    var cur = document.documentElement.getAttribute('data-theme');
-    var next = cur==='light'?'dark':'light';
-    document.documentElement.setAttribute('data-theme', next);
-    themeBtn.innerHTML = next==='light'?'🌙 Dark':'☀️ Light';
-  };
+  themeBtn.onclick=()=>{ const cur=document.documentElement.getAttribute('data-theme'); const next=cur==='light'?'dark':'light'; document.documentElement.setAttribute('data-theme',next); themeBtn.innerHTML=next==='light'?'🌙 Dark':'☀️ Light'; };
 
-  // DOM refs
-  var programSel = document.getElementById('programSel');
-  var validateBtn = document.getElementById('validateBtn');
-  var exportCsvBtn = document.getElementById('exportCsvBtn');
-  var printBtn = document.getElementById('printBtn');
-  var jumpSummaryBtn = document.getElementById('jumpSummaryBtn');
+  // Refs
+  const programSel=$('programSel'), validateBtn=$('validateBtn'), exportCsvBtn=$('exportCsvBtn'), printBtn=$('printBtn'), jumpSummaryBtn=$('jumpSummaryBtn');
+  const familySel=$('familySel'), yearSel=$('yearSel'), trimSel=$('trimSel'), trimSearch=$('trimSearch'), trimCount=$('trimCount'), trimWarn=$('trimWarn');
+  const termSel=$('termSel'), annualMilesSel=$('annualMilesSel'), pacpoToggle=$('pacpoToggle'), hideNA=$('hideNA'), codeBadge=$('codeBadge');
+  const odoInput=$('odoInput'), msrpInput=$('msrpInput'), shareLink=$('shareLink');
+  const finalOut=$('finalOut'), detailOut=$('detailOut'), trueOut=$('trueOut'), lviBadge=$('lviBadge');
+  const theadRow=$('theadRow'), tvalRow=$('tvalRow');
+  const sumProgram=$('sumProgram'), sumYear=$('sumYear'), sumFamily=$('sumFamily'), sumTrim=$('sumTrim'), sumTerm=$('sumTerm'), sumMilesYear=$('sumMilesYear'), sumOdo=$('sumOdo'), sumTrue=$('sumTrue'), sumFinal=$('sumFinal'), sumLvi=$('sumLvi');
 
-  var familySel = document.getElementById('familySel');
-  var yearSel = document.getElementById('yearSel');
-  var trimSel = document.getElementById('trimSel');
-  var trimSearch = document.getElementById('trimSearch');
-  var trimCount = document.getElementById('trimCount');
-  var trimWarn = document.getElementById('trimWarn');
+  const leaseCapCost=$('leaseCapCost'), leaseMF=$('leaseMF'), leaseTax=$('leaseTax'), leaseCapReduction=$('leaseCapReduction'), leaseFees=$('leaseFees'), leaseTerm=$('leaseTerm');
+  const leaseRvPct=$('leaseRvPct'), leaseRvAmt=$('leaseRvAmt'), leaseAdjCap=$('leaseAdjCap'), leasePreTax=$('leasePreTax'), leaseWithTax=$('leaseWithTax'), mfAprHint=$('mfAprHint');
 
-  var termSel = document.getElementById('termSel');
-  var annualMilesSel = document.getElementById('annualMilesSel');
-  var pacpoToggle = document.getElementById('pacpoToggle');
-  var hideNA = document.getElementById('hideNA');
-  var codeBadge = document.getElementById('codeBadge');
+  const snprCard=$('snifferProCard'), snprBest=$('snprBest'), snprBestPay=$('snprBestPay'), snprBestMeta=$('snprBestMeta'), snprApplyBtn=$('snprApplyBtn'), snprDelta=$('snprDelta'), snprTopGrid=$('snprTopGrid'), snprAdvanced=$('snprAdvanced'), snprTbody=$('snprTbody');
+  const sniffAllowPacpoOff=$('sniffAllowPacpoOff'), sniffVaryMiles=$('sniffVaryMiles'), sniffShowAdvanced=$('sniffShowAdvanced');
 
-  var odoInput = document.getElementById('odoInput');
-  var msrpInput = document.getElementById('msrpInput');
+  const errorBanner=$('errorBanner'), infoBanner=$('infoBanner');
 
-  var finalOut = document.getElementById('finalOut');
-  var detailOut = document.getElementById('detailOut');
-  var trueOut = document.getElementById('trueOut');
-  var lviBadge = document.getElementById('lviBadge');
+  let data=null, MONTHS=[], PACPO=2, fullTrimList=[];
+  let currentProgramLabel='PB 25-10R (Default)';
+  let initialProgram=(new URLSearchParams(location.search)).get('data');
 
-  var theadRow = document.getElementById('theadRow');
-  var tvalRow = document.getElementById('tvalRow');
-
-  var sumProgram = document.getElementById('sumProgram');
-  var sumYear = document.getElementById('sumYear');
-  var sumFamily = document.getElementById('sumFamily');
-  var sumTrim = document.getElementById('sumTrim');
-  var sumTerm = document.getElementById('sumTerm');
-  var sumMilesYear = document.getElementById('sumMilesYear');
-  var sumOdo = document.getElementById('sumOdo');
-  var sumTrue = document.getElementById('sumTrue');
-  var sumFinal = document.getElementById('sumFinal');
-  var sumLvi = document.getElementById('sumLvi');
-
-  var shareLink = document.getElementById('shareLink');
-
-  var copyBtn = document.getElementById('copyBtn'); // may not exist in this trimmed version
-
-  var leaseCapCost = document.getElementById('leaseCapCost');
-  var leaseMF = document.getElementById('leaseMF');
-  var leaseTax = document.getElementById('leaseTax');
-  var leaseCapReduction = document.getElementById('leaseCapReduction');
-  var leaseFees = document.getElementById('leaseFees');
-  var leaseTerm = document.getElementById('leaseTerm');
-  var leaseRvPct = document.getElementById('leaseRvPct');
-  var leaseRvAmt = document.getElementById('leaseRvAmt');
-  var leaseAdjCap = document.getElementById('leaseAdjCap');
-  var leasePreTax = document.getElementById('leasePreTax');
-  var leaseWithTax = document.getElementById('leaseWithTax');
-  var mfAprHint = document.getElementById('mfAprHint');
-
-  var errorBanner = document.getElementById('errorBanner');
-  var infoBanner = document.getElementById('infoBanner');
-
-  // Sniffer Pro refs
-  var sniffAllowPacpoOff = document.getElementById('sniffAllowPacpoOff');
-  var snprHint = document.getElementById('snprHint');
-  var snprBest = document.getElementById('snprBest');
-  var snprBestPay = document.getElementById('snprBestPay');
-  var snprBestMeta = document.getElementById('snprBestMeta');
-  var snprApplyBtn = document.getElementById('snprApplyBtn');
-  var snprDelta = document.getElementById('snprDelta');
-  var snprTopGrid = document.getElementById('snprTopGrid');
-  var snprAdvanced = document.getElementById('snprAdvanced');
-  var snprTbody = document.getElementById('snprTbody');
-  var sniffShowAdvanced = document.getElementById('sniffShowAdvanced');
-
-  var data, MONTHS = [], PACPO = 2;
-  var fullTrimList = [];
-  var currentProgramLabel = 'Current';
-
-  // Fallback JSON (minimal to keep UI alive)
-  var FALLBACK_JSON = {
-    months:["24","36","39","48"],
-    pacpo_bonus_percent:2,
-    annual_mileage_adjustments_percent:{ miles_per_year:{"7500":4,"10000":3,"12000":2,"15000":0} },
-    mileage_at_inception_adjustments_percent:{ "MY25":[{miles_range:"0–499",adj:0},{miles_range:"500–1499",adj:-1}] },
-    models:{ "Cayenne":{ "MY22":{ "9YAAA1":{model:"Cayenne", residuals:{"24":69,"36":60,"39":58,"48":52}} },
-                          "MY23":{ "9YBBB2":{model:"Cayenne S", residuals:{"24":70,"36":61,"39":59,"48":53}} } } }
-  };
-
-  function showError(msg){ errorBanner.textContent = msg; errorBanner.style.display='block'; setTimeout(()=>errorBanner.style.display='none',8000); }
-  function showInfo(msg){ infoBanner.textContent = msg; infoBanner.style.display='block'; setTimeout(()=>infoBanner.style.display='none',5000); }
-
-  function readParams(){
-    var p = new URLSearchParams(location.search);
-    return {
-      program:p.get('data'), family:p.get('family'), year:p.get('year'), trim:p.get('trim'), term:p.get('term'),
-      miles:p.get('miles'), odo:p.get('odo'), pacpo:p.get('pacpo'), hidena:p.get('hidena'), msrp:p.get('msrp')
-    };
-  }
-  function resolveUrlMaybe(u){ try{ return new URL(u, location.href).href; }catch(e){ return u; } }
-  function parseMaybeJSONText(t){ try{ return JSON.parse(t);}catch(e){ return null;} }
-  function isDataUrl(u){ return /^data:application\/json/i.test(u); }
-  function loadFromDataUrl(u){
+  // JSON loader: prefer default; if ?data provided and fails, fallback
+  async function loadProgram(selectVal,label){
+    currentProgramLabel=label||currentProgramLabel;
+    const source = (selectVal==='__current__' && initialProgram) ? initialProgram : selectVal;
     try{
-      if(/^data:application\/json;base64,/i.test(u)){ var txt = atob(u.split(',')[1]); return Promise.resolve(JSON.parse(txt)); }
-      var txt2 = decodeURIComponent(u.split(',')[1]||''); return Promise.resolve(JSON.parse(txt2));
-    }catch(e){ return Promise.reject(new Error('Invalid data: URL JSON')); }
+      const url = new URL(source, location.href).href;
+      const res = await fetch(url,{cache:'no-store'});
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      const j = await res.json();
+      afterJSONLoaded(j);
+    }catch(e){
+      banner(errorBanner,`Failed to load program (using fallback): ${String(source).split('/').slice(-1)[0]}`);
+      // Try default file
+      try{
+        const res2=await fetch('porsche_residuals_all.json',{cache:'no-store'});
+        const j2=await res2.json();
+        currentProgramLabel = 'PB 25-10R (Default)';
+        programSel.value='porsche_residuals_all.json';
+        afterJSONLoaded(j2);
+      }catch(e2){
+        // tiny built-in sample to keep UI alive
+        afterJSONLoaded({
+          months:["24","36","39","48"],
+          pacpo_bonus_percent:2,
+          annual_mileage_adjustments_percent:{miles_per_year:{"7500":4,"10000":3,"12000":2,"15000":0}},
+          mileage_at_inception_adjustments_percent:{ "MY25":[{miles_range:"0–499",adj:0},{miles_range:"500–1499",adj:-1}] },
+          models:{ "911":{ "MY25":{ "992C2":{ model:"Carrera", residuals:{"24":72,"36":63,"39":61,"48":55} } } } }
+        });
+      }
+    }
+  }
+
+  function afterJSONLoaded(j){
+    data=j; window.__data=j;
+    MONTHS=data.months||["12","18","24","27","30","36","39","42","48","51","60"];
+    PACPO=data.pacpo_bonus_percent||2;
+    sumProgram.textContent=currentProgramLabel;
+    initSelectors();
+    applyLeaseDefaultsIfEmpty();
+    compute();
+  }
+
+  function normalizeYearKey(k){
+    const s=String(k).trim();
+    const mPlain=s.match(/^(20\d{2})$/); if(mPlain) return {display:'MY'+mPlain[1].slice(-2), key:k};
+    const mMY=s.toUpperCase().replace(/\s+/g,'').match(/^MY(\d{2})$/); if(mMY) return {display:'MY'+mMY[1], key:k};
+    return {display:s, key:k};
+  }
+  function getCaseInsensitive(obj,name){
+    if(!obj||typeof obj!=='object') return undefined;
+    const t=String(name).replace(/\s+/g,'').toLowerCase();
+    return Object.keys(obj).find(k=>k.replace(/\s+/g,'').toLowerCase()===t) ? obj[Object.keys(obj).find(k=>k.replace(/\s+/g,'').toLowerCase()===t)] : undefined;
+  }
+  function getVirtualFamilies(){
+    const out=new Set(); const models=data.models||{};
+    Object.keys(models).forEach(f=>{
+      if(f==='718'){ if(getCaseInsensitive(models['718'],'Cayman')) out.add('718 Cayman'); if(getCaseInsensitive(models['718'],'Boxster')) out.add('718 Boxster'); }
+      else out.add(f);
+    });
+    if(models['Cayman']) out.add('718 Cayman');
+    if(models['Boxster']) out.add('718 Boxster');
+    const order=['911','718 Cayman','718 Boxster','Taycan','Macan','Cayenne','Panamera'];
+    return Array.from(out).sort((a,b)=>order.indexOf(a)-order.indexOf(b));
+  }
+  function branchForFamily(f){
+    const models=data.models||{};
+    if(f==='718 Cayman') return getCaseInsensitive(models['718']||{},'Cayman')||models['Cayman']||{};
+    if(f==='718 Boxster') return getCaseInsensitive(models['718']||{},'Boxster')||models['Boxster']||{};
+    return models[f]||{};
+  }
+  function yearsForFamily(fam){
+    const b=branchForFamily(fam); const out=new Set();
+    Object.keys(b).forEach(k=>out.add(normalizeYearKey(k).display));
+    return Array.from(out).sort((a,b)=>{const ay=parseInt(a.replace(/\D/g,''),10), by=parseInt(b.replace(/\D/g,''),10); if(isNaN(ay)||isNaN(by)) return b.localeCompare(a); return by-ay;});
+  }
+
+  function populate(sel,arr){ sel.innerHTML=''; arr.forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v; sel.appendChild(o); }); }
+  function populateAnnualMiles(){
+    annualMilesSel.innerHTML='';
+    const milesMap=(data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {"2500":6,"5000":5,"7500":4,"10000":3,"12000":2,"15000":0};
+    Object.keys(milesMap).map(k=>parseInt(k,10)).sort((a,b)=>a-b).forEach(n=>{
+      const o=document.createElement('option'); o.value=String(n); o.textContent=n.toLocaleString()+' mi/yr'; annualMilesSel.appendChild(o);
+    });
+    annualMilesSel.value="15000";
+  }
+
+  function cleanTrimLabel(label){
+    // Remove leading code token like "20239YAAA1 " and keep the human model name
+    return String(label||'').replace(/^\s*20\d{2}[A-Z0-9]+\s+/,'').trim();
+  }
+
+  function collectTrimsForYear(){
+    fullTrimList=[];
+    const branch=branchForFamily(familySel.value);
+    const dispYear=yearSel.value;
+    const yearKey=Object.keys(branch).find(k=>normalizeYearKey(k).display===dispYear);
+    const rows=(yearKey && branch[yearKey])||{};
+    Object.entries(rows).forEach(([code,entry])=>{
+      fullTrimList.push({code, model: cleanTrimLabel(entry.model||code)});
+    });
+  }
+  function populateTrims(filterTerm){
+    trimSel.innerHTML='';
+    const term=(filterTerm||'').trim().toLowerCase();
+    const filtered=fullTrimList.filter(t=>(t.model+' '+t.code).toLowerCase().includes(term));
+    filtered.forEach(item=>{ const opt=document.createElement('option'); opt.value=item.code; opt.textContent=item.model; opt.dataset.code=item.code; trimSel.appendChild(opt); });
+    trimCount.textContent = filtered.length ? (filtered.length+' trim(s) available') : 'No matches';
+    trimWarn.style.display = filtered.length ? 'none' : 'block';
+  }
+
+  function initSelectors(){
+    populate(familySel, getVirtualFamilies());
+    populate(yearSel, yearsForFamily(familySel.value));
+    termSel.innerHTML=''; MONTHS.forEach(m=>{ const o=document.createElement('option'); o.value=m; o.textContent=m+' months'; termSel.appendChild(o); });
+    populateAnnualMiles();
+    collectTrimsForYear(); populateTrims('');
+  }
+
+  function parseRange(str){
+    if(!str) return null;
+    const s=str.replace(/,/g,'').replace(/\s/g,''); const parts=s.split(/–|-/); if(parts.length!==2) return null;
+    const a=parseInt(parts[0],10), b=parseInt(parts[1],10); if(isNaN(a)||isNaN(b)) return null; return [a,b];
+  }
+  function findInceptionAdj(myKey,odo){
+    const bands=data.mileage_at_inception_adjustments_percent && data.mileage_at_inception_adjustments_percent[myKey];
+    if(!bands||odo==null) return 0;
+    for(let i=0;i<bands.length;i++){ const rng=parseRange(bands[i].miles_range); if(!rng) continue; if(odo>=rng[0] && odo<=rng[1]) return bands[i].adj||0; }
+    return 0;
+  }
+  function visibleMonthsFor(entry){
+    if(!hideNA.checked) return MONTHS.slice();
+    const r=[]; for(let i=0;i<MONTHS.length;i++){ if(entry && entry.residuals && entry.residuals[MONTHS[i]]!=null) r.push(MONTHS[i]); }
+    return r;
+  }
+  function buildHeader(months){ theadRow.innerHTML=''; const th1=document.createElement('th'); th1.textContent='Trim / Term'; theadRow.appendChild(th1); months.forEach(m=>{ const th=document.createElement('th'); th.textContent=m+' mo'; theadRow.appendChild(th); }); }
+
+  function computeLVI(rvPct,mf){ if(!isFinite(rvPct)||!isFinite(mf)||mf<=0) return null; return rvPct/mf; }
+
+  // Core compute (summary + table + lease)
+  function compute(){
+    const fam=familySel.value;
+    const branch=branchForFamily(fam);
+    const dispYear=yearSel.value;
+    const yrKey=Object.keys(branch).find(k=>normalizeYearKey(k).display===dispYear);
+    const code=trimSel.value;
+    const term=termSel.value;
+    const milesPerYear=parseInt(annualMilesSel.value,10);
+    const odo=odoInput.value ? parseInt(String(odoInput.value).replace(/,/g,''),10) : null;
+
+    if(!yrKey || !code){
+      finalOut.textContent='—'; detailOut.textContent='Select family/year/trim'; trueOut.textContent=''; if(lviBadge) lviBadge.textContent=''; if(sumLvi) sumLvi.textContent='—'; updateShareURL(); runSniffer(); return;
+    }
+
+    const entry=branch[yrKey][code];
+    const base=term ? ((entry && entry.residuals && entry.residuals[term])||null) : null;
+    const pacpoAdj = pacpoToggle.checked ? (data.pacpo_bonus_percent||2) : 0;
+
+    const milesMap=(data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {};
+    let annualAdj=0; if(base!==null && parseInt(term||"0",10)>=24){ annualAdj = milesMap[String(milesPerYear)] || 0; }
+
+    const inceptionKeyCandidates=[yrKey, dispYear, dispYear.replace(/\s+/g,'')];
+    let inceptionAdj=0;
+    for(let i=0;i<inceptionKeyCandidates.length;i++){ const bands=data.mileage_at_inception_adjustments_percent && data.mileage_at_inception_adjustments_percent[inceptionKeyCandidates[i]]; if(bands){ inceptionAdj=findInceptionAdj(inceptionKeyCandidates[i], odo); break; } }
+
+    const monthsShown=visibleMonthsFor(entry); buildHeader(monthsShown);
+
+    const final = (base===null || term==null) ? null : (base + pacpoAdj + annualAdj + inceptionAdj);
+    finalOut.textContent = final===null ? '—' : final + '%';
+    detailOut.textContent = final===null ? 'Select a term' : 'Final with all adjustments';
+    codeBadge.textContent='Code: '+(code||'—');
+
+    tvalRow.innerHTML=''; const lead=document.createElement('td'); lead.textContent=(entry && cleanTrimLabel(entry.model)) || '—'; tvalRow.appendChild(lead);
+    monthsShown.forEach(m=>{
+      const td=document.createElement('td'); const v=entry && entry.residuals && entry.residuals[m]; let shown='—';
+      if(v!=null){
+        const mN=parseInt(m,10); const aAdj=(mN>=24) ? (milesMap[String(milesPerYear)] || 0) : 0;
+        const total=v + pacpoAdj + aAdj + inceptionAdj; shown=total+'%'; td.classList.add('ok');
+      } else td.classList.add('err');
+      td.textContent=shown; tvalRow.appendChild(td);
+    });
+
+    sumProgram.textContent=currentProgramLabel; sumYear.textContent=dispYear||'—'; sumFamily.textContent=fam||'—'; sumTrim.textContent=(entry && cleanTrimLabel(entry.model))||'—';
+    sumTerm.textContent=term ? (term+' mo') : '—'; sumMilesYear.textContent=Number.isFinite(milesPerYear) ? milesPerYear.toLocaleString()+' mi/yr':'—'; sumOdo.textContent=(odo!=null&&!isNaN(odo)) ? odo.toLocaleString()+' mi':'—';
+
+    const msrp = msrpInput.value ? Number(msrpInput.value) : null;
+    const trueResidual = (final!=null && msrp!=null && !isNaN(msrp)) ? Math.round(msrp*(final/100)) : null;
+    sumTrue.textContent = (trueResidual!=null) ? ('$'+trueResidual.toLocaleString()) : '—';
+    trueOut.innerHTML = (trueResidual!=null) ? ('<span style="font-weight:800">MSRP × RV% = </span><span style="font-weight:900">$'+trueResidual.toLocaleString()+'</span>') : '';
+
+    sumFinal.textContent = final===null ? '—' : final + '%';
+
+    // LVI badge uses current MF if entered
+    const mfVal = leaseMF.value ? Number(leaseMF.value) : NaN;
+    const lvi = computeLVI(final, mfVal);
+    if(lvi!=null){ const t=(lvi/1000).toFixed(1)+'k'; if(lviBadge) lviBadge.textContent='LVI: '+t; if(sumLvi) sumLvi.textContent=t; } else { if(lviBadge) lviBadge.textContent=''; if(sumLvi) sumLvi.textContent='—'; }
+
+    // Sync lease term field from picker
+    if(leaseTerm && termSel && termSel.value) leaseTerm.value = termSel.value;
+
+    updateShareURL();
+    leaseCompute();      // then sniffer (sniffer uses lease inputs)
+    runSniffer();
   }
 
   function updateShareURL(){
-    var p = new URLSearchParams();
-    var program = (programSel.value==='__current__') ? (initialProgram || 'porsche_residuals_all.json') : programSel.value;
+    const p=new URLSearchParams();
+    const program=(programSel.value==='__current__' && initialProgram) ? initialProgram : programSel.value;
     p.set('data', program);
     if(familySel.value) p.set('family', familySel.value);
     if(yearSel.value) p.set('year', yearSel.value);
@@ -415,282 +510,82 @@
     if(pacpoToggle.checked) p.set('pacpo','1');
     if(hideNA.checked) p.set('hidena','1');
     if(msrpInput.value) p.set('msrp', msrpInput.value);
-    var url = location.pathname + '?' + p.toString();
-    shareLink.value = location.origin + url;
+    const url=location.pathname+'?'+p.toString();
+    shareLink.value=location.origin+url;
     history.replaceState(null,'',url);
   }
 
-  var initialProgram = (new URLSearchParams(location.search)).get('data') || 'porsche_residuals_all.json';
-
-  function loadProgram(file,label){
-    currentProgramLabel = label || (file==='__current__'?'Current':file);
-    var target = (file==='__current__') ? initialProgram : file;
-    var resolved = resolveUrlMaybe(target);
-
-    if(isDataUrl(resolved)){
-      return loadFromDataUrl(resolved).then(afterJSONLoaded).catch(err=>{ showError(err.message); useFallback();});
-    }
-    var tryUrl = resolved + (resolved.indexOf('?')===-1?'?':'&') + 't=' + Date.now();
-    return fetch(tryUrl,{cache:'no-store'}).then(r=>{
-      if(!r.ok) throw new Error('HTTP '+r.status);
-      return r.text();
-    }).then(txt=>{
-      var j = parseMaybeJSONText(txt); if(!j) throw new Error('Invalid JSON');
-      afterJSONLoaded(j);
-    }).catch(e=>{ showError('Failed to load '+resolved+' — using fallback'); useFallback();});
-  }
-  function useFallback(){ afterJSONLoaded(FALLBACK_JSON); }
-
-  function normalizeYearKey(k){
-    var s=String(k).trim(); var m=s.match(/^(20\d{2})$/); if(m) return {display:'MY'+m[1].slice(-2),key:k};
-    var m2=s.toUpperCase().replace(/\s+/g,'').match(/^MY(\d{2})$/); if(m2) return {display:'MY'+m2[1],key:k};
-    return {display:s,key:k};
-  }
-  function getCaseInsensitive(obj,name){
-    if(!obj||typeof obj!=='object') return undefined;
-    var t = String(name).replace(/\s+/g,'').toLowerCase();
-    var keys = Object.keys(obj);
-    for(var i=0;i<keys.length;i++){
-      if(keys[i].replace(/\s+/g,'').toLowerCase()===t) return obj[keys[i]];
-    }
-    return undefined;
-  }
-  function getVirtualFamilies(){
-    var out=new Set(); var models=data.models||{};
-    Object.keys(models).forEach(f=>{ 
-      if(f==='718'){
-        var cay=getCaseInsensitive(models['718'],'Cayman'); var box=getCaseInsensitive(models['718'],'Boxster');
-        if(cay) out.add('718 Cayman'); if(box) out.add('718 Boxster');
-      } else out.add(f);
-    });
-    if(models['Cayman']) out.add('718 Cayman'); if(models['Boxster']) out.add('718 Boxster');
-    var order=['911','718 Cayman','718 Boxster','Taycan','Macan','Cayenne','Panamera'];
-    return Array.from(out).sort((a,b)=>order.indexOf(a)-order.indexOf(b));
-  }
-  function branchForFamily(famDisp){
-    var models=data.models||{};
-    if(famDisp==='718 Cayman') return getCaseInsensitive(models['718']||{},'Cayman')||models['Cayman']||{};
-    if(famDisp==='718 Boxster') return getCaseInsensitive(models['718']||{},'Boxster')||models['Boxster']||{};
-    return models[famDisp]||{};
-  }
-  function yearsForFamily(famDisp){
-    var out=new Set(); var branch=branchForFamily(famDisp);
-    Object.keys(branch).forEach(k=>out.add(normalizeYearKey(k).display));
-    return Array.from(out).sort((a,b)=>{
-      var ay=parseInt(a.replace(/\D/g,''),10), by=parseInt(b.replace(/\D/g,''),10);
-      if(isNaN(ay)||isNaN(by)) return b.localeCompare(a);
-      return by-ay;
-    });
-  }
-  function populate(select,arr){ select.innerHTML=''; arr.forEach(v=>{ var o=document.createElement('option'); o.value=v; o.textContent=v; select.appendChild(o); }); }
-
-  /* ---------- Trim sanitizer: removes leading long codes like "20239YAAA1 " ---------- */
-  function sanitizeModelName(name){
-    if(!name) return '';
-    var s=String(name).trim();
-    // strip long alphanumeric code prefix (8+ chars) if present
-    s = s.replace(/^[A-Z0-9\-]{8,}\s+/i,'');
-    // collapse multiple spaces
-    s = s.replace(/\s{2,}/g,' ');
-    return s;
-  }
-
-  function collectTrimsForYear(){
-    fullTrimList = [];
-    var branch=branchForFamily(familySel.value);
-    var dispYear=yearSel.value;
-    var yrKey = Object.keys(branch).find(k=>normalizeYearKey(k).display===dispYear);
-    var rows = (yrKey && branch[yrKey]) || {};
-    Object.entries(rows).forEach(([code,entry])=>{
-      var label = entry && entry.model ? sanitizeModelName(entry.model) : ('Trim '+code);
-      fullTrimList.push({code:code, label:label});
-    });
-    // dedupe by label and sort
-    var map=new Map();
-    fullTrimList.forEach(t=>{ if(!map.has(t.label)) map.set(t.label,t); });
-    fullTrimList = Array.from(map.values()).sort((a,b)=>a.label.localeCompare(b.label));
-  }
-  function populateTrims(filterTerm){
-    var term=(filterTerm||'').trim().toLowerCase();
-    trimSel.innerHTML='';
-    var list = fullTrimList.filter(t=> (t.label+' '+t.code).toLowerCase().includes(term));
-    list.forEach(item=>{
-      var opt=document.createElement('option');
-      opt.value=item.code; opt.textContent=item.label;
-      trimSel.appendChild(opt);
-    });
-    trimCount.textContent = list.length ? (list.length+' trim(s) available') : 'No matches';
-    trimWarn.style.display = list.length ? 'none':'block';
-  }
-
-  function populateAnnualMiles(){
-    annualMilesSel.innerHTML='';
-    var milesMap=(data && data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {"2500":6,"5000":5,"7500":4,"10000":3,"12000":2,"15000":0};
-    Object.keys(milesMap).map(k=>parseInt(k,10)).sort((a,b)=>a-b).forEach(n=>{
-      var opt=document.createElement('option'); opt.value=String(n); opt.textContent=n.toLocaleString()+' mi/yr'; annualMilesSel.appendChild(opt);
-    });
-    annualMilesSel.value="15000";
-  }
-
-  function initSelectors(){
-    populate(familySel, getVirtualFamilies());
-    populate(yearSel, yearsForFamily(familySel.value));
-    termSel.innerHTML=''; (data.months||["24","36","39","48"]).forEach(m=>{ var o=document.createElement('option'); o.value=m; o.textContent=m+' months'; termSel.appendChild(o); });
-    populateAnnualMiles();
-    collectTrimsForYear(); populateTrims('');
-  }
-
-  function parseRange(str){
-    if(!str) return null; var s=str.replace(/,/g,'').replace(/\s/g,''); var p=s.split(/–|-/); if(p.length!==2) return null;
-    var a=parseInt(p[0],10), b=parseInt(p[1],10); if(isNaN(a)||isNaN(b)) return null; return [a,b];
-  }
-  function findInceptionAdj(key,odo){
-    var bands=(data && data.mileage_at_inception_adjustments_percent && data.mileage_at_inception_adjustments_percent[key]) || null;
-    if(!bands||odo==null) return 0;
-    for(var i=0;i<bands.length;i++){ var rng=parseRange(bands[i].miles_range); if(!rng) continue; if(odo>=rng[0] && odo<=rng[1]) return bands[i].adj||0; }
-    return 0;
-  }
-
-  function currentEntryAndYearKey(){
-    var fam=familySel.value; var branch=branchForFamily(fam); var dispYear=yearSel.value;
-    var yrKey=Object.keys(branch).find(k=>normalizeYearKey(k).display===dispYear);
-    var code=trimSel.value; var entry=(yrKey && code && branch[yrKey] && branch[yrKey][code]) ? branch[yrKey][code] : null;
-    return {entry, yrKey, dispYear, fam, code};
-  }
-  function visibleMonthsFor(entry){
-    if(!hideNA.checked) return (data.months||["24","36","39","48"]).slice();
-    var res=[]; var MONTHS=data.months||["24","36","39","48"];
-    for(var i=0;i<MONTHS.length;i++){ if(entry && entry.residuals && entry.residuals[MONTHS[i]]!=null) res.push(MONTHS[i]); }
-    return res;
-  }
-  function adjustedResidualForTerm(entry, yrKey, dispYear, term, pacpoOverride){
-    if(!entry||!entry.residuals) return null;
-    var base=entry.residuals[term]; if(base==null) return null;
-
-    var milesMap=(data && data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {};
-    var milesPerYear=parseInt(annualMilesSel.value,10);
-    var annualAdj=(parseInt(term,10)>=24) ? (milesMap[String(milesPerYear)]||0) : 0;
-
-    var pacpoB=(data.pacpo_bonus_percent||2);
-    var pacpoAdj = pacpoOverride===true ? pacpoB : (pacpoOverride===false ? 0 : (pacpoToggle.checked ? pacpoB : 0));
-
-    var odo = odoInput.value ? parseInt(String(odoInput.value).replace(/,/g,''),10) : null;
-    var inceptionAdj = findInceptionAdj(yrKey, odo) || findInceptionAdj(dispYear, odo) || 0;
-
-    return base + pacpoAdj + annualAdj + inceptionAdj;
-  }
-
-  function computeLVI(rvPercent, mf){ if(!isFinite(rvPercent) || !isFinite(mf) || mf<=0) return null; return rvPercent / mf; }
-
-  function buildHeader(visibleMonths){
-    theadRow.innerHTML=''; var th=document.createElement('th'); th.textContent='Trim / Term'; theadRow.appendChild(th);
-    visibleMonths.forEach(m=>{ var t=document.createElement('th'); t.textContent=m+' mo'; theadRow.appendChild(t); });
-  }
-
-  function compute(){
-    var ctx=currentEntryAndYearKey();
-    var entry=ctx.entry, yrKey=ctx.yrKey, dispYear=ctx.dispYear, fam=ctx.fam;
-    var term=termSel.value;
-
-    if(!yrKey || !entry){
-      finalOut.textContent='—'; detailOut.textContent='Select family/year/trim'; trueOut.textContent=''; lviBadge.textContent='';
-      sumLvi.textContent='—'; updateShareURL(); leaseCompute(); recomputeSnifferPro(); return;
-    }
-
-    codeBadge.textContent='Code: '+(ctx.code||'—');
-
-    var monthsShown=visibleMonthsFor(entry);
-    buildHeader(monthsShown);
-
-    var final = (term==null) ? null : adjustedResidualForTerm(entry, yrKey, dispYear, term, /*override*/null);
-    finalOut.textContent = final==null ? '—' : final + '%';
-    detailOut.textContent = final==null ? 'Select a term' : 'Final with all adjustments';
-
-    tvalRow.innerHTML='';
-    var lead=document.createElement('td');
-    // Trim label sanitized
-    var cleanLabel = entry && entry.model ? sanitizeModelName(entry.model) : '—';
-    lead.textContent = cleanLabel; tvalRow.appendChild(lead);
-
-    monthsShown.forEach(m=>{
-      var td=document.createElement('td');
-      var v = entry && entry.residuals && entry.residuals[m];
-      if(v!=null){
-        var tot = adjustedResidualForTerm(entry, yrKey, dispYear, m, null);
-        td.textContent = (tot!=null ? tot + '%' : '—'); td.classList.add(tot!=null?'ok':'err');
-      } else { td.textContent='—'; td.classList.add('err'); }
-      tvalRow.appendChild(td);
-    });
-
-    // Summary
-    sumProgram.textContent = currentProgramLabel;
-    sumYear.textContent = dispYear || '—';
-    sumFamily.textContent = fam || '—';
-    sumTrim.textContent = cleanLabel || '—';
-    sumTerm.textContent = term ? (term+' mo') : '—';
-    sumMilesYear.textContent = (annualMilesSel.value?Number(annualMilesSel.value).toLocaleString():'—')+' mi/yr';
-    var odo = odoInput.value ? parseInt(odoInput.value,10) : null;
-    sumOdo.textContent = (odo!=null && !isNaN(odo)) ? odo.toLocaleString()+' mi' : '—';
-
-    var msrp = msrpInput.value ? Number(msrpInput.value) : NaN;
-    var trueResidual = (final!=null && isFinite(msrp)) ? Math.round(msrp * (final/100)) : null;
-    sumTrue.textContent = trueResidual!=null ? ('$'+trueResidual.toLocaleString()) : '—';
-    sumFinal.textContent = final==null ? '—' : final + '%';
-    trueOut.innerHTML = trueResidual!=null ? ('MSRP × RV% = <strong>$'+trueResidual.toLocaleString()+'</strong>') : '';
-
-    var mfVal = leaseMF && leaseMF.value ? Number(leaseMF.value) : NaN;
-    var lviCurrent = computeLVI(final, mfVal);
-    if(lviCurrent!=null){ var lviText=(lviCurrent/1000).toFixed(1)+'k'; lviBadge.textContent='LVI: '+lviText; sumLvi.textContent=lviText; }
-    else { lviBadge.textContent=''; sumLvi.textContent='—'; }
-
-    if(leaseTerm && termSel && termSel.value) leaseTerm.value = termSel.value;
-    updateShareURL();
-    leaseCompute();
-    recomputeSnifferPro();
-  }
-
   function exportVisibleCSV(){
-    var ctx=currentEntryAndYearKey(); var entry=ctx.entry, yrKey=ctx.yrKey, dispYear=ctx.dispYear;
-    if(!yrKey || !entry){ alert('Select family/year/trim first.'); return; }
-    var monthsShown=visibleMonthsFor(entry);
-    var rows=[]; rows.push(['Trim/Term'].concat(monthsShown.map(m=>m+' mo')));
-    var line=[ sanitizeModelName(entry.model||ctx.code||'—') ];
+    const fam=familySel.value; const branch=branchForFamily(fam); const dispYear=yearSel.value;
+    const yrKey=Object.keys(branch).find(k=>normalizeYearKey(k).display===dispYear);
+    if(!yrKey||!trimSel.value){ alert('Select family/year/trim first.'); return; }
+    const entry=branch[yrKey][trimSel.value]; const monthsShown=visibleMonthsFor(entry);
+    const rows=[]; rows.push(['Trim/Term'].concat(monthsShown.map(m=>m+' mo')));
+    const line=[cleanTrimLabel(entry.model)||'—'];
+    const milesPerYear=parseInt(annualMilesSel.value,10);
+    const pacpoAdj=pacpoToggle.checked ? (data.pacpo_bonus_percent||2) : 0;
+    const milesMap=(data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year)||{};
+    const odo = odoInput.value ? parseInt(String(odoInput.value).replace(/,/g,''),10) : null;
+
+    let inceptionAdj=0; [''+yrKey, dispYear, dispYear.replace(/\s+/g,'')].some(k=>{ const b=data.mileage_at_inception_adjustments_percent && data.mileage_at_inception_adjustments_percent[k]; if(b){ inceptionAdj=findInceptionAdj(k,odo); return true; } return false; });
+
     monthsShown.forEach(m=>{
-      var total=adjustedResidualForTerm(entry, yrKey, dispYear, m, null);
-      line.push(total!=null?(total+'%'):'');
+      const v=entry && entry.residuals && entry.residuals[m];
+      if(v==null){ line.push(''); return; }
+      const aAdj=(parseInt(m,10)>=24) ? (milesMap[String(milesPerYear)]||0) : 0;
+      const total=v+pacpoAdj+aAdj+inceptionAdj;
+      line.push(total+'%');
     });
     rows.push(line);
-    rows.push([]); rows.push(['Program',currentProgramLabel],['Year',dispYear],['Family',ctx.fam],['Trim',line[0]],['Term',termSel.value?termSel.value+' mo':'—'],['Miles/Year',sumMilesYear.textContent],['Final',sumFinal.textContent]);
-    var csv = rows.map(r=>r.map(c=>{ var s=String(c==null?'':c); if(s.includes(',')||s.includes('"')) s='"'+s.replace(/"/g,'""')+'"'; return s; }).join(',')).join('\r\n');
-    var blob=new Blob([csv],{type:'text/csv'}); var url=URL.createObjectURL(blob); var a=document.createElement('a');
-    a.href=url; a.download='residual_'+(ctx.fam||'model')+'_'+(dispYear||'MY')+'.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    rows.push([]); rows.push(['Program',currentProgramLabel],['Year',dispYear],['Family',fam],['Trim',cleanTrimLabel(entry.model)||'—'],['Term',termSel.value?termSel.value+' mo':'—'],['Miles/Year', sumMilesYear.textContent],['Odometer', sumOdo.textContent],['Final', sumFinal.textContent], ['MSRP × RV%', sumTrue.textContent]);
+
+    const csv = rows.map(r=>r.map(c=>{ let s=(c==null?'':String(c)); if(s.includes('"')||s.includes(',')) s='"'+s.replace(/"/g,'""')+'"'; return s; }).join(',')).join('\r\n');
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='residual_'+(cleanTrimLabel(branch[yrKey][trimSel.value].model)||'trim').replace(/[^\w\-]+/g,'_')+'_'+(dispYear||'MY').replace(/\s+/g,'')+'.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
   }
   function printSummary(){ window.print(); }
 
+  function validateJSON(){
+    if(!data){ alert('Load a program first.'); return; }
+    let issues=[]; const models=data.models||{}; let totalTrims=0, missingCells=0;
+    function checkEntry(fam,yearKey,code,entry){
+      totalTrims++; const resids=entry.residuals||{}; MONTHS.forEach(m=>{ if(!(m in resids) || resids[m]==null){ missingCells++; issues.push(`Missing → [${fam}] [${yearKey}] [${entry.model||code}] term ${m} mo`); } });
+    }
+    Object.keys(models).forEach(fam=>{ const famBranch=models[fam]; if(!famBranch||typeof famBranch!=='object') return;
+      Object.keys(famBranch).forEach(yearKey=>{ const group=famBranch[yearKey]; if(!group||typeof group!=='object'){ issues.push('Bad year group at '+fam+' / '+yearKey); return; }
+        Object.keys(group).forEach(code=>{ const entry=group[code]; if(!entry||typeof entry!=='object'){ issues.push('Bad entry at '+fam+' / '+yearKey+' / '+code); return; }
+          if(!('model' in entry)) issues.push('No "model" at '+fam+' / '+yearKey+' / '+code);
+          if(!('residuals' in entry)) issues.push('No "residuals" at '+fam+' / '+yearKey+' / '+code);
+          else checkEntry(fam,yearKey,code,entry);
+        });
+      });
+    });
+    if(!data.annual_mileage_adjustments_percent || !data.annual_mileage_adjustments_percent.miles_per_year) issues.push('annual_mileage_adjustments_percent.miles_per_year missing');
+    if(!data.mileage_at_inception_adjustments_percent) issues.push('mileage_at_inception_adjustments_percent missing');
+
+    const out=[]; out.push('Program: '+(currentProgramLabel||'Unknown')); out.push('MONTHS: '+JSON.stringify(MONTHS)); out.push('PACPO: '+(data.pacpo_bonus_percent||2)+'%'); out.push('Trims: '+totalTrims); out.push('Missing cells: '+missingCells); out.push('—');
+    if(issues.length===0) out.push('✅ No issues found!'); else { out.push('⚠️ Issues ('+issues.length+'):'); issues.forEach(l=>out.push(' • '+l)); }
+    const el=document.createElement('pre'); el.style.whiteSpace='pre-wrap'; el.style.font='12px ui-monospace, SFMono-Regular, Menlo, monospace'; el.textContent=out.join('\n'); const w=window.open('','_blank'); w.document.write('<pre style="white-space:pre-wrap;font:12px ui-monospace, SFMono-Regular, Menlo, monospace">'+el.textContent+'</pre>');
+  }
+
   function leaseCompute(){
-    var rvPctText = sumFinal.textContent;
-    var rvPct = (rvPctText && rvPctText.endsWith('%')) ? parseFloat(rvPctText) : NaN;
-    var msrp = msrpInput.value ? Number(msrpInput.value) : NaN;
-    var term = leaseTerm.value ? parseInt(leaseTerm.value,10) : (termSel && termSel.value ? parseInt(termSel.value,10) : NaN);
-    var cap = leaseCapCost.value ? Number(leaseCapCost.value) : NaN;
-    var mf = leaseMF.value ? Number(leaseMF.value) : NaN;
-    var tax = leaseTax.value ? Number(leaseTax.value)/100 : 0;
-    var capRed = leaseCapReduction.value ? Number(leaseCapReduction.value) : 0;
-    var fees = leaseFees.value ? Number(leaseFees.value) : 0;
+    const rvPctText=sumFinal.textContent; const rvPct=(rvPctText&&rvPctText.endsWith('%'))?parseFloat(rvPctText):NaN;
+    const msrp=msrpInput.value ? Number(msrpInput.value) : NaN;
+    const term=leaseTerm.value ? parseInt(leaseTerm.value,10) : (termSel && termSel.value ? parseInt(termSel.value,10) : NaN);
+    const cap=leaseCapCost.value ? Number(leaseCapCost.value) : NaN;
+    const mf=leaseMF.value ? Number(leaseMF.value) : NaN;
+    const tax=leaseTax.value ? Number(leaseTax.value)/100 : 0;
+    const capRed=leaseCapReduction.value ? Number(leaseCapReduction.value) : 0;
+    const fees=leaseFees.value ? Number(leaseFees.value) : 0;
 
-    leaseRvPct.textContent = isFinite(rvPct) ? rvPct.toFixed(2)+'%' : '—';
-    if(isFinite(mf)) mfAprHint.textContent = '≈ '+(mf*2400).toFixed(2)+'% APR'; else mfAprHint.textContent='';
+    leaseRvPct.textContent=isFinite(rvPct)?(rvPct.toFixed(2)+'%'):'—';
 
-    if(!isFinite(msrp)||!isFinite(rvPct)||!isFinite(term)||term<=0){ leaseRvAmt.textContent='—'; leaseAdjCap.textContent='—'; leasePreTax.textContent='—'; leaseWithTax.textContent='—'; return; }
+    if(!isFinite(msrp)||!isFinite(rvPct)||!isFinite(term)||term<=0){ leaseRvAmt.textContent='—'; leaseAdjCap.textContent='—'; leasePreTax.textContent='—'; leaseWithTax.textContent='—'; mfAprHint.textContent=isFinite(mf)?('≈ '+(mf*2400).toFixed(2)+'% APR'):''; return; }
 
-    var rvAmt = Math.round(msrp*(rvPct/100)); leaseRvAmt.textContent='$'+rvAmt.toLocaleString();
-    var adjCap = (isFinite(cap)?cap:0) - (isFinite(capRed)?capRed:0) + (isFinite(fees)?fees:0);
-    leaseAdjCap.textContent = isFinite(adjCap) ? ('$'+adjCap.toLocaleString()) : '—';
-    if(!isFinite(adjCap)||adjCap<=0||!isFinite(mf)||mf<=0){ leasePreTax.textContent='—'; leaseWithTax.textContent='—'; return; }
-
-    var dep=(adjCap-rvAmt)/term, fin=(adjCap+rvAmt)*mf, preTax=dep+fin, withTax=preTax*(1+(isFinite(tax)?tax:0));
-    leasePreTax.textContent='$'+Math.round(preTax).toLocaleString();
-    leaseWithTax.textContent='$'+Math.round(withTax).toLocaleString();
+    const rvAmt=Math.round(msrp*(rvPct/100)); leaseRvAmt.textContent='$'+rvAmt.toLocaleString();
+    const adjCap=(isFinite(cap)?cap:0) - (isFinite(capRed)?capRed:0) + (isFinite(fees)?fees:0); leaseAdjCap.textContent=isFinite(adjCap)?('$'+adjCap.toLocaleString()):'—';
+    if(!isFinite(adjCap)||adjCap<=0||!isFinite(mf)||mf<=0){ leasePreTax.textContent='—'; leaseWithTax.textContent='—'; mfAprHint.textContent=isFinite(mf)?('≈ '+(mf*2400).toFixed(2)+'% APR'):''; return; }
+    const dep=(adjCap - rvAmt)/term; const fin=(adjCap + rvAmt)*mf; const preTax=dep+fin; const withTax=preTax*(1+(isFinite(tax)?tax:0));
+    leasePreTax.textContent='$'+Math.round(preTax).toLocaleString(); leaseWithTax.textContent='$'+Math.round(withTax).toLocaleString(); mfAprHint.textContent=isFinite(mf)?('≈ '+(mf*2400).toFixed(2)+'% APR'):'';
   }
 
   function applyLeaseDefaultsIfEmpty(){
@@ -698,201 +593,154 @@
     if(!leaseTax.value) leaseTax.value='9.75';
     if(!leaseCapReduction.value) leaseCapReduction.value='7500';
     if(!leaseFees.value) leaseFees.value='1095';
-    if(termSel && termSel.value) leaseTerm.value = termSel.value;
+    if(termSel && termSel.value) leaseTerm.value=termSel.value;
     leaseCompute();
   }
 
-  function restoreFromParams(){
-    var p=readParams();
-    if(p.family){ familySel.value=p.family; }
-    populate(yearSel, yearsForFamily(familySel.value));
-    if(p.year && Array.from(yearSel.options).some(o=>o.value===p.year)) yearSel.value=p.year;
-    collectTrimsForYear(); populateTrims('');
-    if(p.trim && Array.from(trimSel.options).some(o=>o.value===p.trim)) trimSel.value=p.trim;
-    if(p.term && Array.from(termSel.options).some(o=>o.value===p.term)) termSel.value=p.term;
-    if(p.miles) annualMilesSel.value=p.miles;
-    if(p.odo) odoInput.value=p.odo;
-    pacpoToggle.checked = (p.pacpo==='1');
-    hideNA.checked = (p.hidena==='1');
-    if(p.msrp) msrpInput.value=p.msrp;
+  // ----- Deal Sniffer Pro -----
+  function allMileageBands(){
+    const map=(data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {};
+    return Object.keys(map).map(k=>parseInt(k,10)).sort((a,b)=>a-b);
   }
 
-  /* ------------------------- Deal Sniffer Pro ------------------------- */
-  var lastBest = null; // {term, pacpoOn, pay}
-  function computeMonthly(msrp, rvPct, term, cap, mf, tax, capRed, fees){
-    if(!isFinite(msrp)||!isFinite(rvPct)||!isFinite(term)||term<=0) return NaN;
-    var rvAmt=Math.round(msrp*(rvPct/100));
-    var adjCap=(isFinite(cap)?cap:0)-(isFinite(capRed)?capRed:0)+(isFinite(fees)?fees:0);
-    if(!isFinite(adjCap)||adjCap<=0||!isFinite(mf)||mf<=0) return NaN;
-    var dep=(adjCap-rvAmt)/term, fin=(adjCap+rvAmt)*mf, pre=dep+fin, withTax=pre*(1+(isFinite(tax)?tax:0));
-    return Math.round(withTax);
+  function computeRV(entry, term, milesPerYear, pacpoOn, dispYear, yrKey){
+    if(!entry || !entry.residuals || entry.residuals[term]==null) return null;
+    const base=entry.residuals[term];
+    const milesMap=(data.annual_mileage_adjustments_percent && data.annual_mileage_adjustments_percent.miles_per_year) || {};
+    const aAdj=(parseInt(term,10)>=24)?(milesMap[String(milesPerYear)]||0):0;
+    const pac= pacpoOn ? (data.pacpo_bonus_percent||2) : 0;
+
+    // inception adj (if bands exist)
+    const odo = odoInput.value ? parseInt(String(odoInput.value).replace(/,/g,''),10) : null;
+    let inc=0; [yrKey,dispYear,dispYear.replace(/\s+/g,'')].some(k=>{ const b=data.mileage_at_inception_adjustments_percent && data.mileage_at_inception_adjustments_percent[k]; if(b){ inc=findInceptionAdj(k,odo); return true; } return false; });
+    return base + pac + aAdj + inc;
   }
-  function recomputeSnifferPro(){
-    var cap = leaseCapCost.value ? Number(leaseCapCost.value) : NaN;
-    var mf  = leaseMF.value      ? Number(leaseMF.value)      : NaN;
-    var tax = leaseTax.value     ? Number(leaseTax.value)/100 : 0;
-    var capRed = leaseCapReduction.value ? Number(leaseCapReduction.value) : 0;
-    var fees   = leaseFees.value         ? Number(leaseFees.value)         : 0;
-    var msrp   = msrpInput.value         ? Number(msrpInput.value)         : NaN;
 
-    var ctx=currentEntryAndYearKey();
-    if(!ctx.entry || !isFinite(cap) || !isFinite(mf) || !isFinite(msrp)){
-      snprBest.style.display='none'; snprTopGrid.style.display='none'; snprAdvanced.style.display='none';
-      snprHint.style.display='block'; snprHint.textContent='Enter Cap Cost + MSRP + MF to sniff deals.'; lastBest=null; return;
-    }
+  function paymentFor(rvPct){
+    const msrp=Number(msrpInput.value||NaN); const term=Number(leaseTerm.value||termSel.value||NaN);
+    const cap=Number(leaseCapCost.value||NaN); const mf=Number(leaseMF.value||NaN); const tax=(Number(leaseTax.value||0)/100)||0;
+    const capRed=Number(leaseCapReduction.value||0); const fees=Number(leaseFees.value||0);
+    if(!isFinite(msrp)||!isFinite(rvPct)||!isFinite(term)||term<=0||!isFinite(cap)||!isFinite(mf)||mf<=0) return {pre:null,withTax:null,rvAmt:null};
+    const rvAmt=Math.round(msrp*(rvPct/100)); const adjCap=(cap - (isFinite(capRed)?capRed:0) + (isFinite(fees)?fees:0)); if(adjCap<=0) return {pre:null,withTax:null,rvAmt};
+    const dep=(adjCap - rvAmt)/term; const fin=(adjCap + rvAmt)*mf; const pre=dep+fin; const wt=pre*(1+tax);
+    return {pre,withTax:wt,rvAmt};
+  }
 
-    var months = visibleMonthsFor(ctx.entry).map(m=>parseInt(m,10)).filter(n=>isFinite(n));
-    var allowOff = sniffAllowPacpoOff.checked;
+  function runSniffer(){
+    // Preconditions: need Year/Trim and enough lease inputs
+    const fam=familySel.value; const branch=branchForFamily(fam); const dispYear=yearSel.value; const yrKey=Object.keys(branch).find(k=>normalizeYearKey(k).display===dispYear); const code=trimSel.value;
+    const entry = (yrKey && code) ? branch[yrKey][code] : null;
+    const cap=Number(leaseCapCost.value||NaN); const msrp=Number(msrpInput.value||NaN); const mf=Number(leaseMF.value||NaN);
+    if(!entry || !isFinite(cap) || !isFinite(msrp) || !isFinite(mf) || mf<=0){ show(snprBest,false); show(snprTopGrid,false); show(snprAdvanced,false); return; }
 
-    var candidates=[];
-    for(var i=0;i<months.length;i++){
-      var t=String(months[i]);
+    const curTerm = termSel.value ? Number(termSel.value) : NaN;
+    const curMiles = annualMilesSel.value ? Number(annualMilesSel.value) : NaN;
 
-      // PACPO ON path
-      var rvOn = adjustedResidualForTerm(ctx.entry, ctx.yrKey, ctx.dispYear, t, true);
-      if(rvOn!=null){
-        var payOn = computeMonthly(msrp, rvOn, months[i], cap, mf, tax, capRed, fees);
-        var lviOn = computeLVI(rvOn, mf);
-        if(isFinite(payOn)) candidates.push({term:months[i], pacpo:true, rv:rvOn, lvi:lviOn, pay:payOn});
-      }
-      // PACPO OFF path (optional)
-      if(allowOff){
-        var rvOff = adjustedResidualForTerm(ctx.entry, ctx.yrKey, ctx.dispYear, t, false);
-        if(rvOff!=null){
-          var payOff = computeMonthly(msrp, rvOff, months[i], cap, mf, tax, capRed, fees);
-          var lviOff = computeLVI(rvOff, mf);
-          if(isFinite(payOff)) candidates.push({term:months[i], pacpo:false, rv:rvOff, lvi:lviOff, pay:payOff});
+    const months = visibleMonthsFor(entry).map(x=>Number(x)).filter(n=>isFinite(n));
+    const milesSet = sniffVaryMiles.checked ? allMileageBands() : [curMiles];
+    const pacpoOptions = sniffAllowPacpoOff.checked ? [true,false] : [true];
+
+    const rows=[];
+    for(const t of months){
+      for(const m of milesSet){
+        for(const pOn of pacpoOptions){
+          const rvPct = computeRV(entry,String(t),m,pOn,dispYear,yrKey);
+          if(rvPct==null) continue;
+          // temporarily set leaseTerm to term t for payment calc
+          const oldLeaseTerm = leaseTerm.value; leaseTerm.value = String(t);
+          const pay = paymentFor(rvPct);
+          leaseTerm.value = oldLeaseTerm;
+          if(pay.withTax==null) continue;
+          const lvi = computeLVI(rvPct, mf);
+          rows.push({term:t, miles:m, pacpo:pOn, rvPct:+rvPct.toFixed(2), lvi: lvi ? +lvi.toFixed(2) : null, pre:pay.pre, withTax:pay.withTax, perMi: pay.pre && m ? (pay.pre/m) : null});
         }
       }
     }
 
-    if(candidates.length===0){
-      snprBest.style.display='none'; snprTopGrid.style.display='none'; snprAdvanced.style.display='none';
-      snprHint.style.display='block'; snprHint.textContent='No sniffable combos for this trim.'; lastBest=null; return;
-    }
+    if(!rows.length){ show(snprBest,false); show(snprTopGrid,false); show(snprAdvanced,false); return; }
 
-    // Sort by: lowest payment → highest LVI → highest RV → shortest term
-    candidates.sort(function(a,b){
-      if(a.pay!==b.pay) return a.pay-b.pay;
-      if((a.lvi||-1)!==(b.lvi||-1)) return (b.lvi||-1)-(a.lvi||-1);
-      if(a.rv!==b.rv) return b.rv-a.rv;
+    // Sort: withTax asc → rv% desc → lvi desc → term asc
+    rows.sort((a,b)=>{
+      if(a.withTax!==b.withTax) return a.withTax-b.withTax;
+      if(a.rvPct!==b.rvPct) return b.rvPct-a.rvPct;
+      if((a.lvi||0)!==(b.lvi||0)) return (b.lvi||0)-(a.lvi||0);
       return a.term-b.term;
     });
 
-    var currentPay = (leaseWithTax.textContent||'').replace(/[^0-9]/g,'');
-    currentPay = currentPay?Number(currentPay):NaN;
+    // Best
+    const best=rows[0];
+    snprBestPay.textContent='$'+Math.round(best.withTax).toLocaleString();
+    snprBestMeta.textContent=`${best.term} mo • ${best.miles.toLocaleString()} mi/yr • ${best.pacpo?'+2% PACPO':'PACPO Off'} • RV ${best.rvPct}%`;
+    // Δ vs current with-tax
+    const curWt = leaseWithTax.textContent && leaseWithTax.textContent.startsWith('$') ? Number(leaseWithTax.textContent.replace(/[$,]/g,'')) : NaN;
+    if(isFinite(curWt)){ const d=Math.round(best.withTax - curWt); snprDelta.textContent=`Δ vs current: ${d>0?'+':''}$${Math.abs(d).toLocaleString()}`; snprDelta.className='small '+(d<=0?'delta pos':'delta neg'); } else { snprDelta.textContent='Δ vs current: —'; snprDelta.className='small'; }
+    show(snprBest,true);
 
-    // Best banner
-    var best=candidates[0]; lastBest = {term:best.term, pacpoOn:best.pacpo, pay:best.pay};
-    snprBest.style.display='flex';
-    snprBestPay.textContent = '$'+best.pay.toLocaleString();
-    var lviText = (best.lvi!=null)?(best.lvi/1000).toFixed(1)+'k':'—';
-    snprBestMeta.textContent = best.term+' mo • PACPO '+(best.pacpo?'On':'Off')+' • RV '+best.rv.toFixed(2)+'% • LVI '+lviText;
-    snprDelta.textContent = isFinite(currentPay) ? ('Δ vs current: '+((best.pay-currentPay>=0?'+':'-')+'$'+Math.abs(best.pay-currentPay).toLocaleString())) : 'Δ vs current: —';
-
-    // Top 5 grid
-    var top = candidates.slice(0,5);
-    snprTopGrid.innerHTML='';
-    top.forEach((c,idx)=>{
-      var div=document.createElement('div'); div.className='cardx'+(idx===0?' best':'');
-      var dl = isFinite(currentPay) ? (c.pay-currentPay) : null;
-      var deltaTxt = dl==null?'—':((dl>0?'+':'-')+'$'+Math.abs(dl).toLocaleString());
-      var deltaCls = dl==null?'delta':(dl<0?'delta pos':'delta neg');
-      var lviTxt = (c.lvi!=null)?(c.lvi/1000).toFixed(1)+'k':'—';
-      div.innerHTML = `
-        <div class="row"><div class="pillx">Term ${c.term} mo</div><div class="small">PACPO ${c.pacpo?'On':'Off'}</div></div>
-        <div class="row" style="margin-top:6px"><div style="font-weight:900">$${c.pay.toLocaleString()}</div><div class="${deltaCls}">${deltaTxt}</div></div>
-        <div class="small" style="margin-top:4px">RV ${c.rv.toFixed(2)}% • LVI ${lviTxt}</div>
-      `;
-      snprTopGrid.appendChild(div);
-    });
-    snprTopGrid.style.display='grid';
+    // Top grid
+    const top = rows.slice(0,5);
+    snprTopGrid.innerHTML = top.map((r,i)=>`
+      <div class="cardx ${i===0?'best':''}">
+        <div class="row"><div class="pillx">${r.term} mo</div><div class="pillx">${r.miles.toLocaleString()} mi/yr</div></div>
+        <div class="row" style="margin-top:8px"><div class="muted">RV</div><div style="font-weight:900">${r.rvPct}%</div></div>
+        <div class="row" style="margin-top:2px"><div class="muted">LVI</div><div style="font-weight:900">${r.lvi? r.lvi : '—'}</div></div>
+        <div class="row" style="margin-top:8px"><div class="muted">Pre-Tax</div><div style="font-weight:900">$${Math.round(r.pre).toLocaleString()}</div></div>
+        <div class="row"><div class="muted">With Tax</div><div style="font-weight:900">$${Math.round(r.withTax).toLocaleString()}</div></div>
+        <div class="row" style="margin-top:6px"><div class="muted">${r.pacpo?'+2% PACPO':'PACPO Off'}</div><div class="muted">$/mi ${r.perMi? r.perMi.toFixed(2):'—'}</div></div>
+      </div>`).join('');
+    show(snprTopGrid, sniffShowAdvanced.checked);
 
     // Advanced table
-    snprTbody.innerHTML='';
-    candidates.forEach(c=>{
-      // $/mi over term using selected annual miles
-      var milesPerYear = parseInt(annualMilesSel.value||'0',10);
-      var totalMiles = milesPerYear * (c.term/12);
-      var perMile = isFinite(totalMiles)&&totalMiles>0 ? (c.pay/totalMiles) : NaN;
-      var tr=document.createElement('tr');
-      tr.innerHTML = `<td>${c.term}</td><td>${c.pacpo?'On':'Off'}</td><td>${c.rv.toFixed(2)}%</td><td>${c.lvi? (c.lvi/1000).toFixed(1)+'k':'—'}</td><td>$${Math.round(c.pay/(1+(Number(leaseTax.value||0)/100))).toLocaleString()}</td><td>$${c.pay.toLocaleString()}</td><td>${isFinite(perMile)?('$'+perMile.toFixed(2)):'—'}</td>`;
-      snprTbody.appendChild(tr);
-    });
-    snprAdvanced.style.display = sniffShowAdvanced.checked ? 'block' : 'none';
-    snprHint.style.display='none';
+    snprTbody.innerHTML = rows.slice(0,20).map(r=>`
+      <tr><td>${r.term}</td><td>${r.miles.toLocaleString()}</td><td>${r.pacpo?'On':'Off'}</td><td>${r.rvPct}%</td><td>${r.lvi? r.lvi : '—'}</td><td>$${Math.round(r.pre).toLocaleString()}</td><td>$${Math.round(r.withTax).toLocaleString()}</td><td>${r.perMi? r.perMi.toFixed(2):'—'}</td></tr>
+    `).join('');
+    show(snprAdvanced, sniffShowAdvanced.checked);
+
+    snprApplyBtn.onclick=()=>{
+      termSel.value=String(best.term);
+      annualMilesSel.value=String(best.miles);
+      pacpoToggle.checked=!!best.pacpo;
+      leaseTerm.value=String(best.term);
+      compute(); // recompute everything with applied best
+      window.scrollTo({top:document.getElementById('leaseCard').offsetTop-20,behavior:'smooth'});
+    };
   }
 
-  // Apply best
-  snprApplyBtn.addEventListener('click', function(){
-    if(!lastBest) return;
-    termSel.value = String(lastBest.term);
-    leaseTerm.value = String(lastBest.term);
-    pacpoToggle.checked = !!lastBest.pacpoOn;
-    compute(); // recompute everything and re-sniff
-    showInfo('Applied best: '+lastBest.term+' mo • PACPO '+(lastBest.pacpoOn?'On':'Off'));
-  });
+  // Events
+  programSel.addEventListener('change', ()=>{ const label=programSel.options[programSel.selectedIndex].textContent.replace(/^Program:\s*/,''); loadProgram(programSel.value,label); });
+  jumpSummaryBtn.addEventListener('click', ()=>{ const el=$('summaryBox'); el && el.scrollIntoView({behavior:'smooth',block:'start'}); });
+  familySel.addEventListener('change', ()=>{ populate(yearSel, yearsForFamily(familySel.value)); collectTrimsForYear(); populateTrims(trimSearch.value); compute(); });
+  yearSel.addEventListener('change', ()=>{ collectTrimsForYear(); populateTrims(trimSearch.value); compute(); });
+  trimSearch.addEventListener('input', ()=>{ populateTrims(trimSearch.value); compute(); });
+  trimSel.addEventListener('change', compute);
+  termSel.addEventListener('change', ()=>{ compute(); if(leaseTerm) leaseTerm.value=termSel.value||''; leaseCompute(); });
+  pacpoToggle.addEventListener('change', compute);
+  hideNA.addEventListener('change', compute);
+  annualMilesSel.addEventListener('change', compute);
+  odoInput.addEventListener('input', compute);
+  msrpInput.addEventListener('input', ()=>{ compute(); leaseCompute(); });
 
-  // Event wiring
-  programSel.addEventListener('change', function(){
-    var label=programSel.options[programSel.selectedIndex].textContent.replace(/^Program:\s*/,'');
-    loadProgram(programSel.value,label);
-  });
-  jumpSummaryBtn.addEventListener('click', ()=>document.getElementById('summaryBox').scrollIntoView({behavior:'smooth'}));
   exportCsvBtn.addEventListener('click', exportVisibleCSV);
   printBtn.addEventListener('click', printSummary);
   validateBtn.addEventListener('click', validateJSON);
 
-  familySel.addEventListener('change', function(){ populate(yearSel, yearsForFamily(familySel.value)); collectTrimsForYear(); populateTrims(trimSearch.value); compute(); });
-  yearSel.addEventListener('change', function(){ collectTrimsForYear(); populateTrims(trimSearch.value); compute(); });
-  trimSearch.addEventListener('input', function(){ populateTrims(trimSearch.value); });
-  trimSel.addEventListener('change', compute);
-  termSel.addEventListener('change', function(){ compute(); if(leaseTerm) leaseTerm.value=termSel.value||''; });
-  annualMilesSel.addEventListener('change', compute);
-  pacpoToggle.addEventListener('change', compute);
-  hideNA.addEventListener('change', compute);
-  odoInput.addEventListener('input', compute);
-  msrpInput.addEventListener('input', function(){ compute(); leaseCompute(); });
+  leaseCapCost.addEventListener('input', ()=>{ leaseCompute(); runSniffer(); });
+  leaseMF.addEventListener('input', ()=>{ leaseCompute(); compute(); runSniffer(); });
+  leaseTax.addEventListener('input', ()=>{ leaseCompute(); runSniffer(); });
+  leaseCapReduction.addEventListener('input', ()=>{ leaseCompute(); runSniffer(); });
+  leaseFees.addEventListener('input', ()=>{ leaseCompute(); runSniffer(); });
+  leaseTerm.addEventListener('input', ()=>{ leaseCompute(); runSniffer(); });
 
-  // Lease live
-  [leaseCapCost,leaseMF,leaseTax,leaseCapReduction,leaseFees].forEach(el=>{
-    el.addEventListener('input', function(){ leaseCompute(); recomputeSnifferPro(); });
-  });
-  leaseTerm.addEventListener('input', leaseCompute);
-
-  // Sniffer toggles
-  sniffAllowPacpoOff.addEventListener('change', recomputeSnifferPro);
-  sniffShowAdvanced.addEventListener('change', recomputeSnifferPro);
-
-  // Validator (quick)
-  function validateJSON(){
-    if(!data){ alert('Load a program first.'); return; }
-    var issues=[]; var models=data.models||{}; var MONTHS=data.months||["24","36","39","48"];
-    Object.keys(models).forEach(fam=>{
-      var famBranch=models[fam]; Object.keys(famBranch||{}).forEach(yearKey=>{
-        var trims=famBranch[yearKey]||{}; Object.keys(trims).forEach(code=>{
-          var e=trims[code]; if(!e||!e.residuals) issues.push('Missing residuals at '+fam+' '+yearKey+' '+code);
-          MONTHS.forEach(m=>{ if(e && e.residuals && e.residuals[m]==null) issues.push('N/A '+fam+' '+yearKey+' '+(e.model||code)+' @ '+m+'m'); });
-        });
-      });
-    });
-    alert(issues.length?('Issues:\n- '+issues.join('\n- ')):'✅ Looks good');
-  }
+  sniffAllowPacpoOff.addEventListener('change', runSniffer);
+  sniffVaryMiles.addEventListener('change', runSniffer);
+  sniffShowAdvanced.addEventListener('change', ()=>{ runSniffer(); });
 
   // Boot
-  var initialParams = readParams();
-  if(initialParams.program){
-    var opt=Array.from(programSel.options).find(o=>o.value===initialParams.program);
-    if(opt){ programSel.value=initialParams.program; currentProgramLabel=opt.textContent.replace(/^Program:\s*/,''); }
-    else { programSel.value='__current__'; currentProgramLabel=initialParams.program; }
-    loadProgram(programSel.value,currentProgramLabel).then(()=>{
-      initSelectors(); restoreFromParams(); applyLeaseDefaultsIfEmpty(); compute();
-    });
-  } else {
-    programSel.value='porsche_residuals_all.json';
-    loadProgram(programSel.value,'PB 25-10R (Default)').then(()=>{ initSelectors(); restoreFromParams(); applyLeaseDefaultsIfEmpty(); compute(); })
-    .catch(()=>{ programSel.value='__current__'; loadProgram('__current__','Current').then(()=>{ initSelectors(); restoreFromParams(); applyLeaseDefaultsIfEmpty(); compute(); }); });
-  }
+  (async function boot(){
+    // If ?data= present, switch selector to __current__
+    if(initialProgram){ programSel.value='__current__'; }
+    await loadProgram(programSel.value, programSel.options[programSel.selectedIndex].textContent.replace(/^Program:\s*/,''));
+  })();
+
 })();
 </script>
 </body>
