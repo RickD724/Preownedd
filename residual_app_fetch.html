@@ -256,10 +256,10 @@
   .chip.cost{ border-color: rgba(139,92,246,.5); }
   .chip.term{ border-color: rgba(59,130,246,.5); }
 
-/* Sniffer sort toggle (minimal) */
-.seg-toggle { display:inline-flex; background:var(--card); border:1px solid var(--border); border-radius:999px; overflow:hidden; }
-.seg-toggle .seg{ padding:6px 10px; font-size:.82rem; font-weight:700; border:0; background:transparent; cursor:pointer; }
-.seg-toggle .seg.active{ background:linear-gradient(135deg, var(--accent), var(--purple)); color:#fff; box-shadow:0 0 0 1px var(--border-hover) inset; }
+/* Sniffer sort toggle — minimal, isolated */
+.seg-toggle { display:inline-flex; background:var(--bg-card, var(--card)); border:1px solid var(--border,#e5e7eb); border-radius:999px; overflow:hidden; }
+.seg-toggle .seg { padding:6px 10px; font-size:.82rem; font-weight:700; border:0; background:transparent; cursor:pointer; }
+.seg-toggle .seg.active { background:linear-gradient(135deg, var(--accent,#6d28d9), var(--purple,#7c3aed)); color:#fff; box-shadow:0 0 0 1px var(--border-hover,#c4b5fd) inset; }
 
 </style>
 
@@ -453,17 +453,20 @@
       </div>
     </div>
 
-    <!-- Lease Sniffer (Top 5, auto-run) -->
+    <!-- Lease Sniffer (Top 6, auto-run) -->
     <div class="card" id="snifferCard" style="margin-top:14px; animation-delay:0.35s;">
       <div class="rowline" style="justify-content:space-between; margin-bottom:8px;">
         <strong style="font-size:1.05rem;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🕵️ Lease Sniffer — Top 6</strong>
-        <span class="muted" id="sniffSubtitle" style="font-size:0.9rem;">Ranking: Highest LVI first, then with-tax payment.</span>
-<div class="seg-toggle" id="sniffSortToggle" role="group" aria-label="Sniffer sort" style="margin-left:8px;">
-  <button type="button" data-mode="lvi" class="seg active">LVI → $/mo</button>
-  <button type="button" data-mode="payment" class="seg">$/mo → LVI</button>
-</div>
+        <span class="muted" style="font-size:0.9rem;">Ranks by Value Index (LVI) first, then With-Tax payment</span>
       </div>
       <div id="sniffSummary" class="hint" style="margin-bottom:8px;">—</div>
+<div class="rowline" style="gap:8px; margin-top:6px;">
+  <span class="muted" id="sniffSubtitle" style="font-size:0.9rem;">Ranking: Highest LVI first, then with-tax payment.</span>
+  <div class="seg-toggle" id="sniffSortToggle" role="group" aria-label="Sniffer sort">
+    <button type="button" data-mode="lvi" class="seg active">LVI → $/mo</button>
+    <button type="button" data-mode="payment" class="seg">$/mo → LVI</button>
+  </div>
+</div>
       <div class="sniff-cards" id="sniffCards"></div>
     </div>
 
@@ -594,23 +597,6 @@
   var validatorOutput = document.getElementById('validatorOutput');
   var sniffCards = document.getElementById('sniffCards');
   var sniffSummary = document.getElementById('sniffSummary');
-  var sniffSortToggle = document.getElementById('sniffSortToggle');
-  var sniffSubtitle = document.getElementById('sniffSubtitle');
-  var sniffSortMode = 'lvi';
-  if (sniffSortToggle){
-    sniffSortToggle.addEventListener('click', function(e){
-      var btn = e.target.closest('button[data-mode]'); if(!btn) return;
-      sniffSortMode = btn.dataset.mode;
-      Array.from(sniffSortToggle.querySelectorAll('.seg')).forEach(function(b){ b.classList.toggle('active', b===btn); });
-      if (sniffSubtitle){
-        sniffSubtitle.textContent = (sniffSortMode==='payment')
-          ? 'Ranking: Lowest with-tax payment first, then LVI.'
-          : 'Ranking: Highest LVI first, then with-tax payment.';
-      }
-      if (typeof sniffRun==='function') sniffRun();
-    });
-  }
-
 
   var data, MONTHS = [], PACPO = 2;
   var fullTrimList = [];
@@ -1153,26 +1139,22 @@
     });
 
     // LVI-first, then withTax ascending
-    
-if (sniffSortMode === 'payment') {
-      // Lowest with-tax first, tie-breaker: higher LVI
-      candidates.sort(function(a,b){
-        if (a.withTax !== b.withTax) return a.withTax - b.withTax;
-        var al = (a.lvi==null? -Infinity : a.lvi), bl = (b.lvi==null? -Infinity : b.lvi);
-        return bl - al;
-      });
-    } else {
-      // Highest LVI first, tie-breaker: cheaper with-tax
-      candidates.sort(function(a,b){
-        var al = (a.lvi==null? -Infinity : a.lvi), bl = (b.lvi==null? -Infinity : b.lvi);
-        if (bl !== al) return bl - al;
-        return a.withTax - b.withTax;
-      });
-    }
-var bl = (b.lvi==null? -Infinity : b.lvi);
+    candidates.sort(function(a,b){
+      var al = (a.lvi==null? -Infinity : a.lvi);
+      var bl = (b.lvi==null? -Infinity : b.lvi);
       if (bl !== al) return bl - al; // higher LVI first
       return a.withTax - b.withTax;  // then cheaper payment
     });
+
+    
+    // Optional re-sort based on user toggle (non-destructive)
+    if (typeof sniffSortMode !== 'undefined' && sniffSortMode === 'payment') {
+      candidates.sort(function(a,b){
+        if (a.withTax !== b.withTax) return a.withTax - b.withTax; // cheaper first
+        var al = (a.lvi==null? -Infinity : a.lvi), bl = (b.lvi==null? -Infinity : b.lvi);
+        return bl - al; // tie-breaker: higher LVI first
+      });
+    }
 
     var best = candidates.slice(0,6);
     sniffCards.innerHTML = '';
@@ -1369,6 +1351,26 @@ function updateSnifferDeltas(){
   });
 });
 
+</script>
+
+
+<script>
+(function(){
+  // global so sniffRun can read it
+  window.sniffSortMode = 'lvi';
+  var g = document.getElementById('sniffSortToggle');
+  var sub = document.getElementById('sniffSubtitle');
+  if (!g) return;
+  g.addEventListener('click', function(e){
+    var btn = e.target.closest('button[data-mode]'); if(!btn) return;
+    window.sniffSortMode = btn.dataset.mode;
+    Array.from(g.querySelectorAll('.seg')).forEach(function(b){ b.classList.toggle('active', b===btn); });
+    if (sub) sub.textContent = (window.sniffSortMode==='payment')
+      ? 'Ranking: Lowest with-tax payment first, then LVI.'
+      : 'Ranking: Highest LVI first, then with-tax payment.';
+    if (typeof sniffRun === 'function') { try { sniffRun(); } catch(_){} }
+  });
+})();
 </script>
 
 </body>
