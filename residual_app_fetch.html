@@ -1428,9 +1428,12 @@ function updateSnifferDeltas(){
       });
     });
     items.sort(function(a,b){ if(b.finalRV!==a.finalRV) return b.finalRV-a.finalRV; if((b.term||0)!==(a.term||0)) return (b.term||0)-(a.term||0); return (b.lvi||0)-(a.lvi||0); });
-    // cap to max 2 per model
+    // cap to max 2 per family (e.g., 911, Cayenne, Taycan)
     var cap=2, kept=[], seen=Object.create(null);
-    for(var i=0;i<items.length && kept.length<60;i++){ var key=(items[i].model||'').toLowerCase(); var n=seen[key]||0; if(n>=cap) continue; seen[key]=n+1; kept.push(items[i]); }
+    for(var i=0;i<items.length && kept.length<60;i++){
+      var key=(items[i].fam||'').toLowerCase();
+      var n=seen[key]||0; if(n>=cap) continue; seen[key]=n+1; kept.push(items[i]);
+    }
     items = kept;
 
     if(list) list.innerHTML='';
