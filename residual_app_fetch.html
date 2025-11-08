@@ -255,6 +255,12 @@
   .chip.ok{ border-color: rgba(16,185,129,.5); }
   .chip.cost{ border-color: rgba(139,92,246,.5); }
   .chip.term{ border-color: rgba(59,130,246,.5); }
+
+/* Sniffer sort toggle (minimal) */
+.seg-toggle { display:inline-flex; background:var(--card); border:1px solid var(--border); border-radius:999px; overflow:hidden; }
+.seg-toggle .seg{ padding:6px 10px; font-size:.82rem; font-weight:700; border:0; background:transparent; cursor:pointer; }
+.seg-toggle .seg.active{ background:linear-gradient(135deg, var(--accent), var(--purple)); color:#fff; box-shadow:0 0 0 1px var(--border-hover) inset; }
+
 </style>
 
 </head>
@@ -451,7 +457,11 @@
     <div class="card" id="snifferCard" style="margin-top:14px; animation-delay:0.35s;">
       <div class="rowline" style="justify-content:space-between; margin-bottom:8px;">
         <strong style="font-size:1.05rem;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🕵️ Lease Sniffer — Top 6</strong>
-        <span class="muted" style="font-size:0.9rem;"><span id="sniffSubtitle">Ranking: Highest LVI first, then with-tax payment.</span> <span class="seg-toggle" id="sniffSortToggle" role="group" aria-label="Sniffer sort"><button type="button" data-mode="lvi" class="seg active">LVI → $/mo</button><button type="button" data-mode="payment" class="seg">$/mo → LVI</button></span></span>
+        <span class="muted" id="sniffSubtitle" style="font-size:0.9rem;">Ranking: Highest LVI first, then with-tax payment.</span>
+<div class="seg-toggle" id="sniffSortToggle" role="group" aria-label="Sniffer sort" style="margin-left:8px;">
+  <button type="button" data-mode="lvi" class="seg active">LVI → $/mo</button>
+  <button type="button" data-mode="payment" class="seg">$/mo → LVI</button>
+</div>
       </div>
       <div id="sniffSummary" class="hint" style="margin-bottom:8px;">—</div>
       <div class="sniff-cards" id="sniffCards"></div>
@@ -584,6 +594,23 @@
   var validatorOutput = document.getElementById('validatorOutput');
   var sniffCards = document.getElementById('sniffCards');
   var sniffSummary = document.getElementById('sniffSummary');
+  var sniffSortToggle = document.getElementById('sniffSortToggle');
+  var sniffSubtitle = document.getElementById('sniffSubtitle');
+  var sniffSortMode = 'lvi';
+  if (sniffSortToggle){
+    sniffSortToggle.addEventListener('click', function(e){
+      var btn = e.target.closest('button[data-mode]'); if(!btn) return;
+      sniffSortMode = btn.dataset.mode;
+      Array.from(sniffSortToggle.querySelectorAll('.seg')).forEach(function(b){ b.classList.toggle('active', b===btn); });
+      if (sniffSubtitle){
+        sniffSubtitle.textContent = (sniffSortMode==='payment')
+          ? 'Ranking: Lowest with-tax payment first, then LVI.'
+          : 'Ranking: Highest LVI first, then with-tax payment.';
+      }
+      if (typeof sniffRun==='function') sniffRun();
+    });
+  }
+
 
   var data, MONTHS = [], PACPO = 2;
   var fullTrimList = [];
@@ -1126,22 +1153,23 @@
     });
 
     // LVI-first, then withTax ascending
-    if (window.sniffSortMode === 'payment') {
+    
+if (sniffSortMode === 'payment') {
+      // Lowest with-tax first, tie-breaker: higher LVI
       candidates.sort(function(a,b){
         if (a.withTax !== b.withTax) return a.withTax - b.withTax;
         var al = (a.lvi==null? -Infinity : a.lvi), bl = (b.lvi==null? -Infinity : b.lvi);
         return bl - al;
       });
-      var ss = document.getElementById('sniffSubtitle'); if (ss) ss.textContent = 'Ranking: Lowest with-tax payment first, then LVI.';
     } else {
+      // Highest LVI first, tie-breaker: cheaper with-tax
       candidates.sort(function(a,b){
         var al = (a.lvi==null? -Infinity : a.lvi), bl = (b.lvi==null? -Infinity : b.lvi);
         if (bl !== al) return bl - al;
         return a.withTax - b.withTax;
       });
-      var ss2 = document.getElementById('sniffSubtitle'); if (ss2) ss2.textContent = 'Ranking: Highest LVI first, then with-tax payment.';
     }
-      var bl = (b.lvi==null? -Infinity : b.lvi);
+var bl = (b.lvi==null? -Infinity : b.lvi);
       if (bl !== al) return bl - al; // higher LVI first
       return a.withTax - b.withTax;  // then cheaper payment
     });
@@ -1152,7 +1180,7 @@
 
     // Compute current selection for delta
     var cur = candidates.find(function(c){ return String(c.term) === String(termSel.value || '') || String(c.term)===String(leaseTerm.value||''); });
-    sniffSummary.textContent = 'Showing best 5 terms for the SAME structure (cap, MF, tax, fees). Click a card to load term into Lease Estimator.';
+    sniffSummary.textContent = 'Showing best 6 terms for the SAME structure (cap, MF, tax, fees). Click a card to load term into Lease Estimator.';
 
     best.forEach(function(c){
       var div = document.createElement('div'); div.className = 'sniff-card';
@@ -1341,28 +1369,6 @@ function updateSnifferDeltas(){
   });
 });
 
-</script>
-
-
-<style>
-.seg-toggle { display:inline-flex; background:var(--bg-card, var(--card)); border:1px solid var(--border,#e5e7eb); border-radius:999px; overflow:hidden; vertical-align:middle; }
-.seg-toggle .seg{ padding:6px 10px; font-size:.82rem; font-weight:700; border:0; background:transparent; cursor:pointer; }
-.seg-toggle .seg.active{ background:linear-gradient(135deg, var(--accent,#6d28d9), var(--purple,#7c3aed)); color:#fff; box-shadow:0 0 0 1px var(--border-hover,#c4b5fd) inset; }
-</style>
-
-<script>
-(function(){
-  window.sniffSortMode = window.sniffSortMode || 'lvi';
-  var toggle = document.getElementById('sniffSortToggle');
-  if (toggle){
-    toggle.addEventListener('click', function(e){
-      var btn = e.target.closest('button[data-mode]'); if(!btn) return;
-      window.sniffSortMode = btn.dataset.mode;
-      Array.from(toggle.querySelectorAll('.seg')).forEach(b=>b.classList.toggle('active', b===btn));
-      if (typeof sniffRun === 'function') try{ sniffRun(); }catch(e){}
-    });
-  }
-})();
 </script>
 
 </body>
