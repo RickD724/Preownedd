@@ -453,7 +453,7 @@
       </div>
     </div>
 
-    <!-- Lease Sniffer (Top 6, auto-run) -->
+    <!-- Lease Sniffer (Top 5, auto-run) -->
     <div class="card" id="snifferCard" style="margin-top:14px; animation-delay:0.35s;">
       <div class="rowline" style="justify-content:space-between; margin-bottom:8px;">
         <strong style="font-size:1.05rem;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🕵️ Lease Sniffer — Top 6</strong>
@@ -1146,17 +1146,35 @@
       return a.withTax - b.withTax;  // then cheaper payment
     });
 
-    
-    // Optional re-sort based on user toggle (non-destructive)
-    if (typeof sniffSortMode !== 'undefined' && sniffSortMode === 'payment') {
-      candidates.sort(function(a,b){
-        if (a.withTax !== b.withTax) return a.withTax - b.withTax; // cheaper first
-        var al = (a.lvi==null? -Infinity : a.lvi), bl = (b.lvi==null? -Infinity : b.lvi);
-        return bl - al; // tie-breaker: higher LVI first
-      });
+    var best = candidates.slice(0,6);
+    // Ensure toggle changes the final display order (robust, post-slice)
+    function __sniff_getPay(o){
+      return (o && (
+        o.withTax ?? o.with_tax ?? o.paymentWithTax ?? o.payment_with_tax ??
+        o.totalWithTax ?? o.total_with_tax ?? o.total ?? o.pmt ?? o.pmtWithTax ?? o.withTaxPayment
+      ));
+    }
+    function __sniff_getLvi(o){
+      return (o && (o.lvi ?? o.LVI ?? o.valueIndex ?? o.value_index));
+    }
+    if (typeof sniffSortMode !== 'undefined') {
+      if (sniffSortMode === 'payment') {
+        best = best.slice().sort(function(a,b){
+          var ap = __sniff_getPay(a), bp = __sniff_getPay(b);
+          if (ap !== bp) return (ap||Infinity) - (bp||Infinity);
+          var al = __sniff_getLvi(a), bl = __sniff_getLvi(b);
+          return (bl??-Infinity) - (al??-Infinity);
+        });
+      } else {
+        best = best.slice().sort(function(a,b){
+          var al = __sniff_getLvi(a), bl = __sniff_getLvi(b);
+          if ((bl??-Infinity) !== (al??-Infinity)) return (bl??-Infinity) - (al??-Infinity);
+          var ap = __sniff_getPay(a), bp = __sniff_getPay(b);
+          return (ap||Infinity) - (bp||Infinity);
+        });
+      }
     }
 
-    var best = candidates.slice(0,6);
     sniffCards.innerHTML = '';
     if(best.length===0){ sniffSummary.textContent='No alternatives found for this trim.'; return; }
 
@@ -1356,7 +1374,6 @@ function updateSnifferDeltas(){
 
 <script>
 (function(){
-  // global so sniffRun can read it
   window.sniffSortMode = 'lvi';
   var g = document.getElementById('sniffSortToggle');
   var sub = document.getElementById('sniffSubtitle');
