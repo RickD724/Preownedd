@@ -258,6 +258,9 @@
 </style>
 
 
+
+
+
 <style id="top15-css">
 .rank-list{ 
   list-style:none; margin:0; padding:0; 
@@ -478,9 +481,6 @@
         <strong style="font-size:1.05rem;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🕵️ Lease Sniffer — Top 5</strong>
         <span class="muted" style="font-size:0.9rem;">Ranks by Value Index (LVI) first, then With-Tax payment</span>
       </div>
-      <div id="sniffSummary" class="hint" style="margin-bottom:8px;">—</div>
-      <div class="sniff-cards" id="sniffCards"></div>
-    </div>
 <!-- ===== Top 15 Container (AFTER Lease Sniffer) ===== -->
 <div class="card" id="topLeasableContainer" style="margin-top:20px;">
   <div class="rowline" style="justify-content:space-between; margin-bottom:10px;">
@@ -490,6 +490,18 @@
     <button id="rebuildTopBtn" class="btn" type="button" title="Rebuild ranking">↻ Rebuild</button>
   </div>
   <div class="muted" style="margin-bottom:8px;">
+    Ranks each trim by highest achievable Final RV% using best term, best annual miles (≥24 mo), and most favorable inception band for the selected MY.
+    If an MF is entered, LVI is shown as a hint.
+  </div>
+  <ol id="topDealsList" class="rank-list"></ol>
+  <div id="topDealsEmpty" class="muted" style="display:none;">Load a program to see the ranking.</div>
+</div>
+
+      <div id="sniffSummary" class="hint" style="margin-bottom:8px;">—</div>
+      <div class="sniff-cards" id="sniffCards"></div>
+    </div>
+<!-- ===== Top 15 Container (AFTER Lease Sniffer) ===== -->
+<div class="muted" style="margin-bottom:8px;">
     Ranks each trim by highest achievable Final RV% using best term, best annual miles (≥24 mo), and most favorable inception band for the selected MY.
     If an MF is entered, LVI is shown as a hint.
   </div>
@@ -1372,6 +1384,9 @@ function updateSnifferDeltas(){
 </script>
 
 
+
+
+
 <script id="top15-js">
 (function(){
   function q(id){ return document.getElementById(id); }
@@ -1417,7 +1432,7 @@ function updateSnifferDeltas(){
     var mf = (leaseMF && leaseMF.value) ? Number(leaseMF.value) : NaN;
 
     var items = [];
-    var MONTHS = (window.MONTHS || [12,18,24,30,36,39,42,48]);
+    var MONTHS = (window.MONTHS || (data.months || ["12","18","24","27","30","36","39","42","48","51","60"]));
 
     Object.keys(data.models||{}).forEach(function(fam){
       var famBranch = data.models[fam] || {};
@@ -1454,8 +1469,7 @@ function updateSnifferDeltas(){
       return (b.lvi||0) - (a.lvi||0);
     });
 
-    var listEl = q('topDealsList');
-    if(listEl){ listEl.innerHTML=''; }
+    if(list){ list.innerHTML=''; }
     var top = items.slice(0,15);
     if(top.length===0){ if(empty){ empty.style.display='block'; } return; }
 
@@ -1466,7 +1480,8 @@ function updateSnifferDeltas(){
 
       var title = document.createElement('div'); title.className = 'rank-title'; title.textContent = it.model;
       var sub = document.createElement('div'); sub.className = 'rank-sub';
-      sub.textContent = it.yearDisp + ' • ' + it.fam + ' • ' + it.code;
+      var family = it.fam; 
+      sub.textContent = it.yearDisp + ' • ' + family + ' • ' + it.code;
 
       var chips = document.createElement('div'); chips.className = 'rank-chips';
       var chipRV = document.createElement('div'); chipRV.className = 'rank-chip ok';
@@ -1490,7 +1505,7 @@ function updateSnifferDeltas(){
 
       main.appendChild(title); main.appendChild(sub); main.appendChild(chips);
       li.appendChild(no); li.appendChild(main);
-      listEl.appendChild(li);
+      list.appendChild(li);
     });
   }
 
@@ -1501,12 +1516,12 @@ function updateSnifferDeltas(){
     var btn = document.getElementById('rebuildTopBtn');
 
     if(btn) btn.addEventListener('click', build);
-    if(programSel) programSel.addEventListener('change', function(){ setTimeout(build, 60); }};
-    if(pacpoToggle) pacpoToggle.addEventListener('change', function(){ setTimeout(build, 0); }};
-    if(leaseMF) leaseMF.addEventListener('input', function(){ setTimeout(build, 0); }};
+    if(programSel) programSel.addEventListener('change', function(){ setTimeout(build, 60); });
+    if(pacpoToggle) pacpoToggle.addEventListener('change', function(){ setTimeout(build, 0); });
+    if(leaseMF) leaseMF.addEventListener('input', function(){ setTimeout(build, 0); });
   }
 
-  document.addEventListener('DOMContentLoaded', function(){ bind(); setTimeout(build, 250); });
+  document.addEventListener('DOMContentLoaded', function(){ bind(); setTimeout(build, 300); });
 
   if(window.compute){
     var _c = window.compute; window.compute = function(){ _c(); setTimeout(build, 0); };
