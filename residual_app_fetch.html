@@ -258,50 +258,26 @@
 </style>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 <style id="top15-css">
-.rank-list{ 
-  list-style:none; margin:0; padding:0; 
-  display:grid; grid-template-columns:repeat(1,minmax(0,1fr)); gap:10px;
-}
-.rank-item{
-  border:1px solid var(--border); border-radius:12px; background:var(--bg-secondary);
-  padding:12px; display:flex; gap:10px; align-items:center; transition:var(--transition);
-}
-.rank-item:hover{ transform:translateY(-2px); box-shadow:var(--shadow-lg); border-color:var(--border-hover); }
-.rank-no{
-  width:36px; height:36px; border-radius:999px; display:flex; align-items:center; justify-content:center;
-  font-weight:900; border:1px solid var(--border); 
-}
-.rank-main{ flex:1; display:flex; flex-direction:column; gap:4px; }
-.rank-title{ font-weight:900; font-size:.98rem; }
-.rank-sub{ color:var(--muted); font-size:.85rem; }
-.rank-chips{ display:flex; flex-wrap:wrap; gap:8px; }
-.rank-chip{ border:1px solid var(--border); border-radius:999px; padding:4px 10px; font-size:.8rem; font-weight:700; }
-.rank-chip.ok{ border-color: rgba(16,185,129,0.5); }
-.rank-chip.term{ border-color: rgba(59,130,246,0.5); }
-.rank-chip.lvi{ border-color: rgba(139,92,246,0.5); }
-
+.rank-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:10px;}
+.rank-item{border:1px solid var(--border);border-radius:12px;background:var(--bg-secondary);padding:12px;display:flex;gap:10px;align-items:center;transition:var(--transition);}
+.rank-item:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--border-hover);}
+.rank-no{width:36px;height:36px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:900;border:1px solid var(--border);}
+.rank-main{flex:1;display:flex;flex-direction:column;gap:4px;}
+.rank-title{font-weight:900;font-size:.98rem;}
+.rank-sub{color:var(--muted);font-size:.85rem;}
+.rank-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.rank-chip{border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:.8rem;font-weight:700;}
+.rank-chip.ok{border-color:rgba(16,185,129,0.5);}
+.rank-chip.term{border-color:rgba(59,130,246,0.5);}
+.rank-chip.lvi{border-color:rgba(139,92,246,0.5);}
+.soft-divider{height:1px;background:var(--border);opacity:.55;margin:8px 2px 12px 2px;border-radius:1px;}
 /* tiny spinner */
-.top15-spin { display:flex; align-items:center; gap:8px; font-size:.9rem; color:var(--muted); }
-.top15-spin .dot {
-  width:8px; height:8px; border-radius:999px; background:var(--accent);
-  animation: top15-bounce 1.1s infinite ease-in-out both;
-}
-.top15-spin .dot:nth-child(1){ animation-delay: -0.32s; }
-.top15-spin .dot:nth-child(2){ animation-delay: -0.16s; }
-@keyframes top15-bounce { 0%,80%,100%{ transform:scale(0);} 40%{ transform:scale(1);} }
+.top15-spin{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--muted);}
+.top15-spin .dot{width:8px;height:8px;border-radius:999px;background:var(--accent);animation:top15-bounce 1.1s infinite ease-in-out both;}
+.top15-spin .dot:nth-child(1){animation-delay:-.32s;}
+.top15-spin .dot:nth-child(2){animation-delay:-.16s;}
+@keyframes top15-bounce{0%,80%,100%{transform:scale(0);}40%{transform:scale(1);}}
 </style>
 
 </head>
@@ -500,51 +476,30 @@
         <strong style="font-size:1.05rem;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🕵️ Lease Sniffer — Top 5</strong>
         <span class="muted" style="font-size:0.9rem;">Ranks by Value Index (LVI) first, then With-Tax payment</span>
       </div>
-<!-- ===== Top 15 Container (AFTER Lease Sniffer) ===== -->
-<div class="muted" style="margin-bottom:8px;">
-    
-  </div>
-  <ol id="topDealsList" class="rank-list"></ol>
-  <div id="topDealsEmpty" class="muted" style="display:none;">Load a program to see the ranking.</div>
-</div>
-<!-- ===== Top 15 Container (AFTER Lease Sniffer card) ===== -->
-<div class="card" id="topLeasableContainer" style="margin-top:20px;">
-  <div class="rowline" style="justify-content:space-between; margin-bottom:10px;">
+      <div id="sniffSummary" class="hint" style="margin-bottom:8px;">—</div>
+      <div class="sniff-cards" id="sniffCards"></div>
+    </div>
+
+<div class="soft-divider"></div>
+<div class="card" id="topLeasableContainer" style="margin-top:10px;">
+  <div class="rowline" style="justify-content:space-between;margin-bottom:10px;">
     <strong style="font-size:1.05rem;background:linear-gradient(135deg,var(--accent),var(--success));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
       🏆 Top 15 Best-Leasable (Current Program)
     </strong>
     <button id="rebuildTopBtn" class="btn" type="button" title="Rebuild ranking">↻ Rebuild</button>
-  </div></div>
-
+  </div>
+  <div class="muted" style="margin-bottom:8px;">
+    Ranks each trim by highest achievable Final RV% using best term, best annual miles (≥24 mo), and most favorable inception band for the selected MY.
+    If an MF is entered, LVI is shown as a hint.
+  </div>
   <div id="top15Loading" class="top15-spin" style="margin:4px 0 10px 0; display:none;">
     <div class="dot"></div><div class="dot"></div><div class="dot"></div>
     <span>Scanning programs…</span>
   </div>
-
   <ol id="topDealsList" class="rank-list"></ol>
   <div id="topDealsEmpty" class="muted" style="display:none;">Load a program to see the ranking.</div>
 </div>
 
-<!-- ===== Top 15 Container (AFTER Lease Sniffer card) ===== -->
-<div class="muted" style="margin-bottom:8px;">
-    Ranks each trim by highest achievable Final RV% using best term, best annual miles (≥24 mo), and most favorable inception band for the selected MY.
-    If an MF is entered, LVI is shown as a hint.
-  </div>
-  <ol id="topDealsList" class="rank-list"></ol>
-  <div id="topDealsEmpty" class="muted" style="display:none;">Load a program to see the ranking.</div>
-</div>
-
-
-      <div id="sniffSummary" class="hint" style="margin-bottom:8px;">—</div>
-      <div class="sniff-cards" id="sniffCards"></div>
-    </div>
-<!-- ===== Top 15 Container (AFTER Lease Sniffer) ===== -->
-<div class="muted" style="margin-bottom:8px;">
-    
-  </div>
-  <ol id="topDealsList" class="rank-list"></ol>
-  <div id="topDealsEmpty" class="muted" style="display:none;">Load a program to see the ranking.</div>
-</div>
 
 
     <div class="card" id="validatorCard" style="margin-top:12px; display:none; animation-delay:0.4s;">
@@ -1421,240 +1376,148 @@ function updateSnifferDeltas(){
 </script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 <script id="top15-js">
 (function(){
-  function _toNum(x){ if(x==null) return 0; var n = (typeof x==='number')? x : parseFloat(String(x).replace(/[,\s]/g,'')); return isNaN(n)?0:n; }
-  function _normAdj(x){ var n=_toNum(x); if(Math.abs(n)>50) n = n/100; return n; }
   function q(id){ return document.getElementById(id); }
   function hasModels(obj){ try{ return obj && typeof obj==='object' && obj.models && typeof obj.models==='object'; }catch(e){ return false; } }
   function resolveProgram(){
-    // Hard-bind to your file first:
     if(hasModels(window.porsche_residuals_all)) return window.porsche_residuals_all;
-    // Fallbacks
-    var likely = ['data','programData','PROGRAM','activeProgram','currentProgram','PFS','DB','STATE','appState'];
+    var likely=['data','programData','PROGRAM','activeProgram','currentProgram','PFS','DB','STATE','appState'];
     for(var i=0;i<likely.length;i++){ var k=likely[i]; try{ if(hasModels(window[k])) return window[k]; }catch(e){} }
-    // Scan window for any object with .models
-    var keys = Object.getOwnPropertyNames(window);
-    for(var j=0;j<keys.length;j++){ try{ if(hasModels(window[keys[j]])) return window[keys[j]]; } catch(e){} }
+    var keys=Object.getOwnPropertyNames(window);
+    for(var j=0;j<keys.length;j++){ try{ if(hasModels(window[keys[j]])) return window[keys[j]]; }catch(e){} }
     return null;
   }
-
+  function _toNum(x){ if(x==null) return 0; var n=(typeof x==='number')?x:parseFloat(String(x).replace(/[,\s]/g,'')); return isNaN(n)?0:n; }
   function bestAnnualMilesAdjForTerm(term, root){
-    var t = parseInt(term,10);
-    var milesMap = (root && root.annual_mileage_adjustments_percent && root.annual_mileage_adjustments_percent.miles_per_year) || {};
-    if(!isFinite(t) || t < 24) return {miles: null, adj: 0};
-    var best = {miles: null, adj: -Infinity};
+    var t=parseInt(term,10);
+    var milesMap=(root&&root.annual_mileage_adjustments_percent&&root.annual_mileage_adjustments_percent.miles_per_year)||{};
+    if(!isFinite(t)||t<24) return {miles:null,adj:0};
+    var best={miles:null,adj:-Infinity};
     Object.keys(milesMap).forEach(function(k){
-      var a = milesMap[k]; if(a > best.adj){ best = {miles: parseInt(k,10), adj: _toNum(a)}; }
+      var a=_toNum(milesMap[k]); if(a>best.adj){ best={miles:parseInt(k,10),adj:a}; }
     });
-    if(best.adj===-Infinity) best = {miles:null, adj:0};
+    if(best.adj===-Infinity) best={miles:null,adj:0};
     return best;
   }
-
   function bestInceptionAdjForYearKey(yrKey, root){
-    var bands = (root && root.mileage_at_inception_adjustments_percent && root.mileage_at_inception_adjustments_percent[yrKey]) || null;
-    if(!bands) return {range:null, adj:0};
-    var best = {range: null, adj: -Infinity};
+    var bands=(root&&root.mileage_at_inception_adjustments_percent&&root.mileage_at_inception_adjustments_percent[yrKey])||null;
+    if(!bands) return {range:null,adj:0};
+    var best={range:null,adj:-Infinity};
     for(var i=0;i<bands.length;i++){
-      var adj = _toNum(bands[i].adj || 0);
-      if(adj > best.adj){ best = {range: bands[i].miles_range, adj: adj}; }
+      var adj=_toNum(bands[i].adj||0);
+      if(adj>best.adj){ best={range:bands[i].miles_range,adj:adj}; }
     }
-    if(best.adj===-Infinity) best = {range:null, adj:0};
+    if(best.adj===-Infinity) best={range:null,adj:0};
     return best;
   }
-
-  function normalizeYearKey(k){
-    var m = String(k).match(/^MY(\d{2})$/);
-    if(m){ return {raw:k, display: 'MY 20' + m[1]}; }
-    return {raw:k, display:k};
-  }
-
-  function showSpinner(on){
-    var sp = q('top15Loading');
-    if(sp){ sp.style.display = on ? 'flex' : 'none'; }
-  }
-
+  function normalizeYearKey(k){ var m=String(k).match(/^MY(\d{2})$/); if(m){ return {raw:k,display:'MY 20'+m[1]}; } return {raw:k,display:k}; }
   function build(){
-    var list = q('topDealsList'); var empty = q('topDealsEmpty');
-    var root = resolveProgram();
-    if(!root || !root.models){
-      if(list){ list.innerHTML=''; }
-      if(empty){ empty.style.display='block'; }
-      return false;
-    }
-    if(empty){ empty.style.display='none'; }
-
-    var pacpo = q('pacpoToggle'); var leaseMF = q('leaseMF');
-    var usePacpo = !!(pacpo && pacpo.checked);
-    var pacpoAdj = usePacpo ? (root.pacpo_bonus_percent || 2) : 0;
-    var mf = (leaseMF && leaseMF.value) ? Number(leaseMF.value) : NaN;
-
-    var items = [];
-    var MONTHS = (window.MONTHS || root.months || ["12","18","24","27","30","36","39","42","48","51","60"]);
-
+    var list=q('topDealsList'), empty=q('topDealsEmpty'), root=resolveProgram();
+    if(!root||!root.models){ if(list) list.innerHTML=''; if(empty) empty.style.display='block'; return false; }
+    if(empty) empty.style.display='none';
+    var pacpo=q('pacpoToggle'), leaseMF=q('leaseMF');
+    var usePacpo=!!(pacpo&&pacpo.checked);
+    var pacpoAdj=usePacpo?(root.pacpo_bonus_percent||2):0;
+    var mf=(leaseMF&&leaseMF.value)?Number(leaseMF.value):NaN;
+    var items=[], MONTHS=(window.MONTHS||root.months||["12","18","24","27","30","36","39","42","48","51","60"]);
     Object.keys(root.models||{}).forEach(function(fam){
-      var famBranch = root.models[fam] || {};
+      var famBranch=root.models[fam]||{};
       Object.keys(famBranch).forEach(function(yrKey){
-        var yearDisp = normalizeYearKey(yrKey).display;
-        var inceptionBest = bestInceptionAdjForYearKey(yrKey, root);
-        var rows = famBranch[yrKey] || {};
+        var yearDisp=normalizeYearKey(yrKey).display;
+        var inceptionBest=bestInceptionAdjForYearKey(yrKey,root);
+        var rows=famBranch[yrKey]||{};
         Object.keys(rows).forEach(function(code){
-          var entry = rows[code];
-          var model = (entry && entry.model) || code;
-          var residuals = (entry && entry.residuals) || {};
-          var best = {term:null, miles:null, finalRV:-Infinity};
+          var entry=rows[code], model=(entry&&entry.model)||code, residuals=(entry&&entry.residuals)||{};
+          var best={term:null,miles:null,finalRV:-Infinity};
           (MONTHS||[]).forEach(function(m){
-            var base = residuals[m];
-            if(base==null) return;
-            var ann = bestAnnualMilesAdjForTerm(m, root);
-            var finalRV = _toNum(base) + pacpoAdj + _normAdj(ann.adj) + _normAdj(inceptionBest.adj);
-            if(finalRV > best.finalRV){
-              best = {term: parseInt(m,10), miles: ann.miles, finalRV: finalRV};
-            }
+            var base=residuals[m]; if(base==null) return;
+            var ann=bestAnnualMilesAdjForTerm(m,root);
+            var finalRV=_toNum(base)+pacpoAdj+ann.adj+inceptionBest.adj; // no clamp
+            if(finalRV>best.finalRV){ best={term:parseInt(m,10),miles:ann.miles,finalRV:finalRV}; }
           });
           if(best.finalRV>-Infinity){
-            var lvi = (isFinite(mf) && mf>0) ? (best.finalRV / mf) : null;
-            best.finalRV = Math.max(0, Math.min(120, best.finalRV));
-            items.push({ fam: fam, yrKey: yrKey, yearDisp: yearDisp, code: code,
-                         model: model, term: best.term, miles: best.miles, finalRV: best.finalRV, lvi: lvi });
+            var lvi=(isFinite(mf)&&mf>0)?(best.finalRV/mf):null;
+            items.push({fam:fam,yrKey:yrKey,yearDisp:yearDisp,code:code,model:model,term:best.term,miles:best.miles,finalRV:best.finalRV,lvi:lvi});
           }
         });
       });
     });
-
-    items.sort(function(a,b){
-      if(b.finalRV !== a.finalRV) return b.finalRV - a.finalRV;
-      if((b.term||0) !== (a.term||0)) return (b.term||0) - (a.term||0);
-      return (b.lvi||0) - (a.lvi||0);
-    });
-
-    if(list){ list.innerHTML=''; }
-    var top = items.slice(0,15);
-    if(top.length===0){ if(empty){ empty.style.display='block'; } return true; }
-
-    top.forEach(function(it, idx){
-      var li = document.createElement('li'); li.className = 'rank-item';
-      var no = document.createElement('div'); no.className = 'rank-no'; no.textContent = (idx+1);
-      var main = document.createElement('div'); main.className = 'rank-main';
-
-      var title = document.createElement('div'); title.className = 'rank-title'; title.textContent = it.model;
-      var sub = document.createElement('div'); sub.className = 'rank-sub';
-      sub.textContent = it.yearDisp + ' • ' + it.fam + ' • ' + it.code;
-
-      var chips = document.createElement('div'); chips.className = 'rank-chips';
-      var chipRV = document.createElement('div'); chipRV.className = 'rank-chip ok';
-      chipRV.textContent = 'Final RV: ' + it.finalRV.toFixed(0) + '%';
-      var chipTerm = document.createElement('div'); chipTerm.className = 'rank-chip term';
-      chipTerm.textContent = 'Term: ' + (it.term ? (it.term + ' mo') : '—');
-
+    items.sort(function(a,b){ if(b.finalRV!==a.finalRV) return b.finalRV-a.finalRV; if((b.term||0)!==(a.term||0)) return (b.term||0)-(a.term||0); return (b.lvi||0)-(a.lvi||0); });
+    if(list) list.innerHTML='';
+    var top=items.slice(0,15);
+    if(top.length===0){ if(empty) empty.style.display='block'; return true; }
+    top.forEach(function(it,idx){
+      var li=document.createElement('li'); li.className='rank-item';
+      var no=document.createElement('div'); no.className='rank-no'; no.textContent=(idx+1);
+      var main=document.createElement('div'); main.className='rank-main';
+      var title=document.createElement('div'); title.className='rank-title'; title.textContent=it.model;
+      var sub=document.createElement('div'); sub.className='rank-sub'; sub.textContent=it.yearDisp+' • '+it.fam+' • '+it.code;
+      var chips=document.createElement('div'); chips.className='rank-chips';
+      var chipRV=document.createElement('div'); chipRV.className='rank-chip ok'; chipRV.textContent='Final RV: '+it.finalRV.toFixed(0)+'%';
+      var chipTerm=document.createElement('div'); chipTerm.className='rank-chip term'; chipTerm.textContent='Term: '+(it.term?(it.term+' mo'):'—');
       chips.appendChild(chipRV); chips.appendChild(chipTerm);
-
-      if(it.miles != null){
-        var chipMiles = document.createElement('div'); chipMiles.className = 'rank-chip';
-        chipMiles.textContent = it.miles.toLocaleString() + ' mi/yr';
-        chips.appendChild(chipMiles);
-      }
-
-      if(it.lvi != null){
-        var chipLvi = document.createElement('div'); chipLvi.className = 'rank-chip lvi';
-        chipLvi.title = 'Higher = better'; chipLvi.textContent = 'LVI: ' + (it.lvi/1000).toFixed(1) + 'k';
-        chips.appendChild(chipLvi);
-      }
-
-      main.appendChild(title); main.appendChild(sub); main.appendChild(chips);
-      li.appendChild(no); li.appendChild(main);
-      list.appendChild(li);
+      if(it.miles!=null){ var chipMiles=document.createElement('div'); chipMiles.className='rank-chip'; chipMiles.textContent=it.miles.toLocaleString()+' mi/yr'; chips.appendChild(chipMiles); }
+      if(it.lvi!=null){ var chipLvi=document.createElement('div'); chipLvi.className='rank-chip lvi'; chipLvi.title='Higher = better'; chipLvi.textContent='LVI: '+(it.lvi/1000).toFixed(1)+'k'; chips.appendChild(chipLvi); }
+      main.appendChild(title); main.appendChild(sub); main.appendChild(chips); li.appendChild(no); li.appendChild(main); (list||document.body).appendChild(li);
     });
     return true;
   }
-
   function bind(){
-    var programSel = q('programSel');
-    var pacpoToggle = q('pacpoToggle');
-    var leaseMF = q('leaseMF');
-    var btn = q('rebuildTopBtn');
-
-    if(btn) btn.addEventListener('click', function(){ showSpinner(true); setTimeout(function(){ build(); showSpinner(false); }, 50); });
-    if(programSel) programSel.addEventListener('change', function(){ showSpinner(true); setTimeout(function(){ build(); showSpinner(false); }, 200); });
-    if(pacpoToggle) pacpoToggle.addEventListener('change', function(){ setTimeout(function(){ build(); }, 0); });
-    if(leaseMF) leaseMF.addEventListener('input', function(){ setTimeout(function(){ build(); }, 0); });
-
-    document.addEventListener('program-loaded', function(){ showSpinner(true); setTimeout(function(){ build(); showSpinner(false); }, 400); });
+    var programSel=q('programSel'), pacpoToggle=q('pacpoToggle'), leaseMF=q('leaseMF'), btn=q('rebuildTopBtn');
+    function spin(on){ var s=q('top15Loading'); if(s) s.style.display=on?'flex':'none'; }
+    if(btn) btn.addEventListener('click', function(){ spin(true); setTimeout(function(){ build(); spin(false); }, 50); });
+    if(programSel) programSel.addEventListener('change', function(){ spin(true); setTimeout(function(){ build(); spin(false); }, 200); });
+    if(pacpoToggle) pacpoToggle.addEventListener('change', function(){ setTimeout(build, 0); });
+    if(leaseMF) leaseMF.addEventListener('input', function(){ setTimeout(build, 0); });
+    document.addEventListener('program-loaded', function(){ setTimeout(build, 400); });
   }
-
   document.addEventListener('DOMContentLoaded', function(){
     bind();
-    showSpinner(true);
-    // Aggressive retry for async JSON
-    var tries = 0, max = 15;
-    var t = setInterval(function(){
-      tries++; var ok = build();
-      if(ok || tries>=max){ clearInterval(t); showSpinner(false); }
-    }, 400);
+    var tries=0,max=15; var t=setInterval(function(){ tries++; var ok=build(); if(ok||tries>=max){ clearInterval(t); } }, 400);
   });
-
-  if(window.compute){
-    var _c = window.compute;
-    window.compute = function(){ _c(); setTimeout(function(){ build(); }, 0); };
-  }
-  if(window.loadProgram){
-    var _l = window.loadProgram;
-    window.loadProgram = function(file,label){
-      var p = _l(file,label);
-      if(p && p.then){ return p.then(function(){ showSpinner(true); setTimeout(function(){ build(); showSpinner(false); }, 600); }); }
-      setTimeout(function(){ build(); }, 600);
-      return p;
-    };
-  }
+  if(window.compute){ var _c=window.compute; window.compute=function(){ _c(); setTimeout(build,0); }; }
+  if(window.loadProgram){ var _l=window.loadProgram; window.loadProgram=function(file,label){ var p=_l(file,label); if(p&&p.then){ return p.then(function(){ setTimeout(build,600); }); } setTimeout(build,600); return p; }; }
 })();
 </script>
 
 
-
-
-
-<script id="top15-scrub2">
-(function(){
-  function norm(s){ return (s||"").replace(/\s+/g," ").trim(); }
-  function isBlurb(el){
-    if(!el) return false;
-    var t = norm(el.textContent||"");
-    return t.indexOf("Ranks each trim by highest achievable Final RV%")!==-1 &&
-           t.indexOf("If an MF is entered, LVI is shown as a hint")!==-1;
+<script id="top15-relocate-final">
+(function () {
+  function norm(s){ return (s||"").replace(/\s+/g,' ').trim(); }
+  function findSnifferCard(){
+    var cards=document.querySelectorAll('.card');
+    for(var i=0;i<cards.length;i++){
+      var t=norm(cards[i].innerText||'');
+      if(/Lease\s*Sniffer/i.test(t) || /Ranks by Value Index \(LVI\) first, then With-Tax payment/i.test(t)){ return cards[i]; }
+    }
+    return null;
   }
-  function clean(){
-    // Remove blurbs outside the Top-15 card
-    document.querySelectorAll("p,div,section").forEach(function(el){
-      if(el.closest("#topLeasableContainer")) return;
-      if(isBlurb(el)){ el.remove(); }
-    });
-    // Remove lone em-dash rows nearby
-    document.querySelectorAll("p,div").forEach(function(el){
-      var t = norm(el.textContent||"");
-      if(t==="—" && !el.closest("#topLeasableContainer")) el.remove();
-    });
+  function moveTop15AfterSniffer(){
+    var top=document.getElementById('topLeasableContainer'); if(!top) return;
+    var sniffer=findSnifferCard(); if(!sniffer) return;
+    if(top.closest('.card')===sniffer){
+      sniffer.parentNode.insertBefore(top, sniffer.nextSibling);
+    }
+  }
+  function removeStrayBlurb(){
+    var nodes=document.querySelectorAll('p,div,section');
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i]; if(el.closest('#topLeasableContainer')) continue;
+      var t=norm(el.textContent||'');
+      if(t.startsWith('Ranks each trim by highest achievable Final RV%') && t.endsWith('If an MF is entered, LVI is shown as a hint.')){ el.remove(); }
+      if(t==='—' && !el.closest('#topLeasableContainer')) el.remove();
+    }
   }
   function boot(){
-    clean();
-    setTimeout(clean, 200);
-    setTimeout(clean, 800);
-    var obs = new MutationObserver(function(){ clean(); });
-    obs.observe(document.body, {childList:true, subtree:true});
+    moveTop15AfterSniffer(); removeStrayBlurb();
+    var obs=new MutationObserver(function(){ moveTop15AfterSniffer(); removeStrayBlurb(); });
+    obs.observe(document.body,{childList:true,subtree:true});
+    setTimeout(function(){ moveTop15AfterSniffer(); removeStrayBlurb(); },250);
+    setTimeout(function(){ moveTop15AfterSniffer(); removeStrayBlurb(); },800);
   }
-  if(document.readyState === "complete" || document.readyState === "interactive"){ boot(); }
-  else { document.addEventListener("DOMContentLoaded", boot); }
+  if(document.readyState==='complete'||document.readyState==='interactive') boot();
+  else document.addEventListener('DOMContentLoaded', boot);
 })();
 </script>
 
